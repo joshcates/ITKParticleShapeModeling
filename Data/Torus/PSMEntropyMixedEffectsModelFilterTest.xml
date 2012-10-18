@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+
+<psm_project 
+    name    = "PSMEntropyMixedEffectsModelFilterTest Parameter File" 
+    author  = "Josh Cates" 
+    date    = "September 2012" 
+    version = "1.0" 
+    url     = "http://www.sci.utah.edu/~cates">
+
+  <notes>
+    This is an example PSM Project file for the itkPSMEntropyMixedEffectsModelFilterTest.
+  </notes>
+
+  <data>
+    <distance_transforms>
+      mixed.00.mha
+      mixed.01.mha
+      mixed.02.mha
+      mixed.03.mha
+      mixed.04.mha
+      mixed.05.mha
+      mixed.06.mha
+      mixed.07.mha
+      mixed.08.mha
+   
+    </distance_transforms>
+
+    <variables name = "mixed_effects_test">
+      0.0
+      0.5
+      1.0
+      0.0
+      0.5
+      1.0
+      0.0
+      0.5
+      1.0
+    </variables>
+
+    <!-- The unoptimized input model -->
+    <model name = "initialization">
+      mixedinit.00.lpts
+      mixedinit.01.lpts
+      mixedinit.02.lpts
+      mixedinit.03.lpts
+      mixedinit.04.lpts
+      mixedinit.05.lpts
+      mixedinit.06.lpts
+      mixedinit.07.lpts
+      mixedinit.08.lpts
+    </model>
+
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      mixedout.00.lpts
+      mixedout.01.lpts
+      mixedout.02.lpts
+      mixedout.03.lpts
+      mixedout.04.lpts
+      mixedout.05.lpts
+      mixedout.06.lpts
+      mixedout.07.lpts
+      mixedout.08.lpts
+<!--      mixedout.09.lpts
+      mixedout.10.lpts
+      mixedout.11.lpts
+      mixedout.12.lpts
+      mixedout.13.lpts
+      mixedout.14.lpts
+      mixedout.15.lpts
+      mixedout.16.lpts
+      mixedout.17.lpts-->
+    </model>
+  </data>
+
+  <!-- Initialized with min_variance at 100 and relative scaling 50x -->
+  <optimization 
+      regularization_initial    = "100.0" 
+      regularization_final      = "10.0" 
+      regularization_decayspan  = "1000" 
+      tolerance                 = "0.01"
+      maximum_iterations        = "1000"
+      timepoints_per_individual = "3"
+      >
+  </optimization>
+</psm_project>

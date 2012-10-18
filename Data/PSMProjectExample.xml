@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<psm_project name="Torus Example" author = "Josh Cates" date = "September 2012" version = "1.0" url = "http://www.sci.utah.edu/~cates">
+
+  <notes>
+    This is an area for recording any notes on the project.
+    You can use multiple lines.
+  </notes>
+
+  <preprocessing smoothing_sigma="1.0" background_value = "0.0" foreground_value = "1.0" isosurface_value = "0.5">
+  </preprocessing>
+  <data>
+    <segmentations>
+      torus.01.mha
+      torus.02.mha 
+      torus.03.mha
+      torus.04.mha
+    </segmentations>
+
+    <processed_segmentations transforms="torusPPTransforms.xml">
+      torusPP.01.mha
+      torusPP.02.mha 
+      torusPP.03.mha
+      torusPP.04.mha
+    </processed_segmentations>
+    
+    <distance_transforms>
+      torusDT.01.nrrd
+      torusDT.02.nrrd
+      torusDT.03.nrrd
+      torusDT.04.nrrd
+    </distance_transforms>
+
+    <model name = "my_model">
+      torusINIT.00.xml
+      torusINIT.01.xml
+      torusINIT.02.xml
+      torusINIT.03.xml
+    </model>
+
+  </data>
+
+  <initialization algorithm="splitting">
+  </initialization>
+  
+  <optimization algorithm="basic">
+  </optimization>
+  
+</psm_project>

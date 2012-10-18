@@ -1,0 +1,5 @@
+project(ITKParticleShapeModeling)
+set(ITKParticleShapeModeling_LIBRARIES ITKParticleShapeModeling)
+itk_module_impl()
+
+add_subdirectory(Examples)

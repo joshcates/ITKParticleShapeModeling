@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+
+<psm_project 
+    name    = "PSMEntropyModelFilterTest Parameter File" 
+    author  = "Josh Cates" 
+    date    = "March 2012" 
+    version = "1.0" 
+    url     = "http://www.sci.utah.edu/~cates">
+
+  <notes>
+    This is an example PSM Project file for the itkPSMEntropyModelFilterTest.
+  </notes>
+
+  <data>
+    <!-- The distance transforms to shape surfaces: the input data -->
+    <distance_transforms>
+      torusDT.00.mha
+      torusDT.01.mha
+      torusDT.02.mha
+      torusDT.03.mha
+      torusDT.04.mha
+      torusDT.05.mha
+      torusDT.06.mha
+      torusDT.07.mha
+      torusDT.08.mha
+      torusDT.09.mha
+    </distance_transforms>
+
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      optimized.00.lpts
+      optimized.01.lpts
+      optimized.02.lpts
+      optimized.03.lpts
+      optimized.04.lpts
+      optimized.05.lpts
+      optimized.06.lpts
+      optimized.07.lpts
+      optimized.08.lpts 
+      optimized.09.lpts 
+    </model>
+  </data>
+
+  <optimization number_of_scales = "8">
+    <scale number = "0"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "200"
+           >
+    </scale>
+    <scale number = "1"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "2"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "3"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "4"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "5"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "6"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "5000"
+           tolerance                = "0.01"
+           maximum_iterations       = "5000"
+           >
+    </scale>
+    <scale number = "7"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "5000"
+           tolerance                = "0.01"
+           maximum_iterations       = "5000"
+           >
+    </scale>
+  </optimization>
+
+</psm_project>
