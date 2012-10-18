@@ -4,15 +4,14 @@
  *
  * \image html itkLogo.jpg
  *
- * \section intro Introduction
+ * \section intro About
  *
  * Welcome to the Particle Shape Modeling extension module for version
- * 4 of the Insight Toolkit (ITKv4)!  This module implements
- * functionality for ...
+ * 4 of the Insight Toolkit (ITKv4)!  
  *
  * \section homepage Home Page
  *
- * The official web presence for the ITKv4 PSM Extension is located here:
+ * The official homepage for the ITKv4 PSM Extension Module is located here:
  *
  * https://github.com/joshcates/ParticleShapeModeling
  *
@@ -25,4 +24,3 @@
  * \section requirements Notes on memory and other requirements
  *
  */
-
