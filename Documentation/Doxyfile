@@ -45,14 +45,14 @@ PROJECT_BRIEF          = "ITKv4+ module for particle-based statistical shape mod
 # exceed 55 pixels and the maximum width should not exceed 200 pixels. 
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = /Users/cates/MyProjects/ITKv4A2D2/ITK/Modules/External/ITKParticleShapeModeling/Documentation/psmlogo.png
+PROJECT_LOGO           = psmlogo.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = /Users/cates/Desktop/PSMDocsOutputTMP
+OUTPUT_DIRECTORY       = ../../../../../ITKParticleShapeModeling_documentation
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -675,7 +675,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = /Users/cates/MyProjects/ITKv4A2D2/ITK/Modules/External/ITKParticleShapeModeling/include \
+INPUT                  = ../../../../ \
                          /Users/cates/MyProjects/ITKv4A2D2/ITK/Modules/External/ITKParticleShapeModeling/src \
                          /Users/cates/MyProjects/ITKv4A2D2/ITK/Modules/External/ITKParticleShapeModeling/Documentation/MainPage.dox
 
