@@ -1,0 +1,9 @@
+<map id="itk::PSMAttribute&lt; VDimension &gt;" name="itk::PSMAttribute&lt; VDimension &gt;">
+<area shape="rect" id="node5" href="$classitk_1_1_p_s_m_container_array_attribute.html" title="itk::PSMContainerArrayAttribute\l\&lt; VDimension \&gt;" alt="" coords="320,5,528,46"/>
+<area shape="rect" id="node7" href="$classitk_1_1_p_s_m_shape_matrix_attribute.html" title="Each column describes a shape. A shape may be composed of m_DomainsPerShape domains (default 1)..." alt="" coords="327,70,521,111"/>
+<area shape="rect" id="node13" href="$classitk_1_1_p_s_m_container_array_attribute.html" title="PSMContainerArrayAttribute\l\&lt; double, Dimension \&gt;" alt="" coords="331,135,517,177"/>
+<area shape="rect" id="node15" href="$classitk_1_1_p_s_m_container_array_attribute.html" title="PSMContainerArrayAttribute\l\&lt; TNumericType, VDimension \&gt;" alt="" coords="321,201,527,242"/>
+<area shape="rect" id="node9" href="$classitk_1_1_p_s_m_regression_shape_matrix_attribute.html" title="itk::PSMRegressionShapeMatrix\lAttribute\&lt; T, VDimension \&gt;" alt="" coords="576,70,787,111"/>
+<area shape="rect" id="node11" href="$classitk_1_1_p_s_m_mixed_effects_shape_matrix_attribute.html" title="itk::PSMMixedEffectsShape\lMatrixAttribute\&lt; T, VDimension \&gt;" alt="" coords="835,70,1051,111"/>
+<area shape="rect" id="node17" href="$classitk_1_1_p_s_m_mean_curvature_attribute.html" title="itk::PSMMeanCurvatureAttribute\l\&lt; TNumericType, VDimension \&gt;" alt="" coords="577,201,785,242"/>
+</map>

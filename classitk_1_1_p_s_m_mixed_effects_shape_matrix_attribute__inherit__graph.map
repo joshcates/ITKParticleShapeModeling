@@ -1,0 +1,5 @@
+<map id="itk::PSMMixedEffectsShapeMatrixAttribute&lt; T, VDimension &gt;" name="itk::PSMMixedEffectsShapeMatrixAttribute&lt; T, VDimension &gt;">
+<area shape="rect" id="node2" href="$classitk_1_1_p_s_m_regression_shape_matrix_attribute.html" title="itk::PSMRegressionShapeMatrix\lAttribute\&lt; T, VDimension \&gt;" alt="" coords="21,262,232,303"/>
+<area shape="rect" id="node4" href="$classitk_1_1_p_s_m_shape_matrix_attribute.html" title="Each column describes a shape. A shape may be composed of m_DomainsPerShape domains (default 1)..." alt="" coords="29,171,224,213"/>
+<area shape="rect" id="node8" href="$classitk_1_1_p_s_m_attribute.html" title="Base class for PSMParticleSystem attribute classes." alt="" coords="132,81,263,122"/>
+</map>

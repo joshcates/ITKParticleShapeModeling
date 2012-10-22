@@ -1,0 +1,4 @@
+<map id="itk::PSMEntropyModelFilter&lt; TImage, TShapeMatrix &gt;" name="itk::PSMEntropyModelFilter&lt; TImage, TShapeMatrix &gt;">
+<area shape="rect" id="node5" href="$classitk_1_1_p_s_m_entropy_mixed_effects_model_filter.html" title="This class decorates the base PSMEntropyModelFilter class with some additional methods for setting ex..." alt="" coords="416,5,656,46"/>
+<area shape="rect" id="node7" href="$classitk_1_1_p_s_m_entropy_regression_model_filter.html" title="This class decorates the base PSMEntropyModelFilter class with some additional methods for setting ex..." alt="" coords="416,70,656,111"/>
+</map>

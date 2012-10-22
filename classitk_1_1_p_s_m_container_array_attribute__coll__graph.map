@@ -1,0 +1,5 @@
+<map id="itk::PSMContainerArrayAttribute&lt; T, VDimension &gt;" name="itk::PSMContainerArrayAttribute&lt; T, VDimension &gt;">
+<area shape="rect" id="node2" href="$classstd_1_1vector.html" title="std::vector\&lt; PSMContainer\l\&lt; T \&gt;::Pointer \&gt;" alt="" coords="5,126,184,167"/>
+<area shape="rect" id="node4" href="$classitk_1_1_p_s_m_attribute.html" title="Base class for PSMParticleSystem attribute classes." alt="" coords="208,126,339,167"/>
+<area shape="rect" id="node8" href="$structitk_1_1_p_s_m_attribute_1_1_defined_callbacks_struct.html" title="itk::PSMAttribute\&lt;\l VDimension \&gt;::DefinedCallbacks\lStruct" alt="" coords="253,5,469,61"/>
+</map>
