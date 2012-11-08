@@ -179,7 +179,7 @@ PSMRBFCorrespondenceInterpolator<VDimension>
   std::vector<vnl_vector<double> > points(N);
   for (unsigned int i = 0; i < N; i++)
     {
-    points[i].resize(VDimension);
+    points[i].set_size(VDimension);
     for (unsigned int D = 0; D < VDimension; D++)
       {
       points[i][D] = m_PointSetA[i][D];
