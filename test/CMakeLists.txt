@@ -35,6 +35,7 @@ itkPSMMeanCurvatureAttributeTest.cxx
 itkPSMParticleSystemTest.cxx
 itkPSMPointTreeTest.cxx
 itkPSMProjectTest.cxx
+itkPSMRBFCorrespondenceInterpolatorTest.cxx
 itkPSMRegionNeighborhoodTest.cxx
 itkPSMShapeEntropyFunctionTest.cxx
 itkPSMSurfaceNeighborhoodTest.cxx
@@ -98,6 +99,13 @@ itk_add_test(NAME itkPSMParticleSystemTest COMMAND ITKParticleShapeModelingTestD
 itk_add_test(NAME itkPSMPointTreeTest COMMAND ITKParticleShapeModelingTestDriver itkPSMPointTreeTest )
 itk_add_test(NAME itkPSMProjectTest COMMAND ITKParticleShapeModelingTestDriver itkPSMProjectTest
 ${TEST_DATA_ROOT}/PSMProjectExample.xml)
+itk_add_test(NAME itkPSMRBFCorrespondenceInterpolatorTest
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMRBFCorrespondenceInterpolatorTest
+ ${TEST_DATA_ROOT}/Torus/initialize.00.lpts
+ ${TEST_DATA_ROOT}/Torus/initialize.01.lpts
+ ${TEMP}/itkPSMRBFCorrespondenceInterpolatorTestOutput.lpts
+)
 itk_add_test(NAME itkPSMRegionNeighborhoodTest COMMAND ITKParticleShapeModelingTestDriver itkPSMRegionNeighborhoodTest )
 itk_add_test(NAME itkPSMShapeEntropyFunctionTest COMMAND ITKParticleShapeModelingTestDriver itkPSMShapeEntropyFunctionTest)
 itk_add_test(NAME itkPSMSurfaceNeighborhoodTest 

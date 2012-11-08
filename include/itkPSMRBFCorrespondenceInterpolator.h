@@ -42,11 +42,14 @@ public:
 
   /** Standard class typedefs. */
   typedef PSMRBFCorrespondenceInterpolator    Self;
-  typedef Point<double,VDimension>            PointType
+  typedef Point<double,VDimension>            PointType;
   typedef FunctionBase <PointType, PointType> Superclass;
   typedef SmartPointer<Self>                  Pointer;
   typedef SmartPointer<const Self>            ConstPointer;
 
+  /** Method to create through the object factory. */
+  itkNewMacro(Self);
+  
   /** Run-time type information (and related methods). */
   itkTypeMacro( PSMRBFCorrespondenceInterpolator, FunctionBase );
 
@@ -86,8 +89,11 @@ public:
 
 protected:
   PSMRBFCorrespondenceInterpolator();
-  virtual ~PSMRBFCorrespondenceInterpolator();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  virtual ~PSMRBFCorrespondenceInterpolator() {}
+  void PrintSelf(std::ostream& os, Indent indent) const
+  {
+    Superclass::PrintSelf(os,indent);
+  }
 
 private:
   PSMRBFCorrespondenceInterpolator(const Self&); //purposely not implemented
@@ -98,6 +104,10 @@ private:
   std::vector<PointType> m_PointSetA;
   std::vector<PointType> m_PointSetB;
 
+  /** Parameter matrices */
+  vnl_matrix<double> m_P;
+  vnl_matrix<double> m_C;
+  
 };
 
 } // end namespace itk

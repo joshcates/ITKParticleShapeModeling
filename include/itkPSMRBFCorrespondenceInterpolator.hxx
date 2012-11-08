@@ -123,8 +123,11 @@ PSMRBFCorrespondenceInterpolator<VDimension>
     }
 
   // To keep things simple, solve in each dimension separately
-  matrixtype P(4,3);
-  matrixtype C(N,3);
+  //  matrixtype P(4,3);
+  //  matrixtype C(N,3);
+  m_P.set_size(4,3);
+  m_C.set_size(N,3);
+  
   for (unsigned int D = 0; D < 3; D++)
     {
     // Construct the position data vector b from file 2 
@@ -141,13 +144,13 @@ PSMRBFCorrespondenceInterpolator<VDimension>
     // Store results
     for (unsigned int i = 0; i < N; i++)
       {
-      C(i,D) = x[i];
+     m_C(i,D) = x[i];
       }
     
-    P(0,D) = x[N+3];
-    P(1,D) = x[N+2];
-    P(2,D) = x[N+1];
-    P(3,D) = x[N];
+    m_P(0,D) = x[N+3];
+    m_P(1,D) = x[N+2];
+    m_P(2,D) = x[N+1];
+    m_P(3,D) = x[N];
     
     } // end D
 
@@ -155,16 +158,57 @@ PSMRBFCorrespondenceInterpolator<VDimension>
 }
   
 template <unsigned int VDimension>
-typename PSMRBFCorrespondenceInterpolator<VDimension>::VectorType
+typename PSMRBFCorrespondenceInterpolator<VDimension>::PointType
 PSMRBFCorrespondenceInterpolator<VDimension>
-::Evaluate() const
+::Evaluate(const PointType &pt) const
 {
   if (m_Initialized == false)
     {
       itkExceptionMacro("Function has not been initialized");
     }
   
+ // N is the number of points
+  const unsigned int N = m_PointSetA.size();
 
+  // X is the input point
+  vnl_vector<double> X(VDimension);
+  for (unsigned int D = 0; D < VDimension; D++)
+    {    X[D] = pt[D];    }
+
+  // Convert PointSetA from points to vnl_vectors-- perhaps store this in the class?
+  std::vector<vnl_vector<double> > points(N);
+  for (unsigned int i = 0; i < N; i++)
+    {
+    points[i].resize(VDimension);
+    for (unsigned int D = 0; D < VDimension; D++)
+      {
+      points[i][D] = m_PointSetA[i][D];
+      }
+    }
+
+  // Return value in which to accumulate
+  PointType ret;
+  
+  // For each dimension ...
+  for (unsigned int D = 0; D < VDimension; D++)
+    {
+    ret[D] = 0.0f; // initialize to zero
+    
+    // Compute RBF term in D
+    for (unsigned int i = 0; i < N; i++)
+      {      
+      ret[D] += m_C[i,D] * (X - points[i]).magnitude();      
+      }
+    
+    // Add the polynomial term
+    ret[D] += m_P[0];
+    for (unsigned int i = 0; i < VDimension; i++)
+      {
+      ret[D] += m_P[i+1] + X[i];
+      }
+    }
+
+  return ret;
 }
 
 } // end namespace itk
