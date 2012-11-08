@@ -19,12 +19,6 @@
 #define __itkPSMRBFCorrespondenceInterpolator_hxx
 #include "itkPSMRBFCorrespondenceInterpolator.h"
 
-#include <vnl/vnl_vector.h>
-#include <vnl/vnl_matrix.h>
-#include <vnl/algo/vnl_matrix_inverse.h>
-#include <vnl/algo/vnl_determinant.h>
-#include <vnl/algo/vnl_symmetric_eigensystem.h>
-
 namespace itk
 {
 
@@ -66,8 +60,6 @@ PSMRBFCorrespondenceInterpolator<VDimension>
   // TODO: Need algorithm references
   // TODO: Need to implement for at least 2D
 
-  //  INSERT CODE HERE 
-
   typedef vnl_vector<double> vectype;
   typedef vnl_matrix<double> matrixtype;
   
@@ -88,9 +80,9 @@ PSMRBFCorrespondenceInterpolator<VDimension>
     
     for (unsigned int j = 0; j < N; j++)
       {
-      Xj[0] = (m_PointSetB[j])[0];
-      Xj[1] = (m_PointSetB[j])[1];
-      Xj[2] = (m_PointSetB[j])[2];
+      Xj[0] = (m_PointSetA[j])[0];
+      Xj[1] = (m_PointSetA[j])[1];
+      Xj[2] = (m_PointSetA[j])[2];
       
       // Biharmonic Radial Basis Function
       Phi(i,j) = (Xi - Xj).magnitude();
@@ -138,8 +130,10 @@ PSMRBFCorrespondenceInterpolator<VDimension>
       b[i+4] = (m_PointSetB[i])[D];
       }
 
+
     // Solve for parameters
-    x = vnl_matrix_inverse<double>(A) * b;
+    //    x = vnl_matrix_inverse<double>(A) * b;
+    x = vnl_svd<double>(A).solve(b);
 
     // Store results
     for (unsigned int i = 0; i < N; i++)
@@ -147,16 +141,16 @@ PSMRBFCorrespondenceInterpolator<VDimension>
      m_C(i,D) = x[i];
       }
     
-    m_P(0,D) = x[N+3];
-    m_P(1,D) = x[N+2];
-    m_P(2,D) = x[N+1];
-    m_P(3,D) = x[N];
-    
+     m_P(0,D) = x[N+3];
+     m_P(1,D) = x[N+2];
+     m_P(2,D) = x[N+1];
+     m_P(3,D) = x[N];
+
     } // end D
 
   m_Initialized = true;
 }
-  
+
 template <unsigned int VDimension>
 typename PSMRBFCorrespondenceInterpolator<VDimension>::PointType
 PSMRBFCorrespondenceInterpolator<VDimension>
@@ -173,7 +167,7 @@ PSMRBFCorrespondenceInterpolator<VDimension>
   // X is the input point
   vnl_vector<double> X(VDimension);
   for (unsigned int D = 0; D < VDimension; D++)
-    {    X[D] = pt[D];    }
+    {    X(D) = pt[D];    }
 
   // Convert PointSetA from points to vnl_vectors-- perhaps store this in the class?
   std::vector<vnl_vector<double> > points(N);
@@ -182,8 +176,9 @@ PSMRBFCorrespondenceInterpolator<VDimension>
     points[i].set_size(VDimension);
     for (unsigned int D = 0; D < VDimension; D++)
       {
-      points[i][D] = m_PointSetA[i][D];
+        points[i](D) = m_PointSetA[i][D];
       }
+
     }
 
   // Return value in which to accumulate
@@ -197,15 +192,17 @@ PSMRBFCorrespondenceInterpolator<VDimension>
     // Compute RBF term in D
     for (unsigned int i = 0; i < N; i++)
       {      
-      ret[D] += m_C[i,D] * (X - points[i]).magnitude();      
+        ret[D] += m_C(i,D) * (X - points[i]).magnitude();      
       }
     
     // Add the polynomial term
-    ret[D] += m_P[0];
     for (unsigned int i = 0; i < VDimension; i++)
       {
-      ret[D] += m_P[i+1] + X[i];
+        //  std::cout << "ret[D] += m_P(i+1,D) + X(i) ->" << ret[D] << " += " << m_P(i+1,D) << " + " << X(i) << std::endl;
+        ret[D] += m_P(i+1,D) * X(i);
       }
+    ret[D] += m_P(0,D);
+
     }
 
   return ret;

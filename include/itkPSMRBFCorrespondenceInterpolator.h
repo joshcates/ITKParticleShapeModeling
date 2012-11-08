@@ -19,6 +19,9 @@
 #define __itkPSMRBFCorrespondenceInterpolator_h
 
 #include <vector>
+#include <vnl/vnl_vector.h>
+#include <vnl/vnl_matrix.h>
+
 #include "itkFunctionBase.h"
 #include "itkPoint.h"
 #include "itkMacro.h"

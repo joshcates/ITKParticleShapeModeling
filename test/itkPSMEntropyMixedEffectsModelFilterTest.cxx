@@ -147,6 +147,7 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
            {
              errstring += "Could not open point file for input.";
              passed = false;
+             break;
            }
 
          // Read all of the points, one point per line.
@@ -249,7 +250,7 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
          passed = false;
        }
 
-     if (passed = true)
+     if (passed == true)
        {
          for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
            {

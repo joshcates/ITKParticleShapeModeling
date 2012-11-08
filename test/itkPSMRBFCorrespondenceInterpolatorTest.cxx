@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include <iostream>
+#include <fstream>
 #include "itkImage.h"
 #include "itkPSMRBFCorrespondenceInterpolator.h"
 
@@ -28,70 +29,85 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
   std::string output_path = "";
 
   // Check for proper arguments
-  if (argc < 2)
+  if (argc < 4)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
 	<< "itkPSMRBFCorrespondenceInterpolatorTest PointFileA PointFileB PointListToInterpolate\n"
 	<< std::endl;
       return EXIT_FAILURE;
     }
-  else if (argc >2)
-    {
-      output_path = std::string(argv[2]);
-    }
-
-  typedef itk::Image<float, 3> ImageType;
 
   try
     {
      // Create the modeling filter and set up the optimization.
      itk::PSMRBFCorrespondenceInterpolator<3>::Pointer P 
        = itk::PSMRBFCorrespondenceInterpolator<3>::New();
- 
-     // Load the PointFileA
-   //   const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
-//      std::cout << "Reading the initial model correspondences ..." << std::endl;
-//      for (unsigned int i = 0; i < pt_files.size(); i++)
-//        {
-//          // Read the points for this file and add as a list
-//          std::vector<itk::PSMRBFCorrespondenceInterpolator<ImageType>::PointType> c;
 
-//          int counter = 0;
-//          // Open the ascii file.
-//          std::ifstream in( pt_files[i].c_str() );
-//          if ( !in )
-//            {
-//              errstring += "Could not open point file for input.";
-//              passed = false;
-//            }
+     std::vector<itk::PSMRBFCorrespondenceInterpolator<3>::PointType> landmarks;
 
-//          // Read all of the points, one point per line.
-//          while (in)
-//            {
-//              itk::PSMRBFCorrespondenceInterpolator<ImageType>::PointType pt;
-
-//              for (unsigned int d = 0; d < 3; d++)
-//                {
-//                  in >> pt[d];
-//                }
-//              c.push_back(pt);
-//              counter++;
-//            }
-//          // this algorithm pushes the last point twice
-//          c.pop_back();
-//          //  std::cout << "Read " << counter-1 << " points. " << std::endl;
-//          in.close();
-
-//          P->SetInputCorrespondencePoints(i,c);
-                  
-//          std::cout << "  " << pt_files[i] << std::endl;
-//        }
-//      std::cout << "Done!" << std::endl;
-     
-
-     if (passed = true)
+     // Read points from disk
+     for (unsigned int i = 1; i < 4; i++)
        {
 
+         std::vector<itk::PSMRBFCorrespondenceInterpolator<3>::PointType> c;
+         int counter = 0;
+
+         // Open the ascii file.
+         std::cout << "Reading " << argv[i] << std::endl;
+         std::ifstream in( argv[i] );
+         if ( !in )
+           {
+             errstring += "Could not open point file for input.";
+             passed = false;
+             break;
+           }
+         
+         // Read all of the points, one point per line.
+         while (in)
+           {
+             itk::PSMRBFCorrespondenceInterpolator<3>::PointType pt;
+
+              for (unsigned int d = 0; d < 3; d++)
+                {
+                  in >> pt[d];
+                }
+              c.push_back(pt);
+              counter++;
+            }
+          // this algorithm pushes the last point twice
+          c.pop_back();
+          //  std::cout << "Read " << counter-1 << " points. " << std::endl;
+          in.close();
+
+          if (i == 1)
+            {
+              P->SetPointSetA(c);
+            }
+          else if (i == 2)
+            {
+              P->SetPointSetB(c);
+            }
+          else if (i == 3)
+            {
+              landmarks = c;
+            }
+
+        }
+     std::cout << "Done!" << std::endl;
+     
+     
+     if (passed == true)
+       {
+         // Compute the mapping from PointSetA to PointSetB
+         P->Initialize();
+
+         // Map each point
+         for (unsigned int i = 0; i < landmarks.size(); i++)
+           {
+             std::cout << P->Evaluate(landmarks[i]) << std::endl;
+           }
+
+    
        }
      
     }
