@@ -53,7 +53,7 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
          int counter = 0;
 
          // Open the ascii file.
-         std::cout << "Reading " << argv[i] << std::endl;
+         //         std::cout << "Reading " << argv[i] << std::endl;
          std::ifstream in( argv[i] );
          if ( !in )
            {
@@ -93,7 +93,6 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
             }
 
         }
-     std::cout << "Done!" << std::endl;
      
      
      if (passed == true)
@@ -101,10 +100,14 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
          // Compute the mapping from PointSetA to PointSetB
          P->Initialize();
 
+         std::cout << argv[3] << std::endl;
+         
          // Map each point
          for (unsigned int i = 0; i < landmarks.size(); i++)
            {
-             std::cout << P->Evaluate(landmarks[i]) << std::endl;
+           itk::PSMRBFCorrespondenceInterpolator<3>::PointType p
+             =  P->Evaluate(landmarks[i]);
+           std::cout << p[0] << " " << p[1] << " " << p[2] << std::endl;
            }
 
     
@@ -126,7 +129,7 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
 
   if (passed)
     {
-    std::cout << "All tests passed" << std::endl;
+    //    std::cout << "All tests passed" << std::endl;
     return EXIT_SUCCESS;
     }
   else
