@@ -57,7 +57,7 @@ int itkPSMImplicitSurfaceImageFilterTest(int argc, char* argv[] )
      itk::PSMImplicitSurfaceImageFilter<InputImageType, OutputImageType>::Pointer P 
        = itk::PSMImplicitSurfaceImageFilter<InputImageType, OutputImageType>::New();
      P->SetSmoothingSigma(sigma);
-     P->SetIsosurfaceValue(0.5f);
+     P->SetIsosurfaceValue(isosurface_value);
      P->SetInput(reader->GetOutput());
      
       // Write the output file to trigger the pipeline
