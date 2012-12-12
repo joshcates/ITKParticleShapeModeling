@@ -22,6 +22,7 @@
 #include "itkWeakPointer.h"
 #include "itkPSMAttribute.h"
 #include "itkPSMContainer.h"
+#include "itkPSMParticleSystem.h"
 #include "vnl/vnl_matrix.h"
 
 namespace itk

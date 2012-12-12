@@ -27,10 +27,6 @@
 namespace itk
 {
 
-#ifndef __itkPSMParticleSystem_h
-template<unsigned int VDimension> class PSMParticleSystem;
-#endif
-
 /** \class PSMAttribute
  *  \brief Base class for PSMParticleSystem attribute classes.
  * \ingroup ParticleShapeModeling
