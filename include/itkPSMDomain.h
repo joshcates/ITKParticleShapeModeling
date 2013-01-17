@@ -44,7 +44,7 @@ namespace itk
  * 
  *  \ingroup ParticleShapeModeling
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMDomain : public DataObject
 {
 public:

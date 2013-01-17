@@ -36,7 +36,7 @@ namespace itk
  * \sa ParticleClipRegionDomain
  * \sa PSMDomain
  */
-template <class T, unsigned int VDimension=3>
+template <class T, unsigned int VDimension>
 class ITK_EXPORT PSMImageDomainWithCurvature
   : public PSMImageDomainWithHessians<T, VDimension>
 {

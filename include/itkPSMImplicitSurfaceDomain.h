@@ -30,7 +30,7 @@ namespace itk
  *  iteration, and this class assumes it has a distance transform
  *  as an image.
  */
-template <class T, unsigned int VDimension=3>
+template <class T, unsigned int VDimension>
 class ITK_EXPORT PSMImplicitSurfaceDomain
   : public PSMImageDomainWithCurvature<T, VDimension>
 {

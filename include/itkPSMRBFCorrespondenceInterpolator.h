@@ -35,7 +35,7 @@ namespace itk
  *
  * \ingroup 
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMRBFCorrespondenceInterpolator :
   public FunctionBase<Point<double,VDimension>, Point<double,VDimension> >
 {

@@ -37,7 +37,7 @@ namespace itk
  * \sa ParticleClipRegionDomain
  * \sa PSMDomain
  */
-template <class T, unsigned int VDimension=3>
+template <class T, unsigned int VDimension>
 class ITK_EXPORT PSMImageDomainWithGradients : public PSMImageDomain<T, VDimension>
 {
 public:

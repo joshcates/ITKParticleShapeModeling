@@ -29,7 +29,7 @@ namespace itk
 /** \class PSMRegionDomain
  *  \brief 
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMRegionDomain : public PSMDomain<VDimension>
 {
 public:

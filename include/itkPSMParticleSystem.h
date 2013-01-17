@@ -63,7 +63,7 @@ namespace itk
  * \ingroup PSMContainers
  * \author Josh Cates
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMParticleSystem : public DataObject
 {
 public:

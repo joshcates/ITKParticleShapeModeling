@@ -31,7 +31,7 @@ namespace itk
  * PSMPointTree to cache point and index values so that
  * FindNeighborhoodPoints is somewhat optimized. 
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMRegionNeighborhood : public PSMNeighborhood<VDimension>
 {
 public:

@@ -40,7 +40,7 @@ namespace itk
  * \ingroup PSM
  *
  */
-template <unsigned int VDimension=3>
+template <unsigned int VDimension>
 class ITK_EXPORT PSMNeighborhood : public DataObject
 {
 public:

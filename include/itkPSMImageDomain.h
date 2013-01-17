@@ -34,7 +34,7 @@ namespace itk
  * \sa PSMRegionDomain
  *
  */
-template <class T, unsigned int VDimension=3>
+template <class T, unsigned int VDimension>
 class ITK_EXPORT PSMImageDomain : public PSMRegionDomain<VDimension>
 {
 public:
