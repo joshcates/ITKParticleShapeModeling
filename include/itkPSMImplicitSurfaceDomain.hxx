@@ -54,7 +54,7 @@ ApplyVectorConstraints(vnl_vector_fixed<double, VDimension> &gradE,
   if (this->m_UseCuttingPlane == true)
     {    
     // See http://mathworld.wolfram.com/Point-PlaneDistance.html, for example
-    vnl_vector_fixed<double, 3> x;
+    vnl_vector_fixed<double, VDimension> x;
     vnl_vector_fixed<T, VDimension> grad = this->SampleGradientVnl(pos);
     for (unsigned int i = 0; i < VDimension; i++)
       { x[i] = pos[i]; }

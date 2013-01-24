@@ -24,11 +24,11 @@
 
 namespace itk{
 
-class MyRegressionIterationCommand : public itk::Command
+class My2DRegressionIterationCommand : public itk::Command
 {
 public:
  /** Standard class typedefs. */
-  typedef MyRegressionIterationCommand         Self;
+  typedef My2DRegressionIterationCommand         Self;
   typedef Command                    Superclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
@@ -36,7 +36,7 @@ public:
   typedef Image<float, 2> ImageType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MyRegressionIterationCommand, Command);
+  itkTypeMacro(My2DRegressionIterationCommand, Command);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -65,17 +65,17 @@ public:
   }
 
 protected:
-  MyRegressionIterationCommand() {}
-  ~MyRegressionIterationCommand() {}
+  My2DRegressionIterationCommand() {}
+  ~My2DRegressionIterationCommand() {}
 private:
-  MyRegressionIterationCommand(const Self &);        //purposely not implemented
+  My2DRegressionIterationCommand(const Self &);        //purposely not implemented
   void operator=(const Self &); //purposely not implemented
 };
 
 } // end namespace itk
 
 /** This test exercises functionality of the base itkPSMEntropyRegressionModelFilter class */
-int itkPSMEntropyRegressionModelFilterTest(int argc, char* argv[] )
+int itkPSMEntropyRegressionModel2DFilterTest(int argc, char* argv[] )
 {
   bool passed = true;
   std::string errstring = "";
@@ -85,7 +85,7 @@ int itkPSMEntropyRegressionModelFilterTest(int argc, char* argv[] )
   if (argc < 2)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMEntropyRegressionModelFilterTest parameter_file [output_path]\n"
+	<< "itkPSMEntropyRegressionModel2DFilterTest parameter_file [output_path]\n"
         << "See itk::PSMParameterFileReader for documentation on the parameter file format."
 	<< std::endl;
       return EXIT_FAILURE;
@@ -113,7 +113,7 @@ int itkPSMEntropyRegressionModelFilterTest(int argc, char* argv[] )
  
      // Setup the Callback function that is executed after each
      // iteration of the solver.
-     itk::MyRegressionIterationCommand::Pointer mycommand = itk::MyRegressionIterationCommand::New();
+     itk::My2DRegressionIterationCommand::Pointer mycommand = itk::My2DRegressionIterationCommand::New();
      P->AddObserver(itk::IterationEvent(), mycommand);
 
      // Load the distance transforms

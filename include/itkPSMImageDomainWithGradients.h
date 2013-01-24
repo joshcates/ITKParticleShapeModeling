@@ -58,8 +58,8 @@ public:
   typedef VectorLinearInterpolateImageFunction<GradientImageType, typename PointType::CoordRepType>
   GradientInterpolatorType;
 
-  typedef FixedArray<T, 3> VectorType;
-  typedef vnl_vector_fixed<T, 3> VnlVectorType;
+  typedef FixedArray<T, VDimension> VectorType;
+  typedef vnl_vector_fixed<T, VDimension> VnlVectorType;
   
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
