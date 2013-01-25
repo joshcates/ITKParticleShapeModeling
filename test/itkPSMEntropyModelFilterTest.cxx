@@ -80,20 +80,29 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
   bool passed = true;
   std::string errstring = "";
   std::string output_path = "";
+  std::string input_path_prefix = "";
 
   // Check for proper arguments
   if (argc < 2)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMEntropyModelFilterTest parameter_file [output_path]\n"
-        << "See itk::PSMParameterFileReader for documentation on the parameter file format."
+	<< "itkPSMEntropyModelFilterTest parameter_file [output_path] [input_path_prefix]\n"
+                << "See itk::PSMParameterFileReader for documentation on the parameter file format.\n"
+                <<" Note that input_path_prefix will be prefixed to any file names and paths in the xml parameter file.\n"
 	<< std::endl;
       return EXIT_FAILURE;
     }
-  else if (argc >2)
+
+  if (argc >2)
     {
-      output_path = std::string(argv[2]);
+    output_path = std::string(argv[2]);
     }
+
+  if (argc >3)
+    {
+    input_path_prefix = std::string(argv[3]);
+    }
+  
 
   typedef itk::Image<float, 3> ImageType;
 
@@ -123,7 +132,7 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
        {
          itk::ImageFileReader<ImageType>::Pointer reader = 
            itk::ImageFileReader<ImageType>::New();
-         reader->SetFileName(dt_files[i]);
+         reader->SetFileName(input_path_prefix + dt_files[i]);
          reader->Update();
          
          std::cout << "  " << dt_files[i] << std::endl;
@@ -142,7 +151,7 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
 
          int counter = 0;
          // Open the ascii file.
-         std::ifstream in( pt_files[i].c_str() );
+         std::ifstream in( (input_path_prefix + pt_files[i]).c_str() );
          if ( !in )
            {
              errstring += "Could not open point file for input.";

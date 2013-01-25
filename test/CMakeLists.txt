@@ -7,6 +7,9 @@
 # may vary with the OS.)  
 #
 # /path/to/CMake/bin/ctest -R itkPSM
+# 
+# On Windows you will need to specify the build configuration with "-C Release"
+# or "-C Debug", etc.
 #
 # Scrutinize the ouput by checking this file:
 # 
@@ -59,6 +62,7 @@ itkPSMTwoCostFunctionTest.cxx
 CreateTestDriver(ITKParticleShapeModeling "${ITKParticleShapeModeling-Test_LIBRARIES}" "${ITKParticleShapeModelingTests}")
 
 set(TEST_DATA_ROOT "${ITKParticleShapeModeling_SOURCE_DIR}/Data")
+
 itk_add_test(NAME itkPSMContainerTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMContainerTest )
 itk_add_test(NAME itkPSMContainerArrayAttributeTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMContainerArrayAttributeTest)
 itk_add_test(NAME itkPSMCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMCostFunctionTest )
@@ -66,7 +70,8 @@ itk_add_test(NAME itkPSMEntropyModelFilterTest
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMEntropyModelFilterTest
  ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
- ${TEMP}
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
 )
 itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest 
  COMMAND ITKParticleShapeModelingTestDriver
