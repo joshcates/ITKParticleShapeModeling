@@ -77,19 +77,22 @@ itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMEntropyModelFilterMultiscaleTest
  ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterMultiscaleTest.xml
- ${TEMP}
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
 )
 itk_add_test(NAME itkPSMEntropyMixedEffectsModelFilterTest 
 COMMAND ITKParticleShapeModelingTestDriver
 itkPSMEntropyMixedEffectsModelFilterTest
-${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
-${TEMP}
+ ${TEST_DATA_ROOT}/Torus/PSMEntropyMixedEffectsModelFilterTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
 )
 itk_add_test(NAME itkPSMEntropyRegressionModelFilterTest 
 COMMAND ITKParticleShapeModelingTestDriver
 itkPSMEntropyRegressionModelFilterTest
 ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
-${TEMP}
+${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
 )
 itk_add_test(NAME itkPSMGradientDescentOptimizerTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMGradientDescentOptimizerTest)
 itk_add_test(NAME itkPSMImplicitSurfaceImageFilterTest 

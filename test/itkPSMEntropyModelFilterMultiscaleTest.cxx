@@ -81,6 +81,7 @@ int itkPSMEntropyModelFilterMultiscaleTest(int argc, char* argv[] )
   bool passed = true;
   std::string errstring = "";
   std::string output_path = "";
+  std::string input_path_prefix = "";
 
   // Check for proper arguments
   if (argc < 2)
@@ -91,11 +92,17 @@ int itkPSMEntropyModelFilterMultiscaleTest(int argc, char* argv[] )
 	<< std::endl;
       return EXIT_FAILURE;
     }
-  else if (argc >2)
+  
+  if (argc >2)
     {
       output_path = std::string(argv[2]);
     }
 
+  if (argc >3)
+    {
+      input_path_prefix = std::string(argv[3]);
+    }
+  
   typedef itk::Image<float, 3> ImageType;
 
   try
@@ -124,10 +131,10 @@ int itkPSMEntropyModelFilterMultiscaleTest(int argc, char* argv[] )
        {
          itk::ImageFileReader<ImageType>::Pointer reader = 
            itk::ImageFileReader<ImageType>::New();
-         reader->SetFileName(dt_files[i]);
+         reader->SetFileName(input_path_prefix + dt_files[i]);
          reader->Update();
          
-         std::cout << "  " << dt_files[i] << std::endl;
+         std::cout << "  " << (input_path_prefix + dt_files[i]) << std::endl;
 
          P->SetInput(i,reader->GetOutput());
        }
