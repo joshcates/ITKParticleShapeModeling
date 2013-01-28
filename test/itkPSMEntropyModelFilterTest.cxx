@@ -86,9 +86,9 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
   if (argc < 2)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMEntropyModelFilterTest parameter_file [output_path] [input_path_prefix]\n"
+	<< "itkPSMEntropyModelFilterTest parameter_file [output_path] [input_path]\n"
                 << "See itk::PSMParameterFileReader for documentation on the parameter file format.\n"
-                <<" Note that input_path_prefix will be prefixed to any file names and paths in the xml parameter file.\n"
+                <<" Note that input_path will be prefixed to any file names and paths in the xml parameter file.\n"
 	<< std::endl;
       return EXIT_FAILURE;
     }

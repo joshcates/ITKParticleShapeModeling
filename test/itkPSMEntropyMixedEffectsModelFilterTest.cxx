@@ -86,7 +86,7 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
   if (argc < 2)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMEntropyMixedEffectsModelFilterTest parameter_file [output_path]\n"
+	<< "itkPSMEntropyMixedEffectsModelFilterTest parameter_file [output_path] [input_path]\n"
         << "See itk::PSMParameterFileReader for documentation on the parameter file format."
 	<< std::endl;
       return EXIT_FAILURE;
@@ -211,7 +211,7 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
      double regularization_final     = 5.0f;
      double regularization_decayspan = 2000.0f;
      double tolerance                = 1.0e-8;
-     unsigned int maximum_iterations = 200000;
+     unsigned int maximum_iterations = 20000;
      unsigned int timepoints_per_individual = 3;
      if ( project->HasOptimizationAttribute("regularization_initial") )
        regularization_initial = project->GetOptimizationAttribute("regularization_initial");

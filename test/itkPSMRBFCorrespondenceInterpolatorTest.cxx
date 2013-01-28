@@ -27,15 +27,22 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
   bool passed = true;
   std::string errstring = "";
   std::string output_path = "";
+  std::string input_path_prefix = "";
 
   // Check for proper arguments
   if (argc < 4)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMRBFCorrespondenceInterpolatorTest PointFileA PointFileB PointListToInterpolate\n"
+	<< "itkPSMRBFCorrespondenceInterpolatorTest PointFileA PointFileB PointListToInterpolate [input_path]\n"
 	<< std::endl;
       return EXIT_FAILURE;
     }
+  
+  if (argc > 4)
+    {
+      input_path_prefix = std::string(argv[4]);
+    }
+
 
   try
     {
@@ -54,10 +61,12 @@ int itkPSMRBFCorrespondenceInterpolatorTest(int argc, char* argv[] )
 
          // Open the ascii file.
          //         std::cout << "Reading " << argv[i] << std::endl;
-         std::ifstream in( argv[i] );
+         std::string fn = input_path_prefix + std::string(argv[i]);
+         std::ifstream in( fn.c_str() );
          if ( !in )
            {
-             errstring += "Could not open point file for input.";
+             errstring += "Could not open point file for input: ";
+             errstring += fn;
              passed = false;
              break;
            }

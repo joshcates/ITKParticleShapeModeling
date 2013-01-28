@@ -63,9 +63,15 @@ CreateTestDriver(ITKParticleShapeModeling "${ITKParticleShapeModeling-Test_LIBRA
 
 set(TEST_DATA_ROOT "${ITKParticleShapeModeling_SOURCE_DIR}/Data")
 
-itk_add_test(NAME itkPSMContainerTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMContainerTest )
-itk_add_test(NAME itkPSMContainerArrayAttributeTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMContainerArrayAttributeTest)
-itk_add_test(NAME itkPSMCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMCostFunctionTest )
+itk_add_test(NAME itkPSMContainerTest COMMAND
+ITKParticleShapeModelingTestDriver  itkPSMContainerTest )
+
+itk_add_test(NAME itkPSMContainerArrayAttributeTest COMMAND
+ITKParticleShapeModelingTestDriver  itkPSMContainerArrayAttributeTest)
+
+itk_add_test(NAME itkPSMCostFunctionTest COMMAND
+ITKParticleShapeModelingTestDriver  itkPSMCostFunctionTest )
+
 itk_add_test(NAME itkPSMEntropyModelFilterTest 
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMEntropyModelFilterTest
@@ -73,6 +79,7 @@ itk_add_test(NAME itkPSMEntropyModelFilterTest
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
+
 itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest 
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMEntropyModelFilterMultiscaleTest
@@ -80,6 +87,7 @@ itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
+
 itk_add_test(NAME itkPSMEntropyMixedEffectsModelFilterTest 
 COMMAND ITKParticleShapeModelingTestDriver
 itkPSMEntropyMixedEffectsModelFilterTest
@@ -87,6 +95,7 @@ itkPSMEntropyMixedEffectsModelFilterTest
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
+
 itk_add_test(NAME itkPSMEntropyRegressionModelFilterTest 
 COMMAND ITKParticleShapeModelingTestDriver
 itkPSMEntropyRegressionModelFilterTest
@@ -94,38 +103,51 @@ ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
 ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
-itk_add_test(NAME itkPSMGradientDescentOptimizerTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMGradientDescentOptimizerTest)
+
+itk_add_test(NAME itkPSMGradientDescentOptimizerTest COMMAND
+ITKParticleShapeModelingTestDriver
+itkPSMGradientDescentOptimizerTest)
+
 itk_add_test(NAME itkPSMImplicitSurfaceImageFilterTest 
   COMMAND ITKParticleShapeModelingTestDriver  itkPSMImplicitSurfaceImageFilterTest
   ${TEST_DATA_ROOT}/Cardiac/blood_pool.nrrd  
-  ${TEMP}/itkPSMImplicitSurfaceImageFilterTestOutput.nrrd 1.2 0.5
+  ${ITK_TEST_OUTPUT_DIR}/itkPSMImplicitSurfaceImageFilterTestOutput.nrrd 1.2 0.5
 )
+
 itk_add_test(NAME itkPSMMeanCurvatureAttributeTest 
   COMMAND ITKParticleShapeModelingTestDriver  itkPSMMeanCurvatureAttributeTest
   ${TEST_DATA_ROOT}/Torus/torus.00.nrrd
 )
+
 itk_add_test(NAME itkPSMParticleSystemTest COMMAND ITKParticleShapeModelingTestDriver itkPSMParticleSystemTest ) 
+
 itk_add_test(NAME itkPSMPointTreeTest COMMAND ITKParticleShapeModelingTestDriver itkPSMPointTreeTest )
+
 itk_add_test(NAME itkPSMProjectTest COMMAND ITKParticleShapeModelingTestDriver itkPSMProjectTest
 ${TEST_DATA_ROOT}/PSMProjectExample.xml)
+
 itk_add_test(NAME itkPSMRBFCorrespondenceInterpolatorTest
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMRBFCorrespondenceInterpolatorTest
  ${TEST_DATA_ROOT}/Torus/initialize.00.lpts
  ${TEST_DATA_ROOT}/Torus/initialize.01.lpts
- ${TEMP}/itkPSMRBFCorrespondenceInterpolatorTestOutput.lpts
+ ${TEST_DATA_ROOT}/Torus/RBFTestInterpolatorPoints.lpts
 )
+
 itk_add_test(NAME itkPSMRegionNeighborhoodTest COMMAND ITKParticleShapeModelingTestDriver itkPSMRegionNeighborhoodTest )
+
 itk_add_test(NAME itkPSMShapeEntropyFunctionTest COMMAND ITKParticleShapeModelingTestDriver itkPSMShapeEntropyFunctionTest)
+
 itk_add_test(NAME itkPSMSurfaceNeighborhoodTest 
   COMMAND ITKParticleShapeModelingTestDriver itkPSMSurfaceNeighborhoodTest
   ${TEST_DATA_ROOT}/Torus/torus.00.nrrd
 )
-set(TEMP ${ITK_TEST_OUTPUT_DIR})
+
 itk_add_test(NAME itkPSMTrimLabelMapImageFilterTest 
   COMMAND ITKParticleShapeModelingTestDriver  itkPSMTrimLabelMapImageFilterTest
   ${TEST_DATA_ROOT}/Torus/torus.00.nrrd  
-  ${TEMP}/itkPSMTrimLabelMapImageFilterTestOutput.nrrd
+  ${ITK_TEST_OUTPUT_DIR}/itkPSMTrimLabelMapImageFilterTestOutput.nrrd
 )
+
 itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMTwoCostFunctionTest )
 

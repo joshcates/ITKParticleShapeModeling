@@ -79,7 +79,7 @@
       regularization_final      = "10.0" 
       regularization_decayspan  = "1000" 
       tolerance                 = "0.01"
-      maximum_iterations        = "1000"
+      maximum_iterations        = "5"
       timepoints_per_individual = "3"
       >
   </optimization>

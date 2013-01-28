@@ -86,7 +86,7 @@ int itkPSMEntropyRegressionModelFilterTest(int argc, char* argv[] )
   if (argc < 2)
     {
       std::cout << "Wrong number of arguments. \nUse: " 
-	<< "itkPSMEntropyRegressionModelFilterTest parameter_file [output_path] [input_path_prefix]\n"
+	<< "itkPSMEntropyRegressionModelFilterTest parameter_file [output_path] [input_path]\n"
         << "See itk::PSMParameterFileReader for documentation on the parameter file format."
 	<< std::endl;
       return EXIT_FAILURE;
