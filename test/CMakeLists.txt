@@ -35,6 +35,7 @@ itkPSMEntropyRegressionModelFilterTest.cxx
 itkPSMEntropyRegressionModel2DFilterTest.cxx
 itkPSMGradientDescentOptimizerTest.cxx
 itkPSMImplicitSurfaceImageFilterTest.cxx
+itkPSMImplicitSurfaceImage2DFilterTest.cxx
 itkPSMMeanCurvatureAttributeTest.cxx
 itkPSMParticleSystemTest.cxx
 itkPSMPointTreeTest.cxx
@@ -112,6 +113,12 @@ itk_add_test(NAME itkPSMImplicitSurfaceImageFilterTest
   COMMAND ITKParticleShapeModelingTestDriver  itkPSMImplicitSurfaceImageFilterTest
   ${TEST_DATA_ROOT}/Cardiac/blood_pool.nrrd  
   ${ITK_TEST_OUTPUT_DIR}/itkPSMImplicitSurfaceImageFilterTestOutput.nrrd 1.2 0.5
+)
+
+itk_add_test(NAME itkPSMImplicitSurfaceImage2DFilterTest 
+  COMMAND ITKParticleShapeModelingTestDriver  itkPSMImplicitSurfaceImage2DFilterTest
+  ${TEST_DATA_ROOT}/Cardiac/LACine/cinemorph1-00.dcm
+  ${ITK_TEST_OUTPUT_DIR}/itkPSMImplicitSurfaceImage2DFilterTestOutput.nrrd 1.2 0.5
 )
 
 itk_add_test(NAME itkPSMMeanCurvatureAttributeTest 
