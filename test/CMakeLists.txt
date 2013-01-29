@@ -33,6 +33,7 @@ itkPSMEntropyModelFilterMultiscaleTest.cxx
 itkPSMEntropyMixedEffectsModelFilterTest.cxx
 itkPSMEntropyRegressionModelFilterTest.cxx
 itkPSMEntropyRegressionModel2DFilterTest.cxx
+itkPSMEntropyRegressionModel2DFilterMultiscaleTest.cxx
 itkPSMGradientDescentOptimizerTest.cxx
 itkPSMImplicitSurfaceImageFilterTest.cxx
 itkPSMImplicitSurfaceImage2DFilterTest.cxx
@@ -103,6 +104,22 @@ itkPSMEntropyRegressionModelFilterTest
 ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
 ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
+)
+
+itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterTest 
+COMMAND ITKParticleShapeModelingTestDriver
+itkPSMEntropyRegressionModel2DFilterTest
+${TEST_DATA_ROOT}/Cardiac/LACine/PSMEntropyRegressionModel2DFilterTest.xml
+${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Cardiac/LACine/
+)
+
+itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterMultiscaleTest 
+COMMAND ITKParticleShapeModelingTestDriver
+itkPSMEntropyRegressionModel2DFilterMultiscaleTest
+${TEST_DATA_ROOT}/Cardiac/LACine/PSMEntropyRegressionModel2DFilterMultiscaleTest.xml
+${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Cardiac/LACine/
 )
 
 itk_add_test(NAME itkPSMGradientDescentOptimizerTest COMMAND
