@@ -18,7 +18,7 @@
 #include <iostream>
 #include "itkImage.h"
 #include "itkImageFileReader.h"
-#include "itkPSMEntropyModelFilter.h"
+#include "itkPSMEntropyRegressionModelFilter.h"
 #include "itkPSMProjectReader.h"
 #include "itkCommand.h"
 
@@ -44,8 +44,8 @@ public:
   /** This method will be passed a PSMGradientDescentOptimizer */
   virtual void Execute(Object *caller, const EventObject &)
   {    
-    PSMEntropyModelFilter<ImageType> *o 
-      = static_cast<PSMEntropyModelFilter<ImageType> *>(caller);
+    PSMEntropyRegressionModelFilter<ImageType> *o 
+      = static_cast<PSMEntropyRegressionModelFilter<ImageType> *>(caller);
 
     // Print every 10 iterations
     if (o->GetNumberOfElapsedIterations() % 10 != 0) return;
@@ -75,7 +75,7 @@ private:
 
 } // end namespace itk
 
-/** This test exercises functionality of the base itkPSMEntropyModelFilter class */
+/** This test exercises functionality of the base itkPSMEntropyRegressionModelFilter class in a multiscale fashion in 2D! */
 int itkPSMEntropyRegressionModel2DFilterMultiscaleTest(int argc, char* argv[] )
 {
   bool passed = true;
@@ -116,8 +116,8 @@ int itkPSMEntropyRegressionModel2DFilterMultiscaleTest(int argc, char* argv[] )
      itk::PSMProject::Pointer project = xmlreader->GetOutput();
 
      // Create the modeling filter and set up the optimization.
-     itk::PSMEntropyModelFilter<ImageType>::Pointer P 
-       = itk::PSMEntropyModelFilter<ImageType>::New();
+     itk::PSMEntropyRegressionModelFilter<ImageType>::Pointer P 
+       = itk::PSMEntropyRegressionModelFilter<ImageType>::New();
  
      // Setup the Callback function that is executed after each
      // iteration of the solver.
@@ -139,6 +139,28 @@ int itkPSMEntropyRegressionModel2DFilterMultiscaleTest(int argc, char* argv[] )
          P->SetInput(i,reader->GetOutput());
        }
      std::cout << "Done!" << std::endl;
+
+  // Read the explanatory variables (e.g. time)
+     if (project->HasVariables("time_points"))
+       {
+         std::vector<double> expl = project->GetVariables("time_points");
+         
+         if (expl.size() < dt_files.size())
+           {
+             errstring += "There are fewer explanatory variables than input files";
+             passed = false;
+           }
+         else // set the explanatory variables
+           {
+             P->SetVariables(expl);
+           }
+       }
+     else
+       {
+         errstring += "No explanatory variables were present for the regression.";
+         passed = false;
+       }
+
 
      // Exception on failure
      unsigned int number_of_scales = project->GetNumberOfOptimizationScales();     
@@ -193,7 +215,7 @@ int itkPSMEntropyRegressionModel2DFilterMultiscaleTest(int argc, char* argv[] )
              std::ofstream out( fname.c_str() );
              if ( !out )
                {
-                 errstring += "Could not open point file for output: ";
+                 errstring += "Could not open point file for output.";
                }
              else 
                {                 
@@ -207,9 +229,36 @@ int itkPSMEntropyRegressionModel2DFilterMultiscaleTest(int argc, char* argv[] )
                    }         
                }
            }
-       }
 
-     
+         // Now write a single csv file with all points and all domains
+         std::string fname2 = output_path + out_files[0] + std::string("_ALLPOINTS.csv");
+         std::ofstream out2(fname2.c_str());
+         
+         if (!out2)
+           {
+             errstring += "Could not open point csv file for output.";
+           }
+         else
+           {
+             
+             // A row of the shape numbers
+             for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
+               {
+                 out2 << d << "X," << d << "Y,";
+               }
+             out2 << std::endl;
+
+             for (unsigned int j = 0; j < P->GetParticleSystem()->GetNumberOfParticles(0); j++)
+               {
+                 for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
+                   {
+                     out2 <<  P->GetParticleSystem()->GetPosition(j,d)[0]  << ",";
+                     out2 <<  P->GetParticleSystem()->GetPosition(j,d)[1]  << ",";
+                   }
+                 out2 << std::endl;
+               }         
+           }
+       }
     }
   catch(itk::ExceptionObject &e)
     {
