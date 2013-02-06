@@ -175,3 +175,5 @@ itk_add_test(NAME itkPSMTrimLabelMapImageFilterTest
 
 itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMTwoCostFunctionTest )
 
+# Necessary on Linux build to include IOXML in proper order
+target_link_libraries(ITKParticleShapeModelingTestDriver ITKIOXML)

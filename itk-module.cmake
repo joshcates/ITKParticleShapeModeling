@@ -14,7 +14,6 @@ itk_module(ITKParticleShapeModeling
     ITKIONRRD
     ITKIOMeta
     ITKIOGDCM
-    ITKIOXML
     ITKTestKernel #to handle IO in src
     ITKIOImageBase
     ITKIOXML
