@@ -41,6 +41,12 @@ int main (int argc, char *argv[])
   typedef itk::Image<float, 3> image_type;
 
   try {
+
+
+  // First read all of the files one by one and compute the bounding box.
+
+
+  
     std::cout << "Reading " << argv[4] << std::endl;
     itk::ImageFileReader<image_type>::Pointer reader 
       = itk::ImageFileReader<image_type>::New();
