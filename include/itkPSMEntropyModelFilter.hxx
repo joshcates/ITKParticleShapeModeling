@@ -227,7 +227,7 @@ PSMEntropyModelFilter<TImage, TShapeMatrix>::GenerateData()
       // -- but not if this is the last iteration.
       if ((m_NumberOfScales > 1) && (scale != m_NumberOfScales-1) )
         {
-          m_ParticleSystem->SplitAllParticles(this->GetInput()->GetSpacing()[0] * 0.5);
+          m_ParticleSystem->SplitAllParticles(this->GetInput()->GetSpacing()[0] * 1.0);
         }
 
     }

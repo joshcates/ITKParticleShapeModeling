@@ -134,6 +134,7 @@ public:
 protected:
   PSMImplicitSurfaceDomain() : m_Tolerance(1.0e-4), m_UseCuttingPlane(false)
     {
+      srand(time(0));
     }
   void PrintSelf(std::ostream& os, Indent indent) const
   {
