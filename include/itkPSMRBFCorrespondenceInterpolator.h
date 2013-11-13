@@ -21,6 +21,7 @@
 #include <vector>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
+#include <vnl/algo/vnl_svd.h>
 
 #include "itkFunctionBase.h"
 #include "itkPoint.h"
