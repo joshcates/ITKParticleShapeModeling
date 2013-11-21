@@ -4,6 +4,8 @@ itkPSMDOMNodeXMLReader.cxx
 itkPSMProject.cxx
 itkPSMProjectReader.cxx
 itkPSMProjectWriter.cxx
+itkPSMParticleSystem.cxx
+Procrustes.cxx
 )
 
 add_library(ITKParticleShapeModeling ${ITKParticleShapeModeling_SRC})

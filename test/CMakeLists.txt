@@ -41,6 +41,7 @@ itkPSMImplicitSurfaceImage2DFilterTest.cxx
 itkPSMMeanCurvatureAttributeTest.cxx
 itkPSMParticleSystemTest.cxx
 itkPSMPointTreeTest.cxx
+itkPSMProcrustesFunctionTest.cxx
 itkPSMProjectTest.cxx
 itkPSMRBFCorrespondenceInterpolatorTest.cxx
 itkPSMRegionNeighborhoodTest.cxx
@@ -175,6 +176,14 @@ itk_add_test(NAME itkPSMTrimLabelMapImageFilterTest
 )
 
 itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMTwoCostFunctionTest )
+
+itk_add_test(NAME itkPSMProcrustesFunctionTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesFunctionTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesExample.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
 
 # Necessary on Linux build to include IOXML in proper order
 target_link_libraries(ITKParticleShapeModelingTestDriver ITKIOXML)

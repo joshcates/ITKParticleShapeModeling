@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+
+<psm_project name = "PSMProcrustesFunctionTest Parameter File" author = "Salma Bengali" date = "November 2013" version = "1.0">
+
+ <notes>
+    This is an example PSM Project file for the itkPSMProcrustesFunctionTest.
+ </notes>
+ 
+ <data>
+    <!-- The models to be registered -->
+    <model name = "initialization">
+     uropSubsetNoProc_rotate01.lpts
+     uropSubsetNoProc_rotate02.lpts
+     uropSubsetNoProc_rotate03.lpts
+     uropSubsetNoProc_rs01.lpts
+     uropSubsetNoProc_rs02.lpts
+     uropSubsetNoProc_rs03.lpts
+     uropSubsetNoProc_scale01.lpts
+     uropSubsetNoProc_scale02.lpts
+     uropSubsetNoProc_scale03.lpts
+    </model>    
+     
+    <!-- The registered output models -->
+    <model name = "optimized">
+     uropSubsetNoProc_rotate01_reg.lpts
+     uropSubsetNoProc_rotate02_reg.lpts
+     uropSubsetNoProc_rotate03_reg.lpts
+     uropSubsetNoProc_rs01_reg.lpts
+     uropSubsetNoProc_rs02_reg.lpts
+     uropSubsetNoProc_rs03_reg.lpts
+     uropSubsetNoProc_scale01_reg.lpts
+     uropSubsetNoProc_scale02_reg.lpts
+     uropSubsetNoProc_scale03_reg.lpts
+    </model>
+ </data>
+</psm_project>
