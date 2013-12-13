@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+
+<psm_project name = "PSMProcrustesFunctionTest Parameter File" author = "Salma Bengali" date = "November 2013" version = "1.0">
+
+ <notes>
+    This is an example PSM Project file for the itkPSMProcrustesFunctionTest.
+ </notes>
+ 
+ <data>
+    <!-- The models to be registered -->
+    <model name = "initialization">
+     rotated01.lpts
+     rotated02.lpts
+     rotated03.lpts
+     rotated_scaled01.lpts
+     rotated_scaled02.lpts
+     rotated_scaled03.lpts
+     scaled01.lpts
+     scaled02.lpts
+     scaled03.lpts
+    </model>    
+     
+    <!-- The registered output models -->
+    <model name = "optimized">
+     rotated01_registered.wpts
+     rotated02_registered.wpts
+     rotated03_registered.wpts
+     rotated_scaled01_registered.wpts
+     rotated_scaled02_registered.wpts
+     rotated_scaled03_registered.wpts
+     scaled01_registered.wpts
+     scaled02_registered.wpts
+     scaled03_registered.wpts
+    </model>
+ </data>
+</psm_project>
