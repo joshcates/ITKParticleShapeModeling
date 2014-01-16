@@ -1,0 +1,14 @@
+set(ITKParticleShapeModeling_SRC
+itkPSMParticleSystem.cxx
+itkPSMDOMNodeXMLReader.cxx
+itkPSMProject.cxx
+itkPSMProjectReader.cxx
+itkPSMProjectWriter.cxx
+itkPSMParticleSystem.cxx
+itkPSMProcrustesFunction.cxx
+itkPSMProcrustesRegistration.cxx
+)
+
+add_library(ITKParticleShapeModeling ${ITKParticleShapeModeling_SRC})
+target_link_libraries(ITKParticleShapeModeling  ${ITKstatistics_LIBRARIES} ${ITKTransform_LIBRARIES})
+itk_module_target(ITKParticleShapeModeling)
