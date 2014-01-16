@@ -5,7 +5,8 @@ itkPSMProject.cxx
 itkPSMProjectReader.cxx
 itkPSMProjectWriter.cxx
 itkPSMParticleSystem.cxx
-Procrustes.cxx
+itkPSMProcrustesFunction.cxx
+itkPSMProcrustesRegistration.cxx
 )
 
 add_library(ITKParticleShapeModeling ${ITKParticleShapeModeling_SRC})
