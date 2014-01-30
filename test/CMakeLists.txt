@@ -42,6 +42,7 @@ itkPSMMeanCurvatureAttributeTest.cxx
 itkPSMParticleSystemTest.cxx
 itkPSMPointTreeTest.cxx
 itkPSMProcrustesFunctionTest.cxx
+itkPSMProcrustesRegistrationTest.cxx
 itkPSMProjectTest.cxx
 itkPSMRBFCorrespondenceInterpolatorTest.cxx
 itkPSMRegionNeighborhoodTest.cxx
@@ -180,7 +181,15 @@ itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTest
 itk_add_test(NAME itkPSMProcrustesFunctionTest 
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMProcrustesFunctionTest
- ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesExample.xml
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionExample.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
+itk_add_test(NAME itkPSMProcrustesRegistrationTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesRegistrationTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistrationExample.xml
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Procrustes/
 )
