@@ -24,8 +24,8 @@ namespace itk
 {
 /** \class PSMProcrustesRegistration
  *  \brief
- *
  *  
+ *  JOSH -- need documentation here
  *
  */
 template <unsigned int VDimension>
@@ -84,23 +84,28 @@ public:
   int GetDomainsPerShape() const
   { return m_DomainsPerShape; }
 
+  /** JOSH -- need documentation here */
   bool GetScaling() const
   { return m_Scaling; }
   void ScalingOn()
   { m_Scaling = true; }
   void ScalingOff()
   { m_Scaling = false; }
-  
+
+  /** JOSH -- need documentation here */
   bool GetRotationTranslation() const
   { return m_RotationTranslation; }
   void RotationTranslationOn()
   { m_RotationTranslation = true; }
   void RotationTranslationOff()
   { m_RotationTranslation = false; }
-  
+
+  /** JOSH -- need documentation here.  We should talk about whether this
+      function is still needed */
   void SetFixedScales( const std::vector<double> v)
   { m_FixedScales = v; }
-    
+
+  /** JOSH  -- need documentation here. */
   void SetProcrustesInterval(int i)
   { m_Procrustes_Interval = i; }
   int GetProcrustesInterval()
@@ -108,7 +113,9 @@ public:
 
 
 protected:
-  PSMProcrustesRegistration() : m_DomainsPerShape(1), m_Scaling(true), m_RotationTranslation(true) {  }
+  PSMProcrustesRegistration() : m_DomainsPerShape(1),
+    m_Scaling(true), m_RotationTranslation(true)
+    {  }
   virtual ~PSMProcrustesRegistration() {};
 
   void PrintSelf(std::ostream& os, Indent indent) const
@@ -118,11 +125,22 @@ private:
   PSMProcrustesRegistration(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
+  /** */
   std::vector<double> m_FixedScales;
+
+  /** */
   int m_Procrustes_Interval;
+
+  /** */
   int m_DomainsPerShape;
+
+  /** */
   bool m_Scaling;
+
+  /** */
   bool m_RotationTranslation;
+
+  /** */
   PSMParticleSystemType *m_PSMParticleSystem;
 };
 

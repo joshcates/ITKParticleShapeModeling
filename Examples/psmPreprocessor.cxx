@@ -18,7 +18,7 @@
 #include <iostream>
 #include <itkImageFileReader.h>
 #include <itkImageFileWriter.h>
-#include <itkPSMTrimLabelMapImageFilter.h>
+#include <itkPSMCleanTrimLabelMapImageFilter.h>
 #include <itkPSMImplicitSurfaceImageFilter.h>
 
 int main (int argc, char *argv[])

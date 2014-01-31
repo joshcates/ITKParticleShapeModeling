@@ -19,7 +19,8 @@ namespace itk {
 
 template<>
 void
-PSMProcrustesRegistration<3>::RunRegistration(int d)
+PSMProcrustesRegistration<3>
+::RunRegistration(int d)
 {
   // Assume all domains have the same number of particles.
   const int totalDomains = m_PSMParticleSystem->GetNumberOfDomains();
@@ -28,7 +29,7 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
   PSMProcrustesFunction::ShapeListType shapelist;
   PSMProcrustesFunction::ShapeType     shapevector;
   PSMProcrustesFunction::PointType     point;
-
+  
   // Read input shapes from file list
   for(int i = d % m_DomainsPerShape; i < totalDomains; i+=m_DomainsPerShape)
     {
@@ -49,7 +50,7 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
     
   // Run alignment
   PSMProcrustesFunction::SimilarityTransformListType transforms;
-	
+  
   PSMProcrustesFunction procrustes;
   procrustes.RunGeneralizedProcrustes(transforms, shapelist);
   // Construct transform matrices for each particle system.
@@ -64,6 +65,8 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
       // If the user supplied some scales
       if (m_FixedScales.size() != 0)
         {
+        // JOSH -- we should deal with this case.  I don't remember why this is
+        // in here.
         transforms[i].scale = m_FixedScales[i];
         std::cout << "Fixed scale " << i << " = " << m_FixedScales[i] << std::endl;
         }
@@ -84,7 +87,7 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
     // followed by rotation and scaling.
     
     PSMParticleSystemType::TransformType R;
-
+    
     if (m_RotationTranslation == true)
       {
       R(0,0) =  transforms[i].rotation(0,0) * transforms[i].scale;
@@ -130,7 +133,7 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
       R(3,3) =  1.0;
       
       }
-
+    
     m_PSMParticleSystem->SetTransform(k, R);
     //std::cout << "R" << std::endl;
     //std::cout << R << std::endl;
@@ -138,6 +141,5 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
     
     }  
 }
-
 
 } // end namespace

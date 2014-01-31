@@ -19,6 +19,7 @@
 #define __itkPSMImplicitSurfaceDomain_h
 
 #include "itkPSMImageDomainWithCurvature.h"
+#include <ctime>
 
 namespace itk
 {
