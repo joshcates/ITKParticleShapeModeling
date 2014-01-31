@@ -71,7 +71,7 @@ public:
   void RunRegistration(int i);
   void RunRegistration()
   {
-    for (int i =0; i < m_DomainsPerShape; i++)
+    for (int i = 0; i < m_DomainsPerShape; i++)
       {
       this->RunRegistration(i);
       }
@@ -100,6 +100,12 @@ public:
   
   void SetFixedScales( const std::vector<double> v)
   { m_FixedScales = v; }
+    
+  void SetProcrustesInterval(int i)
+  { m_Procrustes_Interval = i; }
+  int GetProcrustesInterval()
+  { return m_Procrustes_Interval; }
+
 
 protected:
   PSMProcrustesRegistration() : m_DomainsPerShape(1), m_Scaling(true), m_RotationTranslation(true) {  }
@@ -113,7 +119,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   std::vector<double> m_FixedScales;
-  
+  int m_Procrustes_Interval;
   int m_DomainsPerShape;
   bool m_Scaling;
   bool m_RotationTranslation;

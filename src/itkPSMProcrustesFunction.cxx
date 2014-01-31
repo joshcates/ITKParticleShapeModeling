@@ -92,7 +92,7 @@ namespace itk{
                 break;
             }
         } // End while loop
-        std::cout <<  "counter: " << counter << std::endl;
+        //std::cout <<  "counter: " << counter << std::endl;
     }
     
     PSMProcrustesFunction::ShapeType PSMProcrustesFunction::RunProcrustes(SimilarityTransform3D & transform, ShapeType mean, ShapeListIteratorType & leaveOutIt)

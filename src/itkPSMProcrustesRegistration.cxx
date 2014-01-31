@@ -25,7 +25,6 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
   const int totalDomains = m_PSMParticleSystem->GetNumberOfDomains();
   const int numPoints = m_PSMParticleSystem->GetNumberOfParticles(0);
   const int numShapes = totalDomains / m_DomainsPerShape;
-
   PSMProcrustesFunction::ShapeListType shapelist;
   PSMProcrustesFunction::ShapeType     shapevector;
   PSMProcrustesFunction::PointType     point;
@@ -33,8 +32,9 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
   // Read input shapes from file list
   for(int i = d % m_DomainsPerShape; i < totalDomains; i+=m_DomainsPerShape)
     {
+    int j = 0;
     shapevector.clear();
-    for(int j = 0; j < numPoints; j++)
+    for(j = 0; j < numPoints; j++)
       {
       point(0) = m_PSMParticleSystem->GetPosition(j,i)[0];
       point(1) = m_PSMParticleSystem->GetPosition(j,i)[1];
@@ -42,9 +42,11 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
       
       shapevector.push_back(point);
       }
+    //std::cout << "i: " << i << std::endl;
+    //std::cout << "j: " << j << std::endl;
     shapelist.push_back(shapevector);
     }
-
+    
   // Run alignment
   PSMProcrustesFunction::SimilarityTransformListType transforms;
 	
@@ -130,9 +132,9 @@ PSMProcrustesRegistration<3>::RunRegistration(int d)
       }
 
     m_PSMParticleSystem->SetTransform(k, R);
-    std::cout << "R" << std::endl;
-    std::cout << R << std::endl;
-    std::cout << std::endl;
+    //std::cout << "R" << std::endl;
+    //std::cout << R << std::endl;
+    //std::cout << std::endl;
     
     }  
 }

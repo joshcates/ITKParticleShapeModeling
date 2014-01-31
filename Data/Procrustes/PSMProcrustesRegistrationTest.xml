@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<psm_project name = "PSMProcrustesRegistrationTest Parameter File" author = "Salma Bengali" date = "January 2014" version = "1.0">
+
+ <notes>
+    This is an example PSM Project file for the itkPSMProcrustesRegistrationTest.
+ </notes>
+ 
+ <data>
+    <distance_transforms>
+      test_LA.nrrd
+    </distance_transforms>
+
+    <!-- The unoptimized input model -->
+    <model name = "initialization">
+     test_LA.0.lpts
+    </model>
+
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      optimized_LA
+    </model>
+  </data>
+
+  <optimization 
+      regularization_initial   = "10.0" 
+      regularization_final     = "2.0" 
+      regularization_decayspan = "5000" 
+      tolerance                = "0.01"
+      maximum_iterations       = "5000"
+      procrustes_interval      = "10"
+      >
+  </optimization>
+
+</psm_project>
