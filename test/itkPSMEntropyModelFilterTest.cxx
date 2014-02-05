@@ -141,6 +141,9 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
        }
      std::cout << "Done!" << std::endl;
 
+     std::cout << "Number of inputs = " << P->GetNumberOfInputs() << std::endl;
+     std::cout << "Correct number of inputs = " << dt_files.size() << std::endl;
+
      // Load the model initialization.  It should be specified as a model with a name. 
      const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
      std::cout << "Reading the initial model correspondences ..." << std::endl;
