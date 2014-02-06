@@ -237,6 +237,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
     itk::ImageFileReader<ImageType>::Pointer reader =
       itk::ImageFileReader<ImageType>::New();
+    
     std::cout << "Reading distance transforms ..." << std::endl;
     for (unsigned int i = 0; i < dt_files.size(); i++)
       {
@@ -252,82 +253,50 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       }
     std::cout << "Done!" << std::endl;
     std::cout << "Number of inputs: " << P->GetNumberOfInputs() << std::endl;
+    
     // Load the model initialization.  It should be specified as a model with a name.
     const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
     std::vector<itk::PSMEntropyModelFilter<ImageType>::PointType> c;
     std::cout << "Reading the initial model correspondences ..." << std::endl;
+    
     for (unsigned int i = 0; i < pt_files.size(); i++)
-      {
-      // Read the points for this file and add as a list
-      int counter = 0;
-      // Open the ascii file.
-      std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
-      if ( !in )
+    {
+        // Read the points for this file and add as a list
+        int counter = 0;
+        // Open the ascii file.
+        std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
+        if ( !in )
         {
-        errstring += "Could not open point file for input.";
-        passed = false;
-        break;
+            errstring += "Could not open point file for input.";
+            passed = false;
+            break;
         }
-      
-      // Read all of the points, one point per line.
-      while (in)
-        {
-        itk::PSMEntropyModelFilter<ImageType>::PointType pt;
         
-        for (unsigned int d = 0; d < 3; d++)
-          {
-          in >> pt[d];
-          }
-        c.push_back(pt);
-        counter++;
+        // Read all of the points, one point per line.
+        while (in)
+        {
+            itk::PSMEntropyModelFilter<ImageType>::PointType pt;
+            
+            for (unsigned int d = 0; d < 3; d++)
+            {
+                in >> pt[d];
+            }
+            c.push_back(pt);
+            counter++;
         }
-      // this algorithm pushes the last point twice
-      c.pop_back();
-      std::cout << "Read " << counter-1 << " points. " << std::endl;
-      in.close();
-      //std::cout << "  " << pt_files[i] << std::endl;
-      }
+        // this algorithm pushes the last point twice
+        c.pop_back();
+        std::cout << "Read " << counter-1 << " points. " << std::endl;
+        in.close();
+        //std::cout << " " << pt_files[i] << std::endl;
+    }
     
     for(unsigned int i = 0; i < 100; i++)
-      {
-      P->SetInputCorrespondencePoints(i,c);
-      }
+    {
+        P->SetInputCorrespondencePoints(i,c);
+    }
     
     std::cout << "Done!" << std::endl;
-    
-    //  Read some parameters from the file or provide defaults
-    double regularization_initial   = 100.0f;
-    double regularization_final     = 5.0f;
-    double regularization_decayspan = 2000.0f;
-    double tolerance                = 1.0e-8;
-    unsigned int maximum_iterations = 200000;
-    unsigned int procrustes_interval = 10;
-    if ( project->HasOptimizationAttribute("regularization_initial") )
-      {
-      regularization_initial = project->GetOptimizationAttribute("regularization_initial");
-      }
-    if ( project->HasOptimizationAttribute("regularization_final") )
-      {
-      regularization_final = project->GetOptimizationAttribute("regularization_final");
-      }
-    if ( project->HasOptimizationAttribute("regularization_decayspan") )
-      {
-      regularization_decayspan = project->GetOptimizationAttribute("regularization_decayspan");
-      }
-    if ( project->HasOptimizationAttribute("tolerance") )
-      {
-      tolerance = project->GetOptimizationAttribute("tolerance");
-      }
-    if ( project->HasOptimizationAttribute("maximum_iterations") )
-      {
-      maximum_iterations
-        = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
-      }
-    if ( project->HasOptimizationAttribute("procrustes_interval") )
-      {
-      procrustes_interval
-        = static_cast<unsigned int>(project->GetOptimizationAttribute("procrustes_interval"));
-      }
     
     // Set up Particle System
     typedef itk::Point<double, 3> PointType;
@@ -344,56 +313,51 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     
     // Add domains to the Particle System
     for(unsigned int i = 0; i < 100; i++)
-      {
-      PS->AddDomain(d1);
-      }
-    
+    {
+        PS->AddDomain(d1);
+    }
+
     // Read in the points and store in Particle System
     int domain = 0;
     int numOfPoints;
     for (unsigned int i = 0; i < PS->GetNumberOfDomains(); i++)
-      {
-      // Read the points for this file and add to the Particle System            
-      // Open the ascii file.
-      std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
-      if ( !in )
+    {
+        // Read the points for this file and add to the Particle System
+        // Open the ascii file.
+        std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
+        if ( !in )
         {
-        errstring += "Could not open point file for input.";
-        passed = false;
-        break;
+            errstring += "Could not open point file for input.";
+            passed = false;
+            break;
         }
-      
-      numOfPoints = 0;
-      // Read all of the points, one point per line.
-      itk::PSMEntropyModelFilter<ImageType>::PointType pt;
-      while (in)
-        {               
-        for (unsigned int d = 0; d < 3; d++)
-          {
-          in >> pt[d];
-          }
-        PS->AddPosition(pt, domain);
-        numOfPoints++;
+        
+        numOfPoints = 0;
+        // Read all of the points, one point per line.
+        itk::PSMEntropyModelFilter<ImageType>::PointType pt;
+        while (in)
+        {
+            for (unsigned int d = 0; d < 3; d++)
+            {
+                in >> pt[d];
+            }
+            PS->AddPosition(pt, domain);
+            numOfPoints++;
         }
-      // this algorithm adds the last point twice
-      PS->RemovePosition(numOfPoints-1, domain);
-      in.close();
-      domain++;            
-      //std::cout << "  " << pt_files[i] << std::endl;
-      }
+        // this algorithm adds the last point twice
+        PS->RemovePosition(numOfPoints-1, domain);
+        in.close();
+        domain++;
+        //std::cout << " " << pt_files[i] << std::endl;
+    }
     
-    // Read transforms        
+    // Read transforms
     object_reader< itk::PSMParticleSystem<3>::TransformType > transform_reader;
     transform_reader.SetFileName(argv[2]);
     transform_reader.Update();
-    
-    for (unsigned int i = 0; i < PS->GetNumberOfDomains(); i++)
-      {
-      PS->SetTransform(i, transform_reader.GetOutput()[i]);
-      //std::cout << "transform parameter: " << transform_reader.GetOutput()[i] << std::endl;
-      }
-    std::cout << "Read transforms." << std::endl;
-    // Apply transforms to the Particle System
+
+    std::cout << "Reading transforms." << std::endl;
+    // Read transforms and apply to the Particle System
     for (unsigned int i = 0; i < PS->GetNumberOfDomains(); i++)
       {
       for(unsigned int j = 0; j < numOfPoints; j++)
@@ -405,18 +369,92 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         point[1] = PS->GetPosition(j,i)[1];
         point[2] = PS->GetPosition(j,i)[2];
         
-        transform = PS->GetTransform(i);
-        
-        trPoint = PS->TransformPoint( point, transform );
+        trPoint = PS->TransformPoint( point, transform_reader.GetOutput()[i] );
         PS->SetPosition( trPoint, j, i);
         }
       }
-    
-    // Run Procrustes once
+        
+    // Run Procrustes on the transformed point sets
     procrustesRegistration->SetPSMParticleSystem(PS);
     procrustesRegistration->RunRegistration();
     
-    // Set variables for PSMProcrustesRegistration 
+    std::string prefix2 = "procrustesOutput_pts";
+    for (unsigned int d = 0; d < PS->GetNumberOfDomains(); d++)
+    {
+        // Open the output file and append the number
+        std::ostringstream ss;
+        ss << d;
+        std::string fname = output_path + prefix2 + "_" + ss.str() + ".lpts";
+        std::ofstream out( fname.c_str() );
+        if ( !out )
+        {
+            errstring += "Could not open point file for output: ";
+        }
+        else
+        {
+            for (unsigned int j = 0; j < PS->GetNumberOfParticles(d); j++)
+            {
+                for (unsigned int i = 0; i < 3; i++)
+                {
+                    out <<  PS->GetTransformedPosition(j,d)[i]  << " ";
+                }
+                out << std::endl;
+            }
+        }
+    }
+        
+    // Write out the transforms
+    std::string output_transform_file = "output_transforms_PSMProcrustesRegistrationTest.txt";
+    std::string out_file = output_path + output_transform_file;
+    std::ofstream out(out_file.c_str());
+    for (unsigned int d = 0; d < PS->GetNumberOfDomains(); d++)
+    {        
+        if(!out)
+        {
+            errstring += "Could not open file for output: ";
+        }
+        else
+        {
+            out << PS->GetTransform(d);
+            out << std::endl;
+        }
+    }
+        
+    //  Read some parameters from the file or provide defaults
+    double regularization_initial   = 100.0f;
+    double regularization_final     = 5.0f;
+    double regularization_decayspan = 2000.0f;
+    double tolerance                = 1.0e-8;
+    unsigned int maximum_iterations = 200000;
+    unsigned int procrustes_interval = 10;
+    if ( project->HasOptimizationAttribute("regularization_initial") )
+    {
+        regularization_initial = project->GetOptimizationAttribute("regularization_initial");
+    }
+    if ( project->HasOptimizationAttribute("regularization_final") )
+    {
+        regularization_final = project->GetOptimizationAttribute("regularization_final");
+    }
+    if ( project->HasOptimizationAttribute("regularization_decayspan") )
+    {
+        regularization_decayspan = project->GetOptimizationAttribute("regularization_decayspan");
+    }
+    if ( project->HasOptimizationAttribute("tolerance") )
+    {
+        tolerance = project->GetOptimizationAttribute("tolerance");
+    }
+    if ( project->HasOptimizationAttribute("maximum_iterations") )
+    {
+        maximum_iterations
+        = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
+    }
+    if ( project->HasOptimizationAttribute("procrustes_interval") )
+    {
+        procrustes_interval
+        = static_cast<unsigned int>(project->GetOptimizationAttribute("procrustes_interval"));
+    }
+        
+    // Set variables for PSMProcrustesRegistration
     procrustesRegistration->SetProcrustesInterval(procrustes_interval);
     procrustesRegistration->SetPSMParticleSystem(P->GetParticleSystem());
     
