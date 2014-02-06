@@ -135,9 +135,9 @@ PSMProcrustesRegistration<3>
       }
     
     m_PSMParticleSystem->SetTransform(k, R);
-    //std::cout << "R" << std::endl;
-    //std::cout << R << std::endl;
-    //std::cout << std::endl;
+    std::cout << "R" << std::endl;
+    std::cout << R << std::endl;
+    std::cout << std::endl;
     
     }  
 }
