@@ -217,11 +217,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     // Create the modeling filter and set up the optimization.
     itk::PSMEntropyModelFilter<ImageType>::Pointer P
       = itk::PSMEntropyModelFilter<ImageType>::New();
-    
-    // Create a particle system
-    itk::PSMParticleSystem<3>::Pointer PS
-      = itk::PSMParticleSystem<3>::New();
-    
+
     // Setup the Callback function that is executed after each
     // iteration of the solver.
     itk::MyPSMProcrustesIterationCommand::Pointer mycommand
@@ -258,11 +254,11 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
     std::vector<itk::PSMEntropyModelFilter<ImageType>::PointType> c;
     std::cout << "Reading the initial model correspondences ..." << std::endl;
-    
+    int numOfPoints;
     for (unsigned int i = 0; i < pt_files.size(); i++)
     {
         // Read the points for this file and add as a list
-        int counter = 0;
+        numOfPoints = 0;
         // Open the ascii file.
         std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
         if ( !in )
@@ -282,13 +278,12 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
                 in >> pt[d];
             }
             c.push_back(pt);
-            counter++;
+            numOfPoints++;
         }
         // this algorithm pushes the last point twice
         c.pop_back();
-        std::cout << "Read " << counter-1 << " points. " << std::endl;
+        std::cout << "Read " << numOfPoints-1 << " points. " << std::endl;
         in.close();
-        //std::cout << " " << pt_files[i] << std::endl;
     }
     
     for(unsigned int i = 0; i < 100; i++)
@@ -298,72 +293,20 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     
     std::cout << "Done!" << std::endl;
     
-    // Set up Particle System
-    typedef itk::Point<double, 3> PointType;
-    const unsigned int SZ = 1000;
-    const signed int SZ2 = -1000;
-    PointType ptl, ptu;
-    ptl[0] = static_cast<double>(SZ2); ptl[1] = static_cast<double>(SZ2); ptl[2] = static_cast<double>(SZ2);
-    ptu[0] = static_cast<double>(SZ); ptu[1] = static_cast<double>(SZ); ptu[2] = static_cast<double>(SZ);
-    
-    itk::PSMRegionDomain<3>::Pointer d1 = itk::PSMRegionDomain<3>::New();
-    
-    // Add domains and neighborhoods
-    d1->SetRegion(ptl, ptu);
-    
-    // Add domains to the Particle System
-    for(unsigned int i = 0; i < 100; i++)
-    {
-        PS->AddDomain(d1);
-    }
-
-    // Read in the points and store in Particle System
-    int domain = 0;
-    int numOfPoints;
-    for (unsigned int i = 0; i < PS->GetNumberOfDomains(); i++)
-    {
-        // Read the points for this file and add to the Particle System
-        // Open the ascii file.
-        std::ifstream in( (input_path_prefix + pt_files[0]).c_str() );
-        if ( !in )
-        {
-            errstring += "Could not open point file for input.";
-            passed = false;
-            break;
-        }
-        
-        numOfPoints = 0;
-        // Read all of the points, one point per line.
-        itk::PSMEntropyModelFilter<ImageType>::PointType pt;
-        while (in)
-        {
-            for (unsigned int d = 0; d < 3; d++)
-            {
-                in >> pt[d];
-            }
-            PS->AddPosition(pt, domain);
-            numOfPoints++;
-        }
-        // this algorithm adds the last point twice
-        PS->RemovePosition(numOfPoints-1, domain);
-        in.close();
-        domain++;
-        //std::cout << " " << pt_files[i] << std::endl;
-    }
-    
-    // Read transforms
+    // Read the input transforms
     object_reader< itk::PSMParticleSystem<3>::TransformType > transform_reader;
     transform_reader.SetFileName(argv[2]);
     transform_reader.Update();
 
     std::cout << "Reading transforms." << std::endl;
     // Read transforms and apply to the Particle System
-    for (unsigned int i = 0; i < PS->GetNumberOfDomains(); i++)
+    for (unsigned int i = 0; i < P->GetParticleSystem()->GetNumberOfDomains(); i++)
       {
       for(unsigned int j = 0; j < numOfPoints; j++)
         {
         itk::PSMEntropyModelFilter<ImageType>::PointType point, trPoint;
         itk::PSMParticleSystem<3>::TransformType transform;
+        itk::PSMParticleSystem<3>::Pointer PS = P->GetParticleSystem();
         
         point[0] = PS->GetPosition(j,i)[0];
         point[1] = PS->GetPosition(j,i)[1];
@@ -374,59 +317,13 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         }
       }
         
-    // Run Procrustes on the transformed point sets
-    procrustesRegistration->SetPSMParticleSystem(PS);
-    procrustesRegistration->RunRegistration();
-    
-    std::string prefix2 = "procrustesOutput_pts";
-    for (unsigned int d = 0; d < PS->GetNumberOfDomains(); d++)
-    {
-        // Open the output file and append the number
-        std::ostringstream ss;
-        ss << d;
-        std::string fname = output_path + prefix2 + "_" + ss.str() + ".lpts";
-        std::ofstream out( fname.c_str() );
-        if ( !out )
-        {
-            errstring += "Could not open point file for output: ";
-        }
-        else
-        {
-            for (unsigned int j = 0; j < PS->GetNumberOfParticles(d); j++)
-            {
-                for (unsigned int i = 0; i < 3; i++)
-                {
-                    out <<  PS->GetTransformedPosition(j,d)[i]  << " ";
-                }
-                out << std::endl;
-            }
-        }
-    }
-        
-    // Write out the transforms
-    std::string output_transform_file = "output_transforms_PSMProcrustesRegistrationTest.txt";
-    std::string out_file = output_path + output_transform_file;
-    std::ofstream out(out_file.c_str());
-    for (unsigned int d = 0; d < PS->GetNumberOfDomains(); d++)
-    {        
-        if(!out)
-        {
-            errstring += "Could not open file for output: ";
-        }
-        else
-        {
-            out << PS->GetTransform(d);
-            out << std::endl;
-        }
-    }
-        
     //  Read some parameters from the file or provide defaults
     double regularization_initial   = 100.0f;
     double regularization_final     = 5.0f;
     double regularization_decayspan = 2000.0f;
     double tolerance                = 1.0e-8;
     unsigned int maximum_iterations = 200000;
-    unsigned int procrustes_interval = 10;
+    unsigned int procrustes_interval = 1;
     if ( project->HasOptimizationAttribute("regularization_initial") )
     {
         regularization_initial = project->GetOptimizationAttribute("regularization_initial");
@@ -480,6 +377,23 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       passed = false;
       }
     
+    // Write out the transforms
+    std::string output_transform_file = "output_transforms_PSMProcrustesRegistrationTest.txt";
+    std::string out_file = output_path + output_transform_file;
+    std::ofstream out(out_file.c_str());
+    for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
+    {
+        if(!out)
+        {
+           errstring += "Could not open file for output: ";
+        }
+        else
+        {
+           out << P->GetParticleSystem()->GetTransform(d);
+           out << std::endl;
+        }
+    }
+        
     // Print out points for domain d
     // Load the model initialization.  It should be specified as a model with a name.
     const std::vector<std::string> &out_files = project->GetModel(std::string("optimized"));
