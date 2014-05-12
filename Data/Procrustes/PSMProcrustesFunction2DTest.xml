@@ -1,0 +1,42 @@
+<?xml verotated_scaledion="1.0" ?>
+
+<psm_project name = "PSMProcrustesFunction2DTest Parameter File" author = "Salma Bengali" date = "May 2014" verotated_scaledion = "1.0">
+
+ <notes>
+    This is an example PSM Project file for the itkPSMProcrustesFunction2DTest.
+ </notes>
+ 
+ <data>
+    <!-- The models to be registered -->
+    <model name = "initialization">
+        endo_2D_rotate01.lpts
+        endo_2D_rotate02.lpts
+        endo_2D_rotate03.lpts
+        endo_2D_rotated_scaled01.lpts
+        endo_2D_rotated_scaled02.lpts
+        endo_2D_rotated_scaled03.lpts
+        endo_2D_scale01.lpts
+        endo_2D_scale02.lpts
+        endo_2D_scale03.lpts
+        endo_2D_trans01.lpts
+        endo_2D_trans02.lpts
+        endo_2D_trans03.lpts
+    </model>    
+     
+    <!-- The registered output models -->
+    <model name = "optimized">
+        endo_2D_rotate01_registered.wpts
+        endo_2D_rotate02_registered.wpts
+        endo_2D_rotate03_registered.wpts
+        endo_2D_rotated_scaled01_registered.wpts
+        endo_2D_rotated_scaled02_registered.wpts
+        endo_2D_rotated_scaled03_registered.wpts
+        endo_2D_scale01_registered.wpts
+        endo_2D_scale02_registered.wpts
+        endo_2D_scale03_registered.wpts
+        endo_2D_trans01_registered.wpts
+        endo_2D_trans02_registered.wpts
+        endo_2D_trans03_registered.wpts
+    </model>
+ </data>
+</psm_project>

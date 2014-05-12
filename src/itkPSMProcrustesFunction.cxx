@@ -27,8 +27,8 @@
 
 namespace itk
 {
-
-void PSMProcrustesFunction
+template<unsigned int VDimension>
+void PSMProcrustesFunction<VDimension>
 ::RunGeneralizedProcrustes(SimilarityTransformListType & transforms,
                            ShapeListType & shapes)
 {
@@ -42,7 +42,7 @@ void PSMProcrustesFunction
   const RealType SOS_EPSILON = 1.0e-8;
 
   int numOfShapes = shapes.size();
-  
+  std::string errstring = "";
   // Initialize transform structure
   transform.rotation.set_identity();
   transform.scale = 1.0;
@@ -60,62 +60,83 @@ void PSMProcrustesFunction
   RealType newSumOfSquares, diff = 1e10;
   
   int counter = 1;
-  while(diff > SOS_EPSILON)
+  try
+  {
+    while(diff > SOS_EPSILON)
     {
-    // Initialize ssqShape vector
-    ssqShape.fill(0.0);
-    // Initialize ssqMean vector
-    ssqMean.fill(0.0);
-    transformIt = transforms.begin();
-    
-    for(leaveOutIt = shapes.begin(); leaveOutIt != shapes.end(); leaveOutIt++)
-      {
-      // Calculate mean of all shapes but one
-      LeaveOneOutMean(mean, shapes, leaveOutIt);
-      (*leaveOutIt) = RunProcrustes((*transformIt), mean, leaveOutIt);
-      transformIt++;
-      } // End shape list iteration
-    
-    // Fix scalings so geometric average = 1
-    RealType scaleAve = 0.0;
-    for(transformIt = transforms.begin(); transformIt != transforms.end(); transformIt++)
-      scaleAve += log((*transformIt).scale);
-    
-    scaleAve = exp(scaleAve / static_cast<RealType>(transforms.size()));
-    
-    SimilarityTransform3D scaleSim;
-    scaleSim.rotation.set_identity();
-    scaleSim.translation.fill(0.0);
-    scaleSim.scale = 1.0 / scaleAve;
-    
-    ShapeListIteratorType shapeListIt = shapes.begin();
-    transformIt = transforms.begin();
-    while(shapeListIt != shapes.end())
-      {
-      TransformShape((*shapeListIt), scaleSim);
-      (*transformIt).scale /= scaleAve;
+      // Initialize ssqShape vector
+      ssqShape.fill(0.0);
+      // Initialize ssqMean vector
+      ssqMean.fill(0.0);
+      transformIt = transforms.begin();
       
-      shapeListIt++;
-      transformIt++;
-      }
-    
-    newSumOfSquares = ComputeSumOfSquares(shapes);
-    diff = sumOfSquares - newSumOfSquares;
-    
-    sumOfSquares = newSumOfSquares;
-    counter++;
-
-    // JOSH -- should throw an exception here
-    if(counter > 1000)
+      for(leaveOutIt = shapes.begin(); leaveOutIt != shapes.end(); leaveOutIt++)
       {
-      std::cout << "Number of iterations on shapes is too high. " << std::endl;
-      break;
+        // Calculate mean of all shapes but one
+        LeaveOneOutMean(mean, shapes, leaveOutIt);
+        (*leaveOutIt) = RunProcrustes((*transformIt), mean, leaveOutIt);
+        transformIt++;
+      } // End shape list iteration
+      
+      // Fix scalings so geometric average = 1
+      RealType scaleAve = 0.0;
+      for(transformIt = transforms.begin(); transformIt != transforms.end(); transformIt++)
+        scaleAve += log((*transformIt).scale);
+      
+      scaleAve = exp(scaleAve / static_cast<RealType>(transforms.size()));
+      
+      SimilarityTransform3D scaleSim;
+      scaleSim.rotation.set_identity();
+      scaleSim.translation.fill(0.0);
+      scaleSim.scale = 1.0 / scaleAve;
+      
+      ShapeListIteratorType shapeListIt = shapes.begin();
+      transformIt = transforms.begin();
+      while(shapeListIt != shapes.end())
+      {
+        TransformShape((*shapeListIt), scaleSim);
+        (*transformIt).scale /= scaleAve;
+        
+        shapeListIt++;
+        transformIt++;
+      }
+      
+      newSumOfSquares = ComputeSumOfSquares(shapes);
+      diff = sumOfSquares - newSumOfSquares;
+      
+      sumOfSquares = newSumOfSquares;
+      counter++;
+      
+      if(counter > 1000)
+      {
+        errstring = "Number of iterations on shapes is too high.";
+        ExceptionObject e( __FILE__, __LINE__ );
+        e.SetDescription( errstring.c_str() );
+        throw e;
       }
     } // End while loop
+  } // End try
+  catch(itk::ExceptionObject &e)
+  {
+    errstring = "ITK exception with description: " + std::string(e.GetDescription())
+    + std::string("\n at location:") + std::string(e.GetLocation())
+    + std::string("\n in file:") + std::string(e.GetFile());
+  }
+  catch(...)
+  {
+    errstring = "Unknown exception thrown";
+  }
   //std::cout <<  "counter: " << counter << std::endl;
 }
-
-PSMProcrustesFunction::ShapeType PSMProcrustesFunction
+// Explicitly instantiate the function for 3D and 2D
+template void PSMProcrustesFunction<3>::RunGeneralizedProcrustes(SimilarityTransformListType & transforms,
+                             ShapeListType & shapes);
+template void PSMProcrustesFunction<2>::RunGeneralizedProcrustes(SimilarityTransformListType & transforms,
+                                                                   ShapeListType & shapes);
+  
+template<unsigned int VDimension>
+typename PSMProcrustesFunction<VDimension>::ShapeType
+PSMProcrustesFunction<VDimension>
 ::RunProcrustes(SimilarityTransform3D & transform, ShapeType mean,
                 ShapeListIteratorType & leaveOutIt)
 {
@@ -124,15 +145,13 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   ShapeType shapeScaled, meanScaled;
   PointType colMeanShape, colMeanMean, ssqShape, ssqMean;
   double normMean, normShape;
-  vnl_matrix_fixed<RealType, 3, 3> shapeMat;
+  vnl_matrix_fixed<RealType, VDimension, VDimension> shapeMat;
   shapeMat.fill(0.0);
   
   int numPoints = (*leaveOutIt).size();
-  int dim = (*leaveOutIt)[0].size();
+  //int dim = (*leaveOutIt)[0].size();
 
-  // This needs to be dynamically allocated since "dim" is not a constant
-  // double meanScaledTranspose[dim][numPoints];
-  vnl_matrix<double> meanScaledTranspose(dim,numPoints);
+  vnl_matrix<double> meanScaledTranspose(VDimension,numPoints);
 
   // Initialize variables
   colMeanShape.fill(0.0);
@@ -144,7 +163,7 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
 
   // Centering the shapes at the origin
   // First calculate mean along columns
-  for(int j = 0; j<dim; j++)
+  for(int j = 0; j<VDimension; j++)
     {
     for(int i = 0; i<numPoints; i++)
       {
@@ -168,7 +187,7 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
     }
   
   // Calculate sum of squared elements of shapeScaled and meanScaled vectors along columns
-  for(int j = 0; j<dim; j++)
+  for(int j = 0; j<VDimension; j++)
     {
     for(int i = 0; i<numPoints; i++)
       {
@@ -184,7 +203,7 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   if(constShape)
     {
     // Calculate scale normalizing value
-    for(int j = 0; j<dim; j++)
+    for(int j = 0; j<VDimension; j++)
       {
       normShape += ssqShape[j];
       normMean += ssqMean[j];
@@ -206,13 +225,15 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   else
     {
     ShapeType output;
+    vnl_vector_fixed<RealType, VDimension> vec;
+    vec.fill(0.0);
     for(int i = 0; i < numPoints; i++)
-      output.push_back(vnl_vector_fixed<RealType, 3>(0.0, 0.0, 0.0));
+      output.push_back(vec);
     ShapeIteratorType outputIt = output.begin();
     while(outputIt != output.end())
       {
       (*outputIt) = colMeanShape;
-      outputIt++;
+      outputIt++; 
       }
     transform.scale = 1.0;
     transform.rotation.set_identity();
@@ -220,7 +241,7 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
     transform.translation = (*outputIt);
     }
   
-  for(int j = 0; j<dim; j++)
+  for(int j = 0; j<VDimension; j++)
     {
     for(int i = 0; i<numPoints; i++)
       {
@@ -229,9 +250,9 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
     }
   
   // Build shapeMat = meanScaledTranspose * shapeScaled
-  for(int i = 0; i<dim; i++)
+  for(int i = 0; i<VDimension; i++)
     {
-    for(int j = 0; j<dim; j++)
+    for(int j = 0; j<VDimension; j++)
       {
       for(int k = 0; k<numPoints; k++)
         {
@@ -249,7 +270,7 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   // TODO: Calculate standardized distance between mean of shapes and registered shape?
   // Calculate scale: Sum up elements of diagonal matrix
   double trsqrt = 0;
-  for(int j = 0; j<dim; j++)
+  for(int j = 0; j<VDimension; j++)
     {
     trsqrt += svd.W()(j);
     }
@@ -267,9 +288,9 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   PointType mult2;
   mult2.fill(0.0);
   
-  for(int i = 0; i<dim; i++)
+  for(int i = 0; i<VDimension; i++)
     {
-    for(int j = 0; j<dim; j++)
+    for(int j = 0; j<VDimension; j++)
       {
       mult2[i] += mult1[j] * newTransform.rotation(j,i);
       }
@@ -297,11 +318,13 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   return outputShape;
 }
 
-PSMProcrustesFunction::ShapeType PSMProcrustesFunction
+template<unsigned int VDimension>
+typename PSMProcrustesFunction<VDimension>::ShapeType
+PSMProcrustesFunction<VDimension>
 ::TransformShape(ShapeType shape, SimilarityTransform3D & transform)
 {
   int numPoints = shape.size();
-  int dim = shape[0].size();
+  //int dim = shape[0].size();
   ShapeIteratorType shapeIt;
   shapeIt = shape.begin();
   
@@ -314,15 +337,17 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
     }
   
   ShapeType transformedShape;
+  vnl_vector_fixed<RealType, VDimension> vec;
+  vec.fill(0.0);
   for(int i = 0; i < numPoints; i++)
-    transformedShape.push_back(vnl_vector_fixed<RealType, 3>(0.0, 0.0, 0.0));
+    transformedShape.push_back(vec);
   
   // Multiply by rotation
   for(int i = 0; i<numPoints; i++)
     {
-    for(int j = 0; j<dim; j++)
+    for(int j = 0; j<VDimension; j++)
       {
-      for(int k = 0; k<dim; k++)
+      for(int k = 0; k<VDimension; k++)
         {
         transformedShape[i][j] += shape[i][k] * transform.rotation[k][j];
         }
@@ -341,7 +366,9 @@ PSMProcrustesFunction::ShapeType PSMProcrustesFunction
   return transformedShape;
 }
 
-PSMProcrustesFunction::RealType PSMProcrustesFunction
+template<unsigned int VDimension>
+typename PSMProcrustesFunction<VDimension>::RealType
+PSMProcrustesFunction<VDimension>
 ::ComputeSumOfSquares(ShapeListType & shapes)
 {
   ShapeListIteratorType shapeIt1, shapeIt2;
@@ -369,15 +396,16 @@ PSMProcrustesFunction::RealType PSMProcrustesFunction
   return sum / static_cast<RealType>(shapes.size() * shapes[0].size());
 }
 
-bool PSMProcrustesFunction
+template<unsigned int VDimension>
+bool PSMProcrustesFunction<VDimension>
 ::CheckDegenerateCase(PointType ssqShape, PointType ssqMean,
                       PointType colMeanShape, PointType colMeanMean, int rows)
 {
   // TODO: Calculate standardized distance between mean of shapes and
   // registered shape?
   PointType valueShape, valueMean;
-  int dim = ssqShape.size();
-  for(int i = 0; i<dim; i++)
+  //int dim = ssqShape.size();
+  for(int i = 0; i<VDimension; i++)
     {
     valueShape[i] = 2.22e-16 * rows * colMeanShape[i];
     valueShape[i] = valueShape[i] * valueShape[i];
@@ -388,7 +416,7 @@ bool PSMProcrustesFunction
   
   // Check if any element in ssqShape and ssqMean is less than any element in
   // valueShape and valueMean resp.
-  for(int j = 0; j<dim; j++)
+  for(int j = 0; j<VDimension; j++)
     {
     if(ssqShape[j] <= valueShape.min_value() && ssqMean[j] <= valueMean.min_value())
       return false;
@@ -397,7 +425,8 @@ bool PSMProcrustesFunction
   return true;
 }	
 
-void PSMProcrustesFunction
+template<unsigned int VDimension>
+void PSMProcrustesFunction<VDimension>
 ::LeaveOneOutMean(ShapeType & mean, ShapeListType & shapeList, ShapeListIteratorType & leaveOutIt)
 {
   ShapeListIteratorType shapeListIt;
@@ -407,9 +436,11 @@ void PSMProcrustesFunction
   
   mean.clear();
   mean.reserve(numPoints);
+  vnl_vector_fixed<RealType, VDimension> vec;
+  vec.fill(0.0);
   for(i = 0; i < numPoints; i++)
     {
-    mean.push_back(vnl_vector_fixed<RealType, 3>(0.0, 0.0, 0.0));
+    mean.push_back(vec);
     }
     
   for(shapeListIt = shapeList.begin(); shapeListIt != shapeList.end(); shapeListIt++)
