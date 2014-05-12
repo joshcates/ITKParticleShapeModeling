@@ -22,9 +22,9 @@ PSMProcrustesRegistration<VDimension>
 ::RunRegistration(int d)
 {
   // Assume all domains have the same number of particles.
-  const int totalDomains = m_PSMParticleSystem->GetNumberOfDomains();
-  const int numPoints = m_PSMParticleSystem->GetNumberOfParticles(0);
-  const int numShapes = totalDomains / m_DomainsPerShape;
+  const int totalDomains =  m_PSMParticleSystem->GetNumberOfDomains();
+  const int numPoints =     m_PSMParticleSystem->GetNumberOfParticles(0);
+  const int numShapes =     totalDomains / m_DomainsPerShape;
   //PSMProcrustesFunctionType typedefs
   ShapeListType shapelist;
   ShapeType     shapevector;
@@ -40,8 +40,6 @@ PSMProcrustesRegistration<VDimension>
         for(int k = 0; k < VDimension; k++)
           {
           point(k) = m_PSMParticleSystem->GetPosition(j,i)[k];
-          //point(1) = m_PSMParticleSystem->GetPosition(j,i)[1];
-          //point(2) = m_PSMParticleSystem->GetPosition(j,i)[2];
           }
       shapevector.push_back(point);
       }

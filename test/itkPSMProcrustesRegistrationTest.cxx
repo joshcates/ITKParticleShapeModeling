@@ -311,7 +311,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         point[0] = PS->GetPosition(j,i)[0];
         point[1] = PS->GetPosition(j,i)[1];
         point[2] = PS->GetPosition(j,i)[2];
-        
+        // Transform the points and set them in the Particle System
         trPoint = PS->TransformPoint( point, transform_reader.GetOutput()[i] );
         PS->SetPosition( trPoint, j, i);
         }

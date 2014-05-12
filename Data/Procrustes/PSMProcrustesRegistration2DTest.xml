@@ -8,20 +8,20 @@
  
  <data>
     <distance_transforms>
-      Crop_P2_endoDT.nrrd
+      endo_2D.nrrd
     </distance_transforms>
 
     <!-- The unoptimized input model -->
     <model name = "initialization">
-      Crop_P2optimized.00.lpts
+      endo_2D_init.lpts
     </model>
 
     <!-- The optimized output model -->
     <model name = "optimized">
-      Crop_P2_endoDT_final_optimized
+      endo_2D_optimized
     </model>
   </data>
-
+  
   <optimization 
       regularization_initial   = "10.0" 
       regularization_final     = "2.0" 

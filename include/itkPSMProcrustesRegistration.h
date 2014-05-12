@@ -94,7 +94,8 @@ public:
   int GetDomainsPerShape() const
   { return m_DomainsPerShape; }
 
-  /** JOSH -- need documentation here */
+  /** Turn on/off the scaling. Shapes will only be rotated and translated if 
+   scaling is turned off.*/
   bool GetScaling() const
   { return m_Scaling; }
   void ScalingOn()
@@ -102,20 +103,7 @@ public:
   void ScalingOff()
   { m_Scaling = false; }
 
-  /** JOSH -- need documentation here */
-  /*bool GetRotationTranslation() const
-  { return m_RotationTranslation; }
-  void RotationTranslationOn()
-  { m_RotationTranslation = true; }
-  void RotationTranslationOff()
-  { m_RotationTranslation = false; }*/
-
-  /** JOSH -- need documentation here.  We should talk about whether this
-      function is still needed */
-  void SetFixedScales( const std::vector<double> v)
-  { m_FixedScales = v; }
-
-  /** JOSH  -- need documentation here. */
+  /** Set/Get the number (interval) of iterations at which GPA is run. */
   void SetProcrustesInterval(int i)
   { m_Procrustes_Interval = i; }
   int GetProcrustesInterval()
@@ -135,22 +123,16 @@ private:
   PSMProcrustesRegistration(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  /** */
-  std::vector<double> m_FixedScales;
-
-  /** */
+  /** The number (interval) of iterations when GPA is run. */
   int m_Procrustes_Interval;
 
-  /** */
+  /** The domains per shape. */
   int m_DomainsPerShape;
 
-  /** */
+  /** Variable to turn on/off the scaling. */
   bool m_Scaling;
-
-  /** */
-  //bool m_RotationTranslation;
-
-  /** */
+  
+  /** Particle System Pointer that points to the list of point correspondences. */
   PSMParticleSystemType *m_PSMParticleSystem;
 };
 

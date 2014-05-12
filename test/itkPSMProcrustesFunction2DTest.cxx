@@ -97,16 +97,6 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
       in.close();
       std::cout << "  " << pt_files[i] << std::endl;
       }
-    /*std::cout << "SHAPES: " << std::endl;
-      for(itk::PSMProcrustesFunction<3>::ShapeListIteratorType shape_it = sl.begin(); shape_it != sl.end(); shape_it++)
-      {
-      for(itk::PSMProcrustesFunction<3>::ShapeIteratorType it = (*shape_it).begin(); it != (*shape_it).end(); ++it)
-      {
-      itk::PSMProcrustesFunction<3>::PointType & point = *it;
-      std::cout << point[0] << ", " << point[1] << ", " << point[2] << std::endl;
-      }
-      std::cout << "shape" << std::endl;
-      }*/
     
     std::cout << "Done!" << std::endl;
     
@@ -137,7 +127,6 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
           // Extra point printed to allow visualizing shape in SWViewer.
           out << point[0] << " " << point[1] << " " << 0.0 << std::endl;
           }
-        //std::cout << "printing output " << fname << std::endl;
         out.close();
         }
       }

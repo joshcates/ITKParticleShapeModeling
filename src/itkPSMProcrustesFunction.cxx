@@ -19,10 +19,6 @@
 #include "itkPSMProcrustesFunction.h"
 #include <iostream>
 #include <vnl/algo/vnl_svd.h>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-#include <iostream>
 #include <fstream>
 
 namespace itk
@@ -69,7 +65,7 @@ void PSMProcrustesFunction<VDimension>
       // Initialize ssqMean vector
       ssqMean.fill(0.0);
       transformIt = transforms.begin();
-      
+      int count = 0;
       for(leaveOutIt = shapes.begin(); leaveOutIt != shapes.end(); leaveOutIt++)
       {
         // Calculate mean of all shapes but one
@@ -100,7 +96,8 @@ void PSMProcrustesFunction<VDimension>
         shapeListIt++;
         transformIt++;
       }
-      
+      // Calculate the sum of squares of discrepancies between
+      // the
       newSumOfSquares = ComputeSumOfSquares(shapes);
       diff = sumOfSquares - newSumOfSquares;
       
@@ -149,7 +146,6 @@ PSMProcrustesFunction<VDimension>
   shapeMat.fill(0.0);
   
   int numPoints = (*leaveOutIt).size();
-  //int dim = (*leaveOutIt)[0].size();
 
   vnl_matrix<double> meanScaledTranspose(VDimension,numPoints);
 
@@ -324,7 +320,6 @@ PSMProcrustesFunction<VDimension>
 ::TransformShape(ShapeType shape, SimilarityTransform3D & transform)
 {
   int numPoints = shape.size();
-  //int dim = shape[0].size();
   ShapeIteratorType shapeIt;
   shapeIt = shape.begin();
   
@@ -404,7 +399,6 @@ bool PSMProcrustesFunction<VDimension>
   // TODO: Calculate standardized distance between mean of shapes and
   // registered shape?
   PointType valueShape, valueMean;
-  //int dim = ssqShape.size();
   for(int i = 0; i<VDimension; i++)
     {
     valueShape[i] = 2.22e-16 * rows * colMeanShape[i];

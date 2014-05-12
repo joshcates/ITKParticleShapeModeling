@@ -210,7 +210,6 @@ int itkPSMEntropyModelFilter2DTest(int argc, char* argv[] )
         std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
         
         // Set the parameters and Run the optimization.
-        //P->SetInitializing(false);
         P->SetMaximumNumberOfIterations(maximum_iterations);
         P->SetRegularizationInitial(regularization_initial);
         P->SetRegularizationFinal(regularization_final);
@@ -252,6 +251,7 @@ int itkPSMEntropyModelFilter2DTest(int argc, char* argv[] )
                         {
                             out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
                         }
+                        out << "0.0";
                         out << std::endl;
                     }
                 }
@@ -260,15 +260,14 @@ int itkPSMEntropyModelFilter2DTest(int argc, char* argv[] )
         
         // Now run for a specific number of iterations.  Also tests
         // restart of the filter.
-        /*P->SetMaximumNumberOfIterations(3);
+        P->SetMaximumNumberOfIterations(3);
         P->SetTolerance(0.0f); // impossible convergence criterium
         P->Update();
         if (P->GetNumberOfElapsedIterations() != 3)
         {
             errstring += "Optimization did not iterate the specified number of fixed iterations.\n";
             passed = false;
-        }
-        */
+        }        
     }
     catch(itk::ExceptionObject &e)
     {

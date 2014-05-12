@@ -26,12 +26,12 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
 {
   bool passed = true;
   double value1, value2, value3;
-  itk::PSMProcrustesFunction::PointType pt;
+  itk::PSMProcrustesFunction<3>::PointType pt;
   std::string errstring = "";
   std::string output_path = "";
   std::string input_path_prefix = "";
-  itk::PSMProcrustesFunction::ShapeType s;
-  itk::PSMProcrustesFunction::ShapeListType sl;
+  itk::PSMProcrustesFunction<3>::ShapeType s;
+  itk::PSMProcrustesFunction<3>::ShapeListType sl;
   
   // Check for proper arguments
   if (argc < 2)
@@ -63,9 +63,6 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
     
     itk::PSMProject::Pointer project = xmlreader->GetOutput();
     
-    // Create the Procrustes pointer
-    itk::PSMProcrustesFunction::Pointer P = itk::PSMProcrustesFunction::New();
-    
     // Load the point files
     const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
     std::cout << "Reading the point files to be registered ..." << std::endl;
@@ -86,7 +83,7 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
       // Read all of the points, one point per line.
       while (in)
         {
-        //itk::PSMProcrustesFunction::PointType pt;
+        //itk::PSMProcrustesFunction<3>::PointType pt;
         
         //for (unsigned int d = 0; d < 3; d++)
         //{
@@ -108,11 +105,11 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
       std::cout << "  " << pt_files[i] << std::endl;
       }
     /*std::cout << "SHAPES: " << std::endl;
-      for(itk::PSMProcrustesFunction::ShapeListIteratorType shape_it = sl.begin(); shape_it != sl.end(); shape_it++)
+      for(itk::PSMProcrustesFunction<3>::ShapeListIteratorType shape_it = sl.begin(); shape_it != sl.end(); shape_it++)
       {
-      for(itk::PSMProcrustesFunction::ShapeIteratorType it = (*shape_it).begin(); it != (*shape_it).end(); ++it)
+      for(itk::PSMProcrustesFunction<3>::ShapeIteratorType it = (*shape_it).begin(); it != (*shape_it).end(); ++it)
       {
-      itk::PSMProcrustesFunction::PointType & point = *it;
+      itk::PSMProcrustesFunction<3>::PointType & point = *it;
       std::cout << point[0] << ", " << point[1] << ", " << point[2] << std::endl;
       }
       std::cout << "shape" << std::endl;
@@ -120,8 +117,8 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
     
     std::cout << "Done!" << std::endl;
     
-    itk::PSMProcrustesFunction::SimilarityTransformListType transforms;
-    itk::PSMProcrustesFunction::Pointer procrustes = itk::PSMProcrustesFunction::New();
+    itk::PSMProcrustesFunction<3>::SimilarityTransformListType transforms;
+    itk::PSMProcrustesFunction<3>::Pointer procrustes = itk::PSMProcrustesFunction<3>::New();
     procrustes->RunGeneralizedProcrustes(transforms, sl);
     
     // Print out the outputs
@@ -141,9 +138,9 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
         }
       else
         {                
-        for(itk::PSMProcrustesFunction::ShapeIteratorType it = s.begin(); it != s.end(); it++)
+        for(itk::PSMProcrustesFunction<3>::ShapeIteratorType it = s.begin(); it != s.end(); it++)
           {
-          itk::PSMProcrustesFunction::PointType & point = (*it);
+          itk::PSMProcrustesFunction<3>::PointType & point = (*it);
           out << point[0] << " " << point[1] << " " << point[2] << std::endl;
           }
         //std::cout << "printing output " << fname << std::endl;
