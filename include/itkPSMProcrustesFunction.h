@@ -26,7 +26,7 @@
 #include "itkMacro.h"
 #include "itkObject.h"
 #include "itkObjectFactory.h"
-
+#include "itkPoint.h"
 namespace itk
 {
 
@@ -35,28 +35,31 @@ namespace itk
    struct should probably just be embedded in the PSMProcrustes function
    itself, since this class is only used within PSMProcrustesFunction.
 */
-struct SimilarityTransform3D
-{
-  vnl_matrix_fixed<double, 3, 3> rotation;
-  double scale;
-  vnl_vector_fixed<double, 3> translation;
-};
 
+    
 /**
    JOSH -- need Doxygen documentation here. See other classes for examples.
    
 */
-class PSMProcrustesFunction : public itk::Object
+template <unsigned int VDimension>
+class ITK_EXPORT PSMProcrustesFunction : public itk::Object
 {
+  struct SimilarityTransform3D
+  {
+    vnl_matrix_fixed<double, VDimension, VDimension> rotation;
+    double scale;
+    vnl_vector_fixed<double, VDimension> translation;
+  };
+    
 public:
   typedef double                                RealType;
-  typedef vnl_vector_fixed<double, 3>           PointType;
+  typedef vnl_vector_fixed<double, VDimension>  PointType;
   typedef std::vector<PointType>                ShapeType;
-  typedef ShapeType::iterator                   ShapeIteratorType;
+  typedef typename ShapeType::iterator          ShapeIteratorType;
   typedef std::vector<ShapeType>                ShapeListType;
-  typedef ShapeListType::iterator               ShapeListIteratorType;
+  typedef typename ShapeListType::iterator      ShapeListIteratorType;
   typedef std::vector<SimilarityTransform3D>    SimilarityTransformListType;
-  typedef SimilarityTransformListType::iterator SimilarityTransformListIteratorType;
+  typedef typename SimilarityTransformListType::iterator SimilarityTransformListIteratorType;
   
   /** Standard class typedefs. */
   typedef PSMProcrustesFunction                 Self;
@@ -97,6 +100,32 @@ private:
 
   // TODO: Template the class to allow for N-D
 };
+/*template<unsigned int VDimension>
+void PSMProcrustesFunction<VDimension>::RunGeneralizedProcrustes(SimilarityTransformListType & transform,
+                              ShapeListType & shapes);
+  
+template<>
+PSMProcrustesFunction<3>::RealType
+PSMProcrustesFunction<3>
+::ComputeSumOfSquares(ShapeListType & shapes);
 
+template<>
+PSMProcrustesFunction<3>::ShapeType
+PSMProcrustesFunction<3>
+::TransformShape(ShapeType shape, SimilarityTransform3D & transform);
+
+template<>
+bool PSMProcrustesFunction<3>
+::CheckDegenerateCase(PointType ssqShape, PointType ssqMean,
+                      PointType colMeanShape, PointType colMeanMean, int rows);
+
+template<>
+void PSMProcrustesFunction<3>
+::LeaveOneOutMean(ShapeType & mean, ShapeListType & shapeList, ShapeListIteratorType & leaveOutIt);
+
+template<unsigned int VDimension>
+typename PSMProcrustesFunction<VDimension>::ShapeType
+PSMProcrustesFunction<VDimension>
+::RunProcrustes(SimilarityTransform3D & transform, ShapeType mean, ShapeListIteratorType & leaveOutIt);*/
 } // end namespace itk
 #endif

@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<psm_project 
+    name    = "PSMEntropyModelFilter2DTest Parameter File" 
+    author  = "Salma Bengali" 
+    date    = "April 2014" 
+    version = "1.0" >
+
+  <notes>
+    This is an example PSM Project file for the itkPSMEntropyModelFilter2DTest.
+  </notes>
+
+  <data>
+    <distance_transforms>
+      Crop_Crop_P2_endoDT.nrrd
+      Crop_Crop_P2_endoDT.nrrd
+      Crop_Crop_P2_endoDT.nrrd
+    </distance_transforms>
+
+    <variables name = "regression_test">
+      1.0
+      1.0
+      1.0
+    </variables>
+
+    <!-- The unoptimized input model -->
+    <model name = "initialization">
+     Crop_P2_endo_init.lpts
+     Crop_P2_endo_init.lpts
+     Crop_P2_endo_init.lpts
+    </model>
+    
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      Crop_Crop_P2optimized.00.lpts
+      Crop_Crop_P2optimized.01.lpts
+      Crop_Crop_P2optimized.02.lpts
+    </model>
+  </data>
+
+  <optimization 
+      regularization_initial   = "10.0" 
+      regularization_final     = "2.0" 
+      regularization_decayspan = "5000" 
+      tolerance                = "0.01"
+      maximum_iterations       = "5000"
+      >
+  </optimization>
+</psm_project>

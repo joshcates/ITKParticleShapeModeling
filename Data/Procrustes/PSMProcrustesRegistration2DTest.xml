@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<psm_project name = "PSMProcrustesRegistration2DTest Parameter File" author = "Salma Bengali" date = "May 2014" version = "1.0">
+
+ <notes>
+    This is an example PSM Project file for the itkPSMProcrustesRegistration2DTest.
+ </notes>
+ 
+ <data>
+    <distance_transforms>
+      Crop_P2_endoDT.nrrd
+    </distance_transforms>
+
+    <!-- The unoptimized input model -->
+    <model name = "initialization">
+      Crop_P2optimized.00.lpts
+    </model>
+
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      Crop_P2_endoDT_final_optimized
+    </model>
+  </data>
+
+  <optimization 
+      regularization_initial   = "10.0" 
+      regularization_final     = "2.0" 
+      regularization_decayspan = "5000" 
+      tolerance                = "0.01"
+      maximum_iterations       = "5000"
+      procrustes_interval      = "1"
+      >
+  </optimization>
+
+</psm_project>
