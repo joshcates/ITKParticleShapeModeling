@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<psm_project name = "PSMProcrustesFunction2DTest Parameter File" author = "Salma Bengali" date = "May 2014" verotated_scaledion = "1.0">
+<psm_project name = "PSMProcrustesFunction2DTest Parameter File" author = "Salma Bengali" date = "May 2014" version = "1.0">
 
  <notes>
     This is an example PSM Project file for the itkPSMProcrustesFunction2DTest.
