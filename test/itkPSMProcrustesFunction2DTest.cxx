@@ -87,7 +87,6 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
         pt[0] = value1;
         pt[1] = value2;
         s.push_back(pt);
-        std::cout << "pt: " << pt[0] << "," << pt[1] << std::endl;
         }
       // This algorithm pushes the last point twice
       s.pop_back();
@@ -95,7 +94,6 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
       // Store the shape in the list
       sl.push_back(s);
       in.close();
-      std::cout << "  " << pt_files[i] << std::endl;
       }
     
     std::cout << "Done!" << std::endl;
@@ -104,6 +102,32 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
     itk::PSMProcrustesFunction<2>::Pointer procrustes = itk::PSMProcrustesFunction<2>::New();
     procrustes->RunGeneralizedProcrustes(transforms, sl);
     
+    // Check whether shapes are correctly registered by checking each point.
+    // Reference shape is chosen to be the first shape in the list.
+    itk::PSMProcrustesFunction<2>::ShapeType reference_shape;
+    itk::PSMProcrustesFunction<2>::ShapeIteratorType it_ref;
+    itk::PSMProcrustesFunction<2>::ShapeIteratorType it;
+    reference_shape = sl[0];
+    for (unsigned int i = 1; i < pt_files.size(); i++)
+      {
+      s = sl[i];
+      for(it = s.begin(),it_ref = reference_shape.begin();it != s.end(),it_ref != reference_shape.end(); it++,it_ref++)
+        {
+        itk::PSMProcrustesFunction<2>::PointType & point1 = (*it_ref);
+        itk::PSMProcrustesFunction<2>::PointType & point2 = (*it);
+        // Subtract value of each point from the reference points
+        for(int j = 0; j<2; j++)
+          {
+          float diff = point1[j] - point2[j];
+          if(diff > 1e-6)
+            {
+            passed = false;
+            break;
+            }
+          }
+        }
+      }     
+      
     // Print out the outputs
     // Load the output model names
     const std::vector<std::string> &out_files = project->GetModel(std::string("optimized"));
