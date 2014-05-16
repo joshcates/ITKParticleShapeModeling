@@ -12,38 +12,110 @@
 
   <data>
     <distance_transforms>
-      Crop_Crop_P2_endoDT.nrrd
-      Crop_Crop_P2_endoDT.nrrd
-      Crop_Crop_P2_endoDT.nrrd
+      P2_endoDT.nrrd
+      P4_endoDT.nrrd
+      P5_endoDT.nrrd
+      P6_endoDT.nrrd
+      P10_endoDT.nrrd
+      P11_endoDT.nrrd
+      P12_endoDT.nrrd
+      P13_endoDT.nrrd
+      P14_endoDT.nrrd
+      P15_endoDT.nrrd
     </distance_transforms>
 
     <variables name = "regression_test">
       1.0
+      3.0
+      2.0
+      2.4
+      3.1
+      2.0
+      1.8
       1.0
-      1.0
+      4.0
+      2.5
     </variables>
-
-    <!-- The unoptimized input model -->
-    <model name = "initialization">
-     Crop_P2_endo_init.lpts
-     Crop_P2_endo_init.lpts
-     Crop_P2_endo_init.lpts
-    </model>
     
     <!-- The optimized output model -->
     <model name = "optimized">
-      Crop_Crop_P2optimized.00.lpts
-      Crop_Crop_P2optimized.01.lpts
-      Crop_Crop_P2optimized.02.lpts
+      P2_endo_optimized.lpts
+      P4_endo_optimized.lpts
+      P5_endo_optimized.lpts
+      P6_endo_optimized.lpts
+      P10_endo_optimized.lpts
+      P11_endo_optimized.lpts
+      P12_endo_optimized.lpts
+      P13_endo_optimized.lpts
+      P14_endo_optimized.lpts
+      P15_endo_optimized.lpts
     </model>
   </data>
 
-  <optimization 
-      regularization_initial   = "10.0" 
-      regularization_final     = "2.0" 
-      regularization_decayspan = "5000" 
-      tolerance                = "0.01"
-      maximum_iterations       = "5000"
-      >
+ <optimization number_of_scales = "8">
+    <scale number = "0"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "200"
+           >
+    </scale>
+    <scale number = "1"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "2"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "3"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "4"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "5"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "6"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
+    <scale number = "7"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "400"
+           >
+    </scale>
   </optimization>
 </psm_project>

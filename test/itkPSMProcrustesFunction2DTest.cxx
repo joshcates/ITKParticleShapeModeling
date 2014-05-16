@@ -94,6 +94,7 @@ int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
       // Store the shape in the list
       sl.push_back(s);
       in.close();
+      std::cout << "  " << pt_files[i] << std::endl;
       }
     
     std::cout << "Done!" << std::endl;
