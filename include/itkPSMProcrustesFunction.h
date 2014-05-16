@@ -26,37 +26,40 @@
 #include "itkMacro.h"
 #include "itkObject.h"
 #include "itkObjectFactory.h"
+#include "itkPoint.h"
 
 namespace itk
 {
 
-/**
-   JOSH -- need Doxygen documentation here describing this struct.  Also, this
-   struct should probably just be embedded in the PSMProcrustes function
-   itself, since this class is only used within PSMProcrustesFunction.
-*/
-struct SimilarityTransform3D
+  /** \class PSMProcrustesFunction
+   *  \brief Generalized Procrustes Analysis is the rigid registration between 
+   * different input shapes represented by point correspondences to produce an
+   * optimal mean shape. One transformation per shape is computed using the 
+   * PSMProcrustesFunction. The point sets are registered by translation, rotation 
+   * and uniform scaling. Scaling can be turned off if required.
+   *  \ingroup PSM
+   */
+template <unsigned int VDimension>
+class ITK_EXPORT PSMProcrustesFunction : public itk::Object
 {
-  vnl_matrix_fixed<double, 3, 3> rotation;
-  double scale;
-  vnl_vector_fixed<double, 3> translation;
-};
-
-/**
-   JOSH -- need Doxygen documentation here. See other classes for examples.
-   
-*/
-class PSMProcrustesFunction : public itk::Object
-{
+  /** This struct stores the transformation per input shape. It consists of a
+   rotation, scale and translation component. */
+  struct SimilarityTransform3D
+  {
+    vnl_matrix_fixed<double, VDimension, VDimension> rotation;
+    double scale;
+    vnl_vector_fixed<double, VDimension> translation;
+  };
+    
 public:
   typedef double                                RealType;
-  typedef vnl_vector_fixed<double, 3>           PointType;
+  typedef vnl_vector_fixed<double, VDimension>  PointType;
   typedef std::vector<PointType>                ShapeType;
-  typedef ShapeType::iterator                   ShapeIteratorType;
+  typedef typename ShapeType::iterator          ShapeIteratorType;
   typedef std::vector<ShapeType>                ShapeListType;
-  typedef ShapeListType::iterator               ShapeListIteratorType;
+  typedef typename ShapeListType::iterator      ShapeListIteratorType;
   typedef std::vector<SimilarityTransform3D>    SimilarityTransformListType;
-  typedef SimilarityTransformListType::iterator SimilarityTransformListIteratorType;
+  typedef typename SimilarityTransformListType::iterator SimilarityTransformListIteratorType;
   
   /** Standard class typedefs. */
   typedef PSMProcrustesFunction                 Self;
@@ -70,12 +73,13 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(PSMProcrustesFunction, Object);
 
-  // JOSH -- changed comment syntax for consistency
   /** Align a list of shapes using Generalized Procrustes Analysis */
   void RunGeneralizedProcrustes(SimilarityTransformListType & transform,
                                 ShapeListType & shapes);
 
-  /** JOSH -- need description here */
+  /** Calculate the sum of squares of the discrepancies between the 
+   registered input shapes and the reference shape points. This yields the 
+   maximum likelihood estimate. */
   RealType ComputeSumOfSquares(ShapeListType & shapes);
 
   /** Helper function to transform a shape by a similarity transform */
@@ -94,9 +98,6 @@ private:
       Analysis */
   ShapeType RunProcrustes(SimilarityTransform3D & transform, ShapeType mean,
                           ShapeListIteratorType & leaveOutIt);
-
-  // TODO: Template the class to allow for N-D
 };
-
 } // end namespace itk
 #endif

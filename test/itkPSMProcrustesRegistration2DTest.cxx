@@ -41,9 +41,9 @@ public:
   typedef SmartPointer< Self >                    Pointer;
   typedef SmartPointer< const Self >              ConstPointer;
   
-  typedef Image<float, 3> ImageType;
+  typedef Image<float, 2> ImageType;
   
-  PSMProcrustesRegistration<3> *procrustesRegistration;
+  PSMProcrustesRegistration<2> *procrustesRegistration;
   /** Run-time type information (and related methods). */
   itkTypeMacro(MyPSMProcrustesIterationCommand, Command);
   
@@ -85,7 +85,7 @@ public:
   {
     std::cout << "SHOULDN'T BE HERE" << std::endl;
   }
-  void SetPSMProcrustesRegistration(PSMProcrustesRegistration<3> *p)
+  void SetPSMProcrustesRegistration(PSMProcrustesRegistration<2> *p)
   { procrustesRegistration = p;  }
   
 protected:
@@ -174,7 +174,7 @@ private:
 
 
 /** This test exercises functionality of the base itkPSMProcrustesRegistration class */
-int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
+int itkPSMProcrustesRegistration2DTest(int argc, char* argv[] )
 {
   bool passed = true;
   std::string errstring = "";
@@ -185,7 +185,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
   if (argc < 3)
     {
     std::cout << "Wrong number of arguments. \nUse: "
-              << "itkPSMProcrustesRegistrationTest parameter_file transforms_file [output_path] [input_path]\n"
+              << "itkPSMProcrustesRegistration2DTest parameter_file transforms_file [output_path] [input_path]\n"
               << "See itk::PSMParameterFileReader for documentation on the parameter file format.\n"
               <<" Note that input_path will be prefixed to any file names and paths in the xml parameter file.\n"
               << std::endl;
@@ -202,7 +202,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     input_path_prefix = std::string(argv[4]);
     }    
   
-  typedef itk::Image<float, 3> ImageType;
+  typedef itk::Image<float, 2> ImageType;
   
   try
     {
@@ -225,8 +225,8 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     P->AddObserver(itk::IterationEvent(), mycommand);
     
     // Create the ProcrustesRegistration pointer
-    itk::PSMProcrustesRegistration<3>::Pointer procrustesRegistration
-      = itk::PSMProcrustesRegistration<3>::New();
+    itk::PSMProcrustesRegistration<2>::Pointer procrustesRegistration
+      = itk::PSMProcrustesRegistration<2>::New();
     
     mycommand->SetPSMProcrustesRegistration( procrustesRegistration );
     // Load the distance transforms
@@ -254,7 +254,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
     std::vector<itk::PSMEntropyModelFilter<ImageType>::PointType> c;
     std::cout << "Reading the initial model correspondences ..." << std::endl;
-    int numOfPoints;
+    unsigned int numOfPoints;
     for (unsigned int i = 0; i < pt_files.size(); i++)
     {
         // Read the points for this file and add as a list
@@ -273,7 +273,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         {
             itk::PSMEntropyModelFilter<ImageType>::PointType pt;
             
-            for (unsigned int d = 0; d < 3; d++)
+            for (unsigned int d = 0; d < 2; d++)
             {
                 in >> pt[d];
             }
@@ -294,7 +294,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     std::cout << "Done!" << std::endl;
     
     // Read the input transforms
-    object_reader< itk::PSMParticleSystem<3>::TransformType > transform_reader;
+    object_reader< itk::PSMParticleSystem<2>::TransformType > transform_reader;
     transform_reader.SetFileName(argv[2]);
     transform_reader.Update();
 
@@ -305,12 +305,12 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       for(unsigned int j = 0; j < numOfPoints; j++)
         {
         itk::PSMEntropyModelFilter<ImageType>::PointType point, trPoint;
-        itk::PSMParticleSystem<3>::TransformType transform;
-        itk::PSMParticleSystem<3>::Pointer PS = P->GetParticleSystem();
+        itk::PSMParticleSystem<2>::TransformType transform;
+        itk::PSMParticleSystem<2>::Pointer PS = P->GetParticleSystem();
         
         point[0] = PS->GetPosition(j,i)[0];
         point[1] = PS->GetPosition(j,i)[1];
-        point[2] = PS->GetPosition(j,i)[2];
+
         // Transform the points and set them in the Particle System
         trPoint = PS->TransformPoint( point, transform_reader.GetOutput()[i] );
         PS->SetPosition( trPoint, j, i);
@@ -378,7 +378,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       }
     
     // Write out the transforms
-    std::string output_transform_file = "output_transforms_PSMProcrustesRegistrationTest.txt";
+    std::string output_transform_file = "output_transforms_PSMProcrustesRegistration2DTest.txt";
     std::string out_file = output_path + output_transform_file;
     std::ofstream out(out_file.c_str());
     for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
@@ -413,10 +413,11 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         {
         for (unsigned int j = 0; j < P->GetParticleSystem()->GetNumberOfParticles(d); j++)
           {
-          for (unsigned int i = 0; i < 3; i++)
-            {
-            out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
-            }
+          //for (unsigned int i = 0; i < 2; i++)
+          //  {
+          // Print the last point as 0.0 so that SWViewer can read the point files
+          out <<  P->GetParticleSystem()->GetPosition(j,d)[0]  << " " << P->GetParticleSystem()->GetPosition(j,d)[1] << " " << 0.0;
+          //  }
           out << std::endl;
           }
         }

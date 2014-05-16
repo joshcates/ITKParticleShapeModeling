@@ -22,16 +22,16 @@
 #include "itkCommand.h"
 #include "itkPSMProjectReader.h"
 
-int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
+int itkPSMProcrustesFunction2DTest( int argc, char* argv[] )
 {
   bool passed = true;
   double value1, value2, value3;
-  itk::PSMProcrustesFunction<3>::PointType pt;
+  itk::PSMProcrustesFunction<2>::PointType pt;
   std::string errstring = "";
   std::string output_path = "";
   std::string input_path_prefix = "";
-  itk::PSMProcrustesFunction<3>::ShapeType s;
-  itk::PSMProcrustesFunction<3>::ShapeListType sl;
+  itk::PSMProcrustesFunction<2>::ShapeType s;
+  itk::PSMProcrustesFunction<2>::ShapeListType sl;
   
   // Check for proper arguments
   if (argc < 2)
@@ -86,7 +86,6 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
         in>>value1>>value2>>value3;
         pt[0] = value1;
         pt[1] = value2;
-        pt[2] = value3;
         s.push_back(pt);
         }
       // This algorithm pushes the last point twice
@@ -97,38 +96,38 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
       in.close();
       std::cout << "  " << pt_files[i] << std::endl;
       }
-      
+    
     std::cout << "Done!" << std::endl;
     
-    itk::PSMProcrustesFunction<3>::SimilarityTransformListType transforms;
-    itk::PSMProcrustesFunction<3>::Pointer procrustes = itk::PSMProcrustesFunction<3>::New();
+    itk::PSMProcrustesFunction<2>::SimilarityTransformListType transforms;
+    itk::PSMProcrustesFunction<2>::Pointer procrustes = itk::PSMProcrustesFunction<2>::New();
     procrustes->RunGeneralizedProcrustes(transforms, sl);
-      
+    
     // Check whether shapes are correctly registered by checking each point.
     // Reference shape is chosen to be the first shape in the list.
-    itk::PSMProcrustesFunction<3>::ShapeType reference_shape;
-    itk::PSMProcrustesFunction<3>::ShapeIteratorType it_ref;
-    itk::PSMProcrustesFunction<3>::ShapeIteratorType it;
+    itk::PSMProcrustesFunction<2>::ShapeType reference_shape;
+    itk::PSMProcrustesFunction<2>::ShapeIteratorType it_ref;
+    itk::PSMProcrustesFunction<2>::ShapeIteratorType it;
     reference_shape = sl[0];
     for (unsigned int i = 1; i < pt_files.size(); i++)
-    {
+      {
       s = sl[i];
       for(it = s.begin(),it_ref = reference_shape.begin();it != s.end(),it_ref != reference_shape.end(); it++,it_ref++)
-      {
-        itk::PSMProcrustesFunction<3>::PointType & point1 = (*it_ref);
-        itk::PSMProcrustesFunction<3>::PointType & point2 = (*it);
-        // Subtract value of each point from the reference points
-        for(int j = 0; j<3; j++)
         {
+        itk::PSMProcrustesFunction<2>::PointType & point1 = (*it_ref);
+        itk::PSMProcrustesFunction<2>::PointType & point2 = (*it);
+        // Subtract value of each point from the reference points
+        for(int j = 0; j<2; j++)
+          {
           float diff = point1[j] - point2[j];
           if(diff > 1e-6)
-          {
+            {
             passed = false;
             break;
+            }
           }
         }
-      }
-    }
+      }     
       
     // Print out the outputs
     // Load the output model names
@@ -147,15 +146,17 @@ int itkPSMProcrustesFunctionTest( int argc, char* argv[] )
         }
       else
         {                
-        for(itk::PSMProcrustesFunction<3>::ShapeIteratorType it = s.begin(); it != s.end(); it++)
+        for(itk::PSMProcrustesFunction<2>::ShapeIteratorType it = s.begin(); it != s.end(); it++)
           {
-          itk::PSMProcrustesFunction<3>::PointType & point = (*it);
-          out << point[0] << " " << point[1] << " " << point[2] << std::endl;
+          itk::PSMProcrustesFunction<2>::PointType & point = (*it);
+          // Extra point printed to allow visualizing shape in SWViewer.
+          out << point[0] << " " << point[1] << " " << 0.0 << std::endl;
           }
         out.close();
         }
       }
     passed = true;
+    // TODO: How to check if shapes have been registered correctly?
     }
   
   catch(itk::ExceptionObject &e)

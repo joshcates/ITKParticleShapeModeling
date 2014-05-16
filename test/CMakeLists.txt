@@ -29,19 +29,22 @@ itkPSMCleanAndCenterLabelMapImageFilterTest.cxx
 itkPSMContainerTest.cxx
 itkPSMContainerArrayAttributeTest.cxx
 itkPSMCostFunctionTest.cxx
+itkPSMEntropyMixedEffectsModelFilterTest.cxx
+itkPSMEntropyModelFilter2DTest.cxx
 itkPSMEntropyModelFilterTest.cxx
 itkPSMEntropyModelFilterMultiscaleTest.cxx
-itkPSMEntropyMixedEffectsModelFilterTest.cxx
 itkPSMEntropyRegressionModelFilterTest.cxx
-itkPSMEntropyRegressionModel2DFilterTest.cxx
 itkPSMEntropyRegressionModel2DFilterMultiscaleTest.cxx
+itkPSMEntropyRegressionModel2DFilterTest.cxx
 itkPSMGradientDescentOptimizerTest.cxx
-itkPSMImplicitSurfaceImageFilterTest.cxx
 itkPSMImplicitSurfaceImage2DFilterTest.cxx
+itkPSMImplicitSurfaceImageFilterTest.cxx
 itkPSMMeanCurvatureAttributeTest.cxx
 itkPSMParticleSystemTest.cxx
 itkPSMPointTreeTest.cxx
+itkPSMProcrustesFunction2DTest.cxx
 itkPSMProcrustesFunctionTest.cxx
+itkPSMProcrustesRegistration2DTest.cxx
 itkPSMProcrustesRegistrationTest.cxx
 itkPSMProjectTest.cxx
 itkPSMRBFCorrespondenceInterpolatorTest.cxx
@@ -77,12 +80,20 @@ ITKParticleShapeModelingTestDriver  itkPSMContainerArrayAttributeTest)
 itk_add_test(NAME itkPSMCostFunctionTest COMMAND
 ITKParticleShapeModelingTestDriver  itkPSMCostFunctionTest )
 
-itk_add_test(NAME itkPSMEntropyModelFilterTest 
- COMMAND ITKParticleShapeModelingTestDriver
- itkPSMEntropyModelFilterTest
- ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
+itk_add_test(NAME itkPSMEntropyMixedEffectsModelFilterTest 
+COMMAND ITKParticleShapeModelingTestDriver
+itkPSMEntropyMixedEffectsModelFilterTest
+ ${TEST_DATA_ROOT}/Torus/PSMEntropyMixedEffectsModelFilterTest.xml
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
+)
+
+itk_add_test(NAME itkPSMEntropyModelFilter2DTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMEntropyModelFilter2DTest
+ ${TEST_DATA_ROOT}/Cardiac/PSMEntropyModelFilter2DTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Cardiac/
 )
 
 itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest 
@@ -93,20 +104,20 @@ itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest
  ${TEST_DATA_ROOT}/Torus/
 )
 
-itk_add_test(NAME itkPSMEntropyMixedEffectsModelFilterTest 
-COMMAND ITKParticleShapeModelingTestDriver
-itkPSMEntropyMixedEffectsModelFilterTest
- ${TEST_DATA_ROOT}/Torus/PSMEntropyMixedEffectsModelFilterTest.xml
+itk_add_test(NAME itkPSMEntropyModelFilterTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMEntropyModelFilterTest
+ ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
 
-itk_add_test(NAME itkPSMEntropyRegressionModelFilterTest 
+itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterMultiscaleTest 
 COMMAND ITKParticleShapeModelingTestDriver
-itkPSMEntropyRegressionModelFilterTest
-${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
+itkPSMEntropyRegressionModel2DFilterMultiscaleTest
+${TEST_DATA_ROOT}/Cardiac/LACine/PSMEntropyRegressionModel2DFilterMultiscaleTest.xml
 ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Torus/
+ ${TEST_DATA_ROOT}/Cardiac/LACine/
 )
 
 itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterTest 
@@ -117,12 +128,12 @@ ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Cardiac/LACine/
 )
 
-itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterMultiscaleTest 
+itk_add_test(NAME itkPSMEntropyRegressionModelFilterTest 
 COMMAND ITKParticleShapeModelingTestDriver
-itkPSMEntropyRegressionModel2DFilterMultiscaleTest
-${TEST_DATA_ROOT}/Cardiac/LACine/PSMEntropyRegressionModel2DFilterMultiscaleTest.xml
+itkPSMEntropyRegressionModelFilterTest
+${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterTest.xml
 ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Cardiac/LACine/
+ ${TEST_DATA_ROOT}/Torus/
 )
 
 itk_add_test(NAME itkPSMGradientDescentOptimizerTest COMMAND
@@ -178,10 +189,26 @@ itk_add_test(NAME itkPSMTrimLabelMapImageFilterTest
 
 itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMTwoCostFunctionTest )
 
+itk_add_test(NAME itkPSMProcrustesFunction2DTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesFunction2DTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionExample2D.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
 itk_add_test(NAME itkPSMProcrustesFunctionTest 
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMProcrustesFunctionTest
  ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionExample.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
+itk_add_test(NAME itkPSMProcrustesRegistration2DTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesRegistration2DTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistration2DExample.xml
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Procrustes/
 )
@@ -193,6 +220,7 @@ itk_add_test(NAME itkPSMProcrustesRegistrationTest
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Procrustes/
 )
+
 
 # Necessary on Linux build to include IOXML in proper order
 target_link_libraries(ITKParticleShapeModelingTestDriver ITKIOXML)
