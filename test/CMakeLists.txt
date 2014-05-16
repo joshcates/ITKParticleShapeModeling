@@ -91,9 +91,9 @@ itkPSMEntropyMixedEffectsModelFilterTest
 itk_add_test(NAME itkPSMEntropyModelFilter2DTest 
  COMMAND ITKParticleShapeModelingTestDriver
  itkPSMEntropyModelFilter2DTest
- ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilter2DTest.xml
+ ${TEST_DATA_ROOT}/Cardiac/PSMEntropyModelFilter2DTest.xml
  ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Procrustes/
+ ${TEST_DATA_ROOT}/Cardiac/
 )
 
 itk_add_test(NAME itkPSMEntropyModelFilterMultiscaleTest 
