@@ -74,11 +74,11 @@ class ITK_EXPORT PSMEntropyMixedEffectsModelFilter
  /** Set/Get the explanatory variables */
  void SetVariables(const std::vector<double> &v)
  {
-   this->GetShapeMatrix()->SetVariables(v);
+   this->GetShapeMatrix()->SetExplanatory(v);
  }
  const std::vector<double> &GetVariables() const
  {
-   return this->GetShapeMatrix()->GetVariables();
+   return this->GetShapeMatrix()->GetExplanatory();
  }
 
  /** */
