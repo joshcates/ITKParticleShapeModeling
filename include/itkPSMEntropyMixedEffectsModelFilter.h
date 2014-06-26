@@ -81,17 +81,27 @@ class ITK_EXPORT PSMEntropyMixedEffectsModelFilter
    return this->GetShapeMatrix()->GetExplanatory();
  }
 
- /** */
- unsigned int GetTimePointsPerIndividual() const
+ /** Set/Get time point variables */
+ void SetTimePointsPerIndividual(const vnl_vector<int> &v)
+ {
+   this->GetShapeMatrix()->SetTimePointsPerIndividual(v);
+ }
+ const vnl_vector<int> &GetTimePointsPerIndividual() const
  {
    return this->GetShapeMatrix()->GetTimePointsPerIndividual();
  }
- void SetTimePointsPerIndividual(unsigned int n)
+
+ /** Set/Get num individuals */
+ void SetNumIndividuals(int n)
  {
-   this->GetShapeMatrix()->SetTimePointsPerIndividual(n);
+   this->GetShapeMatrix()->SetNumIndividuals(n);
+ }
+ int GetNumIndividuals()
+ {
+   return this->GetShapeMatrix()->GetNumIndividuals();
  }
 
-protected:
+ protected:
  PSMEntropyMixedEffectsModelFilter() {}
  virtual ~PSMEntropyMixedEffectsModelFilter() {}
  

@@ -37,6 +37,12 @@
       1.0
     </variables>
 
+    <variables name = "timepts_per_individual">
+    3
+    3
+    3
+    </variables>
+
     <!-- The unoptimized input model -->
     <model name = "initialization">
       mixedinit.00.lpts
@@ -80,7 +86,7 @@
       regularization_decayspan  = "1000" 
       tolerance                 = "0.01"
       maximum_iterations        = "5"
-      timepoints_per_individual = "3"
+      num_individuals           = "3"
       >
   </optimization>
 </psm_project>

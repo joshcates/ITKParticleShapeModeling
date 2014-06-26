@@ -199,7 +199,7 @@ namespace itk
      return this->m_DomainsPerShape;
    }
 
-   void SetTimeptsPerIndividual(vnl_vector<int> & v)
+   void SetTimePointsPerIndividual(const vnl_vector<int> & v)
    {
      (this->m_TimeptsPerIndividual).set_size(v.size());
 
@@ -209,12 +209,12 @@ namespace itk
      }
    }
 
-   vnl_vector<int> GetTimeptsPerIndividual() const
+   vnl_vector<int> &GetTimePointsPerIndividual() const
    {
      return this->m_TimeptsPerIndividual;
    }
 
-   vnl_vector<int> &GetTimeptsPerIndividual()
+   vnl_vector<int> &GetTimePointsPerIndividual()
    {
      return this->m_TimeptsPerIndividual;
    }
@@ -224,7 +224,7 @@ namespace itk
      this->m_NumIndividuals = i;
    }
 
-   int &GetNumIndividuals()
+   int GetNumIndividuals()
    {
      return this->m_NumIndividuals;
    }
@@ -336,10 +336,10 @@ namespace itk
      this->m_DefinedCallbacks.PositionRemoveEvent = true;
      m_UpdateCounter = 0;
      m_RegressionInterval = 1;
-     m_NumIndividuals = 84;
+     m_NumIndividuals = 1;
      m_TimeptsPerIndividual.set_size(m_NumIndividuals);
      for(int i = 0; i < m_NumIndividuals; i++)
-       m_TimeptsPerIndividual(i) = 3;
+       m_TimeptsPerIndividual(i) = 2;
    }
 
    virtual ~PSMMixedEffectsShapeMatrixAttribute() {};
