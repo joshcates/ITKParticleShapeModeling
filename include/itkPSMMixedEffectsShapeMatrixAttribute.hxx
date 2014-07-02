@@ -63,8 +63,8 @@ EstimateParameters()
   std::cout << "num individuals: " << this->m_NumIndividuals << std::endl;
   
   // set the sizes of random slope and intercept matrix
-  m_SlopeRand.set_size(m_NumIndividuals, nr); // num_groups X num_points*3
-  m_InterceptRand.set_size(m_NumIndividuals, nr); // num_groups X num_points*3
+  m_SlopeRand.set_size(m_NumIndividuals, nr); // num_individuals X num_points*3
+  m_InterceptRand.set_size(m_NumIndividuals, nr); // num_individuals X num_points*3
   
   vnl_matrix<double> fixed; // slopes + intercepts for all points
   vnl_matrix<double> random; // slopes + intercepts for all groups, for all points
