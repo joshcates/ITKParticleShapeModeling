@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include <iostream>
+#include <sstream>
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "itkPSMEntropyMixedEffectsModelFilter.h"
@@ -306,7 +307,38 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
                }
            }
        }
-     
+     vnl_vector<double> intercepts = P->GetShapeMatrix()->GetIntercept();
+     vnl_vector<double> slope = P->GetShapeMatrix()->GetSlope();
+     std::string fname1 = output_path + "Intercept.lpts";
+     std::string fname2 = output_path + "Intercept_0.5xSlope.lpts";
+     std::string fname3 = output_path + "Intercept_1xSlope.lpts";
+     std::ofstream out1(fname1.c_str());
+     std::ofstream out2(fname2.c_str());
+     std::ofstream out3(fname3.c_str());
+    
+     vnl_vector<double>::iterator it1,it2;
+     if ( !out1 || !out2 || !out3 )
+       {
+       errstring += "Could not open point file for output: ";
+       }
+     else
+       {
+       int counter = 0;
+       for(it1 = intercepts.begin(), it2 = slope.begin(); it1 != intercepts.end(), it2 != slope.end(); ++it1, ++it2)
+         {
+         out1 << *it1 << ' ';
+         out2 << *it1 + (0.5)*(*it2) << ' ';
+         out3 << (*it1) + (*it2) << ' ';
+         counter++;
+         if(counter == 3)
+           {
+           out1 << std::endl;
+           out2 << std::endl;
+           out3 << std::endl;
+           counter = 0;
+           }
+         }
+       }     
     }
   catch(itk::ExceptionObject &e)
     {
