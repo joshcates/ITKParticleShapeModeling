@@ -182,9 +182,9 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
      std::cout << "Done!" << std::endl;
    
      // Read the explanatory variables (e.g. time)
-     if (project->HasVariables("mixed_effects_test"))
+     if (project->HasVariables("explanatory_variables"))
        {
-         std::vector<double> expl = project->GetVariables("mixed_effects_test");
+         std::vector<double> expl = project->GetVariables("explanatory_variables");
          
          if (expl.size() < dt_files.size())
            {

@@ -23,16 +23,27 @@
       20_32mo_endo_DT.nrrd          
     </distance_transforms>
 
-    <variables name = "mixed_effects_test">
-      0.0
-      0.8
-      1.0
-      0.0
-      0.04
-      0.13
-      1.0
-      0.0
-      1.0
+    <!--<variables name = "explanatory_variables">
+      18
+      26
+      37
+      3
+      7
+      16
+      24
+      7
+      32
+    </variables>-->
+     <variables name = "explanatory_variables">
+      1.5
+      2.17
+      3.08
+      0.25
+      0.58
+      1.33
+      2.0
+      0.58
+      2.67
     </variables>
 
     <variables name = "timepts_per_individual">
@@ -74,7 +85,7 @@
       regularization_final      = "10.0" 
       regularization_decayspan  = "1000" 
       tolerance                 = "0.01"
-      maximum_iterations        = "500"
+      maximum_iterations        = "100"
       num_individuals           = "3"
       >
   </optimization>
