@@ -182,9 +182,10 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
      std::cout << "Done!" << std::endl;
    
      // Read the explanatory variables (e.g. time)
+     std::vector<double> expl;
      if (project->HasVariables("explanatory_variables"))
        {
-         std::vector<double> expl = project->GetVariables("explanatory_variables");
+         expl = project->GetVariables("explanatory_variables");
          
          if (expl.size() < dt_files.size())
            {
@@ -246,17 +247,17 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
        std::vector<double> tp = project->GetVariables("timepts_per_individual");
        vnl_vector<int> timepts; timepts.set_size(tp.size());
        for(int i = 0; i < timepts.size(); i++)
-	 timepts[i] = static_cast<int>(tp[i]);
+         timepts[i] = static_cast<int>(tp[i]);
   
        if (timepts.size() != num_individuals)
        {
-	 errstring += "Number of individuals and timepts associated dont match!";
-	 passed = false;
+         errstring += "Number of individuals and timepts associated dont match!";
+         passed = false;
        }
        else // set the timepts variables
        {
-	 std::cout << "Setting variables" << std::endl;
-	 P->SetTimePointsPerIndividual(timepts);
+         std::cout << "Setting variables" << std::endl;
+         P->SetTimePointsPerIndividual(timepts);
        }
      }
      else
@@ -307,38 +308,38 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
                }
            }
        }
-     vnl_vector<double> intercepts = P->GetShapeMatrix()->GetIntercept();
-     vnl_vector<double> slope = P->GetShapeMatrix()->GetSlope();
-     std::string fname1 = output_path + "Intercept.lpts";
-     std::string fname2 = output_path + "Intercept_0.5xSlope.lpts";
-     std::string fname3 = output_path + "Intercept_1xSlope.lpts";
-     std::ofstream out1(fname1.c_str());
-     std::ofstream out2(fname2.c_str());
-     std::ofstream out3(fname3.c_str());
     
-     vnl_vector<double>::iterator it1,it2;
-     if ( !out1 || !out2 || !out3 )
+     std::vector<double>::iterator it_expl;
+     vnl_vector<double> output_intercept_slope;
+     vnl_vector<double>::iterator output_it;
+     int file_count = 0;
+     for(it_expl = expl.begin(); it_expl != expl.end(); ++it_expl)
        {
-       errstring += "Could not open point file for output: ";
-       }
-     else
-       {
-       int counter = 0;
-       for(it1 = intercepts.begin(), it2 = slope.begin(); it1 != intercepts.end(), it2 != slope.end(); ++it1, ++it2)
+         output_intercept_slope = P->GetShapeMatrix()->ComputeMean(*it_expl);
+         std::ostringstream ss;
+         ss << file_count;
+         std::string fname = output_path + "Intercept+TimexSlope" + "_" + ss.str() + ".lpts";
+         std::ofstream out(fname.c_str());
+         if ( !out )
          {
-         out1 << *it1 << ' ';
-         out2 << *it1 + (0.5)*(*it2) << ' ';
-         out3 << (*it1) + (*it2) << ' ';
-         counter++;
-         if(counter == 3)
+           errstring += "Could not open point file for output: ";
+         }
+         else
+         {
+           int counter = 0;
+           for(output_it = output_intercept_slope.begin(); output_it != output_intercept_slope.end(); ++output_it)
            {
-           out1 << std::endl;
-           out2 << std::endl;
-           out3 << std::endl;
-           counter = 0;
+             out << *output_it << ' ';
+             counter++;
+             if(counter == 3)
+             {
+               out << std::endl;
+               counter = 0;
+             }
            }
          }
-       }     
+         file_count++;
+       }
     }
   catch(itk::ExceptionObject &e)
     {
