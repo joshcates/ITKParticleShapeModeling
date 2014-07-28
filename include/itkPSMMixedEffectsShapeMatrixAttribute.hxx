@@ -18,6 +18,7 @@
 #ifndef __itkPSMMixedEffectsShapeMatrixAttribute_hxx
 #define __itkPSMMixedEffectsShapeMatrixAttribute_hxx
 #include "itkPSMMixedEffectsShapeMatrixAttribute.h"
+#include <iostream>
 
 namespace itk
 {
@@ -31,7 +32,7 @@ void PSMMixedEffectsShapeMatrixAttribute<T,VDimension>
   int indexSum = 0, group_indx = -1;
   tempvect.set_size(m_MeanMatrix.rows());
   tempvect.fill(0.0);
-  for (int i = 0; i < m_MeanMatrix.cols(); i++)
+  for (unsigned int i = 0; i < m_MeanMatrix.cols(); i++)
   {
     if(i == indexSum)
     {
@@ -60,7 +61,6 @@ EstimateParameters()
   int num_shapes = static_cast<double>(X.cols());
   
   int nr = X.rows(); //number of points*3
-  std::cout << "num individuals: " << this->m_NumIndividuals << std::endl;
   
   // set the sizes of random slope and intercept matrix
   m_SlopeRand.set_size(m_NumIndividuals, nr); // num_individuals X num_points*3
@@ -136,12 +136,20 @@ EstimateParameters()
         indexSum += m_TimeptsPerIndividual(k);
         
         Vs[k] = (identity_n[k] * sigma2s) + Xp[k] * Ds * vnl_transpose(Xp[k]);
-        Ws[k] = vnl_inverse(Vs[k]);
+        
+        if(Vs[k].rows() > 4)
+        {
+          Ws[k] = vnl_matrix_inverse<double>(Vs[k]);
+        }
+        else
+        {
+          Ws[k] = vnl_inverse<double>(Vs[k]);
+        }
         sum_mat1 = sum_mat1 + vnl_transpose(Xp[k]) * Ws[k] * Xp[k];
         sum_mat2 = sum_mat2 + vnl_transpose(Xp[k]) * Ws[k] * y;
       }
       
-      tempvect = vnl_inverse(sum_mat1) * sum_mat2;
+      tempvect = vnl_inverse<double>(sum_mat1) * sum_mat2;
       fixed.set_column(i, tempvect);
       
       indexSum = 0; // re-initializing
