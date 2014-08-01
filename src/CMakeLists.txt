@@ -13,5 +13,5 @@ add_library(ITKParticleShapeModeling ${ITKParticleShapeModeling_SRC})
 target_link_libraries(ITKParticleShapeModeling  ${ITKstatistics_LIBRARIES} ${ITKTransform_LIBRARIES})
 itk_module_target(ITKParticleShapeModeling)
 
-add_executable(PSMCLI itkPSMCommandLineTool.cxx itkPSMCommandLineClass.cxx)
+add_executable(ParticleShapeModeling_CLI itkPSMCommandLineTool.cxx itkPSMCommandLineClass.cxx)
 target_link_libraries(PSMCLI ITKParticleShapeModeling ITKIOXML ITKIOMeta ITKIOGDCM ITKIONRRD ${ITKIOImageBase_LIBRARIES} ${ITKstatistics_LIBRARIES} ${ITKTransform_LIBRARIES})
