@@ -26,6 +26,7 @@
 itk_module_test()
 set(ITKParticleShapeModelingTests
 itkPSMCleanAndCenterLabelMapImageFilterTest.cxx
+itkPSMCommandLineTool.cxx
 itkPSMContainerTest.cxx
 itkPSMContainerArrayAttributeTest.cxx
 itkPSMCostFunctionTest.cxx
@@ -221,6 +222,13 @@ itk_add_test(NAME itkPSMProcrustesRegistrationTest
  ${TEST_DATA_ROOT}/Procrustes/
 )
 
+itk_add_test(NAME itkPSMCommandLineTool
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMCommandLineTool
+ ${TEST_DATA_ROOT}/Torus/PSMCommandLineClassTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
+)
 
 # Necessary on Linux build to include IOXML in proper order
 target_link_libraries(ITKParticleShapeModelingTestDriver ITKIOXML)
