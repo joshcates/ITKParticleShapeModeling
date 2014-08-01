@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+
+<psm_project 
+    name    = "PSMCommandLineClassTest Parameter File" 
+    author  = "Salma Bengali" 
+    date    = "August 2014" 
+    version = "1.0" >
+
+  <notes>
+    This is an example PSM Project file for the itkPSMCommandLineTool.
+  </notes>
+
+  <data>
+    <distance_transforms>
+      torusDT.00.mha
+      torusDT.01.mha
+      torusDT.02.mha
+      torusDT.03.mha
+      torusDT.04.mha
+      torusDT.05.mha
+      torusDT.06.mha
+      torusDT.07.mha
+      torusDT.08.mha
+      torusDT.09.mha
+    </distance_transforms>
+
+    <variables name = "regression_test">
+      1.0
+      3.0
+      2.0
+      2.4
+      3.1
+      2.0
+      1.8
+      1.0
+      4.0
+      2.5
+    </variables>
+
+    <!-- The unoptimized input model -->
+    <model name = "initialization">
+     initialize.00.lpts
+     initialize.01.lpts
+     initialize.02.lpts
+     initialize.03.lpts
+     initialize.04.lpts
+     initialize.05.lpts
+     initialize.06.lpts
+     initialize.07.lpts
+     initialize.08.lpts
+     initialize.09.lpts
+    </model>
+
+    <!-- The optimized output model -->
+    <model name = "optimized">
+      optimized.00.lpts
+      optimized.01.lpts
+      optimized.02.lpts
+      optimized.03.lpts
+      optimized.04.lpts
+      optimized.05.lpts
+      optimized.06.lpts
+      optimized.07.lpts
+      optimized.08.lpts 
+      optimized.09.lpts 
+    </model>
+  </data>
+
+  <optimization 
+      regularization_initial   = "10.0" 
+      regularization_final     = "2.0" 
+      regularization_decayspan = "5000" 
+      tolerance                = "0.01"
+      maximum_iterations       = "5000"
+      procrustes_interval      = "10"
+      >
+  </optimization>
+</psm_project>
