@@ -85,7 +85,7 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     /** Set the file name of the project parameter file */
     void SetProjectParameterFileName(const char *fname);
   
-  //protected:
+    /** Constructor and destructor */
     PSMCommandLineClass();
     virtual ~PSMCommandLineClass() {};
   
@@ -111,9 +111,5 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     typename itk::MemberCommand<PSMCommandLineClass>::Pointer m_IterateCmd;
 };
 } // end namespace
-
-/*#ifndef ITK_MANUAL_INSTANTIATION
-#include "itkPSMCommandLineClass.hxx"
-#endif*/
 
 #endif 

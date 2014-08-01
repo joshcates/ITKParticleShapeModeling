@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-//#ifndef _itkPSMCommandLineClass_hxx
-//#define _itkPSMCommandLineClass_hxx
-
 #include "itkPSMCommandLineClass.h"
 #include <fstream>
 #include <vector>
@@ -32,16 +29,17 @@ PSMCommandLineClass<VDimension>
 ::PSMCommandLineClass()
 {
   this->m_ProcrustesCounter = 0;
-  //this->m_ProjectParameterFile = fname;
 }
   
 template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::IterateCallback(itk::Object *caller , const itk::EventObject &)
 {
+  // Check if the Procrustes interval is set to a value other than 0
   if (this->m_ProcrustesRegistration->GetProcrustesInterval() != 0)
   {
     this->m_ProcrustesCounter++;
+    // If the counter is greater than the interval value, run Procrustes registration
     if (this->m_ProcrustesCounter >= (int)this->m_ProcrustesRegistration->GetProcrustesInterval())
     {
       // Reset the counter
@@ -69,15 +67,16 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadInputs(std::string input_path_prefix)
 {
-  //itk::PSMProjectReader::Pointer m_XmlReader = itk::PSMProjectReader::New();
+  // Read the project parameter file
   this->m_XmlReader = PSMCommandLineClass::ProjectReaderType::New();
   this->m_XmlReader->SetFileName(this->m_ProjectParameterFile);
   this->m_XmlReader->Update();
   
+  // Store the project parameters
   this->m_Project = PSMCommandLineClass::ProjectType::New();
   this->m_Project = m_XmlReader->GetOutput();
-  //itk::PSMProject::Pointer m_Project = m_XmlReader->GetOutput();
   
+  // Read in the distance transforms
   const std::vector<std::string> &dt_files = this->m_Project->GetDistanceTransforms();
   this->m_Filter = PSMCommandLineClass::EntropyModelFilterType::New();
   std::cout << "Reading distance transforms ..." << std::endl;
@@ -85,7 +84,6 @@ void PSMCommandLineClass<VDimension>
   {
     itk::ImageFileReader<PSMCommandLineClass::ImageType>::Pointer reader =
     itk::ImageFileReader<PSMCommandLineClass::ImageType>::New();
-    //reader->SetImageIO(MetaImageIO::New());
     reader->SetFileName(input_path_prefix + dt_files[i]);
     reader->Update();
     
@@ -139,13 +137,6 @@ void PSMCommandLineClass<VDimension>
 ::ReadInputParameters()
 {
   this->m_ProcrustesRegistration = PSMCommandLineClass::ProcrustesRegistrationType::New();
-  /*Added*/
-  //itk::PSMProjectReader::Pointer m_XmlReader = itk::PSMProjectReader::New();
-
-  //m_XmlReader->SetFileName(this->m_ProjectParameterFile);
-  //m_XmlReader->Update();
-  
-  //itk::PSMProject::Pointer m_Project = m_XmlReader->GetOutput(); /*End Added*/
   
   //  Provide some default parameters
   double regularization_initial   = 100.0f;
@@ -245,9 +236,9 @@ void PSMCommandLineClass<VDimension>
   // Create the callback function to run Procrustes
   m_IterateCmd = itk::MemberCommand<PSMCommandLineClass>::New();
   m_IterateCmd->SetCallbackFunction(this, &PSMCommandLineClass::IterateCallback);
-  // Add the observer to the filter which will run depending on the iteration count
+  // Add the observer to the filter which will run depending on what the iteration count is
   this->m_Filter->AddObserver(itk::IterationEvent(), m_IterateCmd);
-  // Run the filter
+  // Run the optimization filter
   this->m_Filter->Update();
   // TODO: Is this error message really required?
   if (this->m_Filter->GetNumberOfElapsedIterations() >= this->m_Filter->GetMaximumNumberOfIterations())
@@ -265,8 +256,6 @@ void PSMCommandLineClass<VDimension>
   this->m_ProjectParameterFile = fname;
 }
 // Explicit instantiation
-//template void PSMCommandLineClass<3>::New();
 template void PSMCommandLineClass<3>::Run( const char *fname, std::string input_path_prefix, std::string output_path );
 } // end namespace itk
 
-//#endif

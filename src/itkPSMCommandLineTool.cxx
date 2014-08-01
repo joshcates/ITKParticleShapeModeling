@@ -17,15 +17,11 @@
  *=========================================================================*/
 
 #include <iostream>
-#include <string>
 #include "itkPSMCommandLineClass.h"
 #include "itkPSMCommandLineClass.cxx"
-//#include "itkMetaImageIO.h"
-//#include "itkPSMProcrustesRegistration.h"
-//#include "itkPSMEntropyModelFilter.h"
 
 int main( int argc, char *argv[] )
-{
+{  
   std::string output_path = "";
   std::string input_path_prefix = "";
   // Check for proper arguments
