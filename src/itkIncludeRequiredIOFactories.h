@@ -21,6 +21,7 @@
 #include "itkMetaImageIOFactory.h"
 #include "itkObjectFactoryBase.h"
 
+/** Fixed ITK runtime error where image format is not recognized. */
 void RegisterRequiredFactories(){
   itk::ObjectFactoryBase::RegisterFactory( itk::MetaImageIOFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GDCMImageIOFactory::New() );
