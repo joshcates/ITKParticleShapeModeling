@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 
+#include "itkIncludeRequiredIOFactories.h"
 #include <iostream>
 #include "itkPSMCommandLineClass.h"
 #include "itkPSMCommandLineClass.cxx"
@@ -47,6 +48,7 @@ int main( int argc, char *argv[] )
   
   try
   {
+    RegisterRequiredFactories();
     itk::PSMCommandLineClass<3>::Pointer psmClass = itk::PSMCommandLineClass<3>::New();
     psmClass->Run( argv[1], input_path_prefix, output_path );
   }
