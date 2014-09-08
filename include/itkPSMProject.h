@@ -142,7 +142,7 @@ namespace itk
       first check HasVariables.*/
   const std::vector<std::string > &GetVariablesText(const std::string &name) const;
 
- /** Stream the XML content of this project to a standard ostream.
+  /** Stream the XML content of this project to a standard ostream.
       Note that this method cannot be made const because the necessary
       accessor methods in itkDOMNode are not defined as const. This
       method, however, does not modify the content of the
