@@ -26,6 +26,7 @@
 itk_module_test()
 set(ITKParticleShapeModelingTests
 itkPSMCleanAndCenterLabelMapImageFilterTest.cxx
+itkPSMCommandLineTool.cxx
 itkPSMContainerTest.cxx
 itkPSMContainerArrayAttributeTest.cxx
 itkPSMCostFunctionTest.cxx

@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include <iostream>
+#include <sstream>
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "itkPSMEntropyMixedEffectsModelFilter.h"
@@ -180,13 +181,11 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
        }
      std::cout << "Done!" << std::endl;
    
-     // Read the number of timepoints per individual
-
-
      // Read the explanatory variables (e.g. time)
-     if (project->HasVariables("mixed_effects_test"))
+     std::vector<double> expl;
+     if (project->HasVariables("explanatory_variables"))
        {
-         std::vector<double> expl = project->GetVariables("mixed_effects_test");
+         expl = project->GetVariables("explanatory_variables");
          
          if (expl.size() < dt_files.size())
            {
@@ -197,7 +196,6 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
            {std::cout << "Setting variables" << std::endl;
              P->SetVariables(expl);
            }
-
        }
      else
        {
@@ -211,7 +209,8 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
      double regularization_decayspan = 2000.0f;
      double tolerance                = 1.0e-8;
      unsigned int maximum_iterations = 20000;
-     unsigned int timepoints_per_individual = 3;
+     unsigned int num_individuals = 1;
+
      if ( project->HasOptimizationAttribute("regularization_initial") )
        regularization_initial = project->GetOptimizationAttribute("regularization_initial");
      if ( project->HasOptimizationAttribute("regularization_final") )
@@ -222,8 +221,8 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
        tolerance = project->GetOptimizationAttribute("tolerance");
      if ( project->HasOptimizationAttribute("maximum_iterations") )
        maximum_iterations = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
-     if ( project->HasOptimizationAttribute("timepoints_per_individual") )
-       timepoints_per_individual = static_cast<unsigned int>(project->GetOptimizationAttribute("timepoints_per_individual"));
+     if ( project->HasOptimizationAttribute("num_individuals") )
+        num_individuals = static_cast<unsigned int>(project->GetOptimizationAttribute("num_individuals"));
 
      std::cout << "Optimization parameters: " << std::endl;
      std::cout << "    regularization_initial = " << regularization_initial << std::endl;
@@ -238,7 +237,36 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
      P->SetRegularizationFinal(regularization_final);
      P->SetRegularizationDecaySpan(regularization_decayspan);
      P->SetTolerance(tolerance);
+     P->SetNumIndividuals(num_individuals);
 
+     std::cout << "        num_individuals = " << P->GetNumIndividuals() << std::endl;
+
+     // Read the number of timepoints per individual
+     if (project->HasVariables("timepts_per_individual"))
+     {
+       std::vector<double> tp = project->GetVariables("timepts_per_individual");
+       vnl_vector<int> timepts; timepts.set_size(tp.size());
+       for(int i = 0; i < timepts.size(); i++)
+         timepts[i] = static_cast<int>(tp[i]);
+  
+       if (timepts.size() != num_individuals)
+       {
+         errstring += "Number of individuals and timepts associated dont match!";
+         passed = false;
+       }
+       else // set the timepts variables
+       {
+         std::cout << "Setting variables" << std::endl;
+         P->SetTimePointsPerIndividual(timepts);
+       }
+     }
+     else
+     {
+       errstring += "No timepts variables were present.";
+       passed = false;
+     }
+
+     // Update parameters
      P->Update();
     
      //   if (P->GetNumberOfElapsedIterations() >= maximum_iterations)
@@ -280,7 +308,38 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
                }
            }
        }
-     
+    
+     std::vector<double>::iterator it_expl;
+     vnl_vector<double> output_intercept_slope;
+     vnl_vector<double>::iterator output_it;
+     int file_count = 0;
+     for(it_expl = expl.begin(); it_expl != expl.end(); ++it_expl)
+       {
+         output_intercept_slope = P->GetShapeMatrix()->ComputeMean(*it_expl);
+         std::ostringstream ss;
+         ss << file_count;
+         std::string fname = output_path + "Intercept+TimexSlope" + "_" + ss.str() + ".lpts";
+         std::ofstream out(fname.c_str());
+         if ( !out )
+         {
+           errstring += "Could not open point file for output: ";
+         }
+         else
+         {
+           int counter = 0;
+           for(output_it = output_intercept_slope.begin(); output_it != output_intercept_slope.end(); ++output_it)
+           {
+             out << *output_it << ' ';
+             counter++;
+             if(counter == 3)
+             {
+               out << std::endl;
+               counter = 0;
+             }
+           }
+         }
+         file_count++;
+       }
     }
   catch(itk::ExceptionObject &e)
     {
