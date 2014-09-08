@@ -180,7 +180,6 @@ int itkPSMEntropyMixedEffectsModelFilterTest(int argc, char* argv[] )
        }
      std::cout << "Done!" << std::endl;
    
-
      // Read the number of timepoints per individual
 
 

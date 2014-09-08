@@ -33,6 +33,7 @@ void PSMMixedEffectsShapeMatrixAttribute<T,VDimension>
   // For each sample, which are in the columns, ...
   for (unsigned int i = 0; i < this->GetMeanMatrix().cols(); i++)
     {
+      // Convert m_TimePointsPerIndividual to an array
       int group_indx = i / m_TimePointsPerIndividual;
       tempvect = this->GetIntercept() + this->GetSlope() * expl(i);
       tempvect = tempvect + m_InterceptRand.get_row(group_indx);
