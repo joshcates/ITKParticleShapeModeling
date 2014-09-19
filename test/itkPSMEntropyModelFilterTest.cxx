@@ -23,67 +23,66 @@
 #include "itkCommand.h"
 
 namespace itk{
-    
-    class MyIterationCommand : public itk::Command
-    {
-    public:
-        /** Standard class typedefs. */
-        typedef MyIterationCommand         Self;
-        typedef Command                    Superclass;
-        typedef SmartPointer< Self >       Pointer;
-        typedef SmartPointer< const Self > ConstPointer;
-        
-        typedef Image<float, 3> ImageType;
-        
-        /** Run-time type information (and related methods). */
-        itkTypeMacro(MyIterationCommand, Command);
-        
-        /** Method for creation through the object factory. */
-        itkNewMacro(Self);
-        
-        /** This method will be passed a PSMGradientDescentOptimizer */
-        virtual void Execute(Object *caller, const EventObject &)
-        {
-            PSMEntropyModelFilter<ImageType> *o
+
+class MyIterationCommand : public itk::Command
+{
+public:
+  /** Standard class typedefs. */
+  typedef MyIterationCommand         Self;
+  typedef Command                    Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
+  
+  typedef Image<float, 3> ImageType;
+  
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(MyIterationCommand, Command);
+  
+  /** Method for creation through the object factory. */
+  itkNewMacro(Self);
+  
+  /** This method will be passed a PSMGradientDescentOptimizer */
+  virtual void Execute(Object *caller, const EventObject &)
+  {
+    PSMEntropyModelFilter<ImageType> *o
             = static_cast<PSMEntropyModelFilter<ImageType> *>(caller);
-            
-            // Print every 10 iterations
-            if (o->GetNumberOfElapsedIterations() % 10 != 0) return;
-            
-            std::cout << "Iteration # " << o->GetNumberOfElapsedIterations() << std::endl;
-            std::cout << " Eigenmode variances: ";
-            for (unsigned int i = 0; i < o->GetShapePCAVariances().size(); i++)
-            {
-                std::cout << o->GetShapePCAVariances()[i] << " ";
-            }
-            std::cout << std::endl;
-            std::cout << " Regularization = " << o->GetRegularizationConstant() << std::endl;
-        }
-        virtual void Execute(const Object *, const EventObject &)
-        {
-            std::cout << "SHOULDN'T BE HERE" << std::endl;
-        }
-        
-    protected:
-        MyIterationCommand() {}
-        ~MyIterationCommand() {}
-    private:
-        MyIterationCommand(const Self &);        //purposely not implemented
-        void operator=(const Self &); //purposely not implemented
-    };
     
+    // Print every 10 iterations
+    if (o->GetNumberOfElapsedIterations() % 10 != 0) { return; }
+    
+    std::cout << "Iteration # " << o->GetNumberOfElapsedIterations() << std::endl;
+    std::cout << " Eigenmode variances: ";
+    for (unsigned int i = 0; i < o->GetShapePCAVariances().size(); i++)
+      {
+        std::cout << o->GetShapePCAVariances()[i] << " ";
+      }
+    std::cout << std::endl;
+    std::cout << " Regularization = " << o->GetRegularizationConstant() << std::endl;
+  }
+  virtual void Execute(const Object *, const EventObject &)
+  {
+    std::cout << "SHOULDN'T BE HERE" << std::endl;
+  }
+  
+protected:
+  MyIterationCommand() {}
+  ~MyIterationCommand() {}
+private:
+  MyIterationCommand(const Self &);        //purposely not implemented
+  void operator=(const Self &); //purposely not implemented
+};
 } // end namespace itk
 
 /** This test exercises functionality of the base itkPSMEntropyModelFilter class */
 int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
 {
-    bool passed = true;
-    std::string errstring = "";
-    std::string output_path = "";
-    std::string input_path_prefix = "";
-    
-    // Check for proper arguments
-    if (argc < 2)
+  bool passed = true;
+  std::string errstring = "";
+  std::string output_path = "";
+  std::string input_path_prefix = "";
+  
+  // Check for proper arguments
+  if (argc < 2)
     {
         std::cout << "Wrong number of arguments. \nUse: "
         << "itkPSMEntropyModelFilterTest parameter_file [output_path] [input_path]\n"
@@ -92,52 +91,50 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
         << std::endl;
         return EXIT_FAILURE;
     }
-    
-    if (argc >2)
+  
+  if (argc >2)
     {
-        output_path = std::string(argv[2]);
+      output_path = std::string(argv[2]);
+    }
+  if (argc >3)
+    {
+      input_path_prefix = std::string(argv[3]);
     }
     
-    if (argc >3)
+  typedef itk::Image<float, 3> ImageType;
+    
+  try
     {
-        input_path_prefix = std::string(argv[3]);
-    }
-    
-    
-    typedef itk::Image<float, 3> ImageType;
-    
-    try
-    {
-        // Read the project parameters
-        itk::PSMProjectReader::Pointer xmlreader =
+      // Read the project parameters
+      itk::PSMProjectReader::Pointer xmlreader =
         itk::PSMProjectReader::New();
-        xmlreader->SetFileName(argv[1]);
-        xmlreader->Update();
-        
-        itk::PSMProject::Pointer project = xmlreader->GetOutput();
-        
-        // Create the modeling filter and set up the optimization.
-        itk::PSMEntropyModelFilter<ImageType>::Pointer P
+      xmlreader->SetFileName(argv[1]);
+      xmlreader->Update();
+      
+      itk::PSMProject::Pointer project = xmlreader->GetOutput();
+      
+      // Create the modeling filter and set up the optimization.
+      itk::PSMEntropyModelFilter<ImageType>::Pointer P
         = itk::PSMEntropyModelFilter<ImageType>::New();
-        
-        // Setup the Callback function that is executed after each
-        // iteration of the solver.
-        itk::MyIterationCommand::Pointer mycommand = itk::MyIterationCommand::New();
-        P->AddObserver(itk::IterationEvent(), mycommand);
-        
-        // Load the distance transforms
-        const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
-        std::cout << "Reading distance transforms ..." << std::endl;
-        for (unsigned int i = 0; i < dt_files.size(); i++)
+      
+      // Setup the Callback function that is executed after each
+      // iteration of the solver.
+      itk::MyIterationCommand::Pointer mycommand = itk::MyIterationCommand::New();
+      P->AddObserver(itk::IterationEvent(), mycommand);
+      
+      // Load the distance transforms
+      const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
+      std::cout << "Reading distance transforms ..." << std::endl;
+      for (unsigned int i = 0; i < dt_files.size(); i++)
         {
-            itk::ImageFileReader<ImageType>::Pointer reader =
+          itk::ImageFileReader<ImageType>::Pointer reader =
             itk::ImageFileReader<ImageType>::New();
-            reader->SetFileName(input_path_prefix + dt_files[i]);
-            reader->Update();
-            
-            std::cout << "  " << dt_files[i] << std::endl;
-            
-            P->SetInput(i,reader->GetOutput());
+          reader->SetFileName(input_path_prefix + dt_files[i]);
+          reader->Update();
+          
+          std::cout << "  " << dt_files[i] << std::endl;
+          
+          P->SetInput(i,reader->GetOutput());
         }
         std::cout << "Done!" << std::endl;
         
@@ -148,7 +145,7 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
         const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
         std::cout << "Reading the initial model correspondences ..." << std::endl;
         for (unsigned int i = 0; i < pt_files.size(); i++)
-        {
+          {
             // Read the points for this file and add as a list
             std::vector<itk::PSMEntropyModelFilter<ImageType>::PointType> c;
             
@@ -165,14 +162,14 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
             // Read all of the points, one point per line.
             while (in)
             {
-                itk::PSMEntropyModelFilter<ImageType>::PointType pt;
-                
-                for (unsigned int d = 0; d < 3; d++)
+              itk::PSMEntropyModelFilter<ImageType>::PointType pt;
+              
+              for (unsigned int d = 0; d < 3; d++)
                 {
-                    in >> pt[d];
+                  in >> pt[d];
                 }
-                c.push_back(pt);
-                counter++;
+              c.push_back(pt);
+              counter++;
             }
             // this algorithm pushes the last point twice
             c.pop_back();
@@ -182,7 +179,7 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
             P->SetInputCorrespondencePoints(i,c);
             
             std::cout << "  " << pt_files[i] << std::endl;
-        }
+          }
         std::cout << "Done!" << std::endl;
         
         //  Read some parameters from the file or provide defaults
@@ -192,15 +189,15 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
         double tolerance                = 1.0e-8;
         unsigned int maximum_iterations = 200000;
         if ( project->HasOptimizationAttribute("regularization_initial") )
-            regularization_initial = project->GetOptimizationAttribute("regularization_initial");
+          regularization_initial = project->GetOptimizationAttribute("regularization_initial");
         if ( project->HasOptimizationAttribute("regularization_final") )
-            regularization_final = project->GetOptimizationAttribute("regularization_final");
+          regularization_final = project->GetOptimizationAttribute("regularization_final");
         if ( project->HasOptimizationAttribute("regularization_decayspan") )
-            regularization_decayspan = project->GetOptimizationAttribute("regularization_decayspan");
+          regularization_decayspan = project->GetOptimizationAttribute("regularization_decayspan");
         if ( project->HasOptimizationAttribute("tolerance") )
-            tolerance = project->GetOptimizationAttribute("tolerance");
+          tolerance = project->GetOptimizationAttribute("tolerance");
         if ( project->HasOptimizationAttribute("maximum_iterations") )
-            maximum_iterations = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
+          maximum_iterations = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
         
         std::cout << "Optimization parameters: " << std::endl;
         std::cout << "    regularization_initial = " << regularization_initial << std::endl;
@@ -233,9 +230,9 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
         }
         
         if (passed == true)
-        {
+          {
             for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
-            {
+              {
                 // Open the output file.
                 std::string fname = output_path + out_files[d];
                 std::ofstream out( fname.c_str() );
@@ -245,17 +242,17 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
                 }
                 else
                 {
-                    for (unsigned int j = 0; j < P->GetParticleSystem()->GetNumberOfParticles(d); j++)
+                  for (unsigned int j = 0; j < P->GetParticleSystem()->GetNumberOfParticles(d); j++)
                     {
-                        for (unsigned int i = 0; i < 3; i++)
+                      for (unsigned int i = 0; i < 3; i++)
                         {
-                            out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
+                          out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
                         }
                         out << std::endl;
                     }
                 }
-            }
-        }
+              }
+          }
         
         // Now run for a specific number of iterations.  Also tests
         // restart of the filter.
@@ -263,35 +260,26 @@ int itkPSMEntropyModelFilterTest(int argc, char* argv[] )
         P->SetTolerance(0.0f); // impossible convergence criterium
         P->Update();
         if (P->GetNumberOfElapsedIterations() != 3)
-        {
+          {
             errstring += "Optimization did not iterate the specified number of fixed iterations.\n";
             passed = false;
         }
-        
     }
-    catch(itk::ExceptionObject &e)
-    {
-        errstring = "ITK exception with description: " + std::string(e.GetDescription())
-        + std::string("\n at location:") + std::string(e.GetLocation())
-        + std::string("\n in file:") + std::string(e.GetFile());
-        passed = false;
-    }
-    catch(...)
-    {
+  catch(itk::ExceptionObject &e)
+      {
         errstring = "Unknown exception thrown";
         passed = false;
-    }
-    
-    if (passed)
+      }
+  
+  if (passed)
     {
-        std::cout << "All tests passed" << std::endl;
+      std::cout << "All tests passed" << std::endl;
         return EXIT_SUCCESS;
     }
     else
-    {
+      {
         std::cout << "Test failed with the following error:" << std::endl;
         std::cout << errstring << std::endl;
         return EXIT_FAILURE;
-    }
+      }
 }
-

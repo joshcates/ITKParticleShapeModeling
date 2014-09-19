@@ -36,6 +36,15 @@ void PSMMixedEffectsShapeMatrixAttribute<T,VDimension>
   {
     if(i == indexSum)
     {
+
+      //// Convert m_TimePointsPerIndividual to an array
+      //  int group_indx = i / m_TimePointsPerIndividual;
+      //  tempvect = this->GetIntercept() + this->GetSlope() * expl(i);
+      //  tempvect = tempvect + m_InterceptRand.get_row(group_indx);
+      //  tempvect = tempvect + m_SlopeRand.get_row(group_indx) * expl(i);
+      //// ... compute the mean.
+      //this->GetMeanMatrix().set_column(i, tempvect);
+      
       group_indx = group_indx + 1;
       indexSum += m_TimeptsPerIndividual(group_indx);
     }

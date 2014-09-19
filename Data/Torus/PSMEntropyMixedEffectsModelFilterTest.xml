@@ -21,8 +21,7 @@
       mixed.05.mha
       mixed.06.mha
       mixed.07.mha
-      mixed.08.mha
-   
+      mixed.08.mha  
     </distance_transforms>
 
     <variables name = "mixed_effects_test">
