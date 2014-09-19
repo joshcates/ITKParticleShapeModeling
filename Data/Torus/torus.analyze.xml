@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<point_files>  
+initialize.00.lpts
+initialize.01.lpts
+initialize.02.lpts
+initialize.03.lpts
+initialize.04.lpts
+initialize.05.lpts
+initialize.06.lpts
+initialize.07.lpts
+initialize.08.lpts
+initialize.09.lpts
+optimized.00.lpts
+optimized.01.lpts
+optimized.02.lpts
+optimized.03.lpts
+optimized.04.lpts
+optimized.05.lpts
+optimized.06.lpts
+optimized.07.lpts
+optimized.08.lpts 
+optimized.09.lpts 
+</point_files>		  <!-- Set of correspondence points -->
+                     <!-- in "world" coordinate space. -->
