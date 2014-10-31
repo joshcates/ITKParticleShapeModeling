@@ -60,19 +60,16 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     itkTypeMacro(PSMCommandLineClass, DataObject);
   
     /** Input distance transforms image typedef */
-    typedef typename itk::Image<float, 3> ImageType;
+    typedef typename itk::Image<float, VDimension> ImageType;
     /** PSM model optimization filter typedef */
     typedef PSMEntropyModelFilter<typename PSMCommandLineClass::ImageType> EntropyModelFilterType;
     /** Procrustes Registration typedef */
-    typedef PSMProcrustesRegistration<3> ProcrustesRegistrationType;
+    typedef PSMProcrustesRegistration<VDimension> ProcrustesRegistrationType;
     /** Project Reader typedef */
     typedef PSMProjectReader ProjectReaderType;
     /** Project typedef */
     typedef PSMProject ProjectType;
   
-    /** Callback to run Procrustes Registration on the shapes at the interval 
-     *  specified in the project parameter file or by default. */
-    void IterateCallback(itk::Object *, const itk::EventObject &);
     /** Read the distance transforms that are provided as inputs to the 
      *  optimzation filter. */
     void ReadInputs(std::string input_path_prefix);
@@ -82,12 +79,19 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     void WriteOutputs(std::string output_path);
     /** Run the steps of the optimization process */
     void Run(const char *fname, std::string input_path_prefix, std::string output_path);
-    /** Set the file name of the project parameter file */
-    void SetProjectParameterFileName(const char *fname);
   
     /** Constructor and destructor */
     PSMCommandLineClass();
     virtual ~PSMCommandLineClass() {};
+  
+  protected:
+    /** Set the file name of the project parameter file */
+    void SetProjectParameterFileName(const char *fname);
+    /** Set default optimization scale parameters */
+    void SetDefaultScales(unsigned int num);
+    /** Callback to run Procrustes Registration on the shapes at the interval
+    *  specified in the project parameter file or by default. */
+    void IterateCallback(itk::Object *, const itk::EventObject &);
   
   private:
     PSMCommandLineClass(const Self&); //purposely not implemented
