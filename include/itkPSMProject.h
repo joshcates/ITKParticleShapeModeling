@@ -91,6 +91,9 @@ namespace itk
       specified by name.  If no name is given, this method just
       returns the first list of names give by a model_tag. */
   const std::vector<std::string> &GetModel(const std::string &name);
+  
+  /** Returns true if the model with the specified name is given. */
+  bool HasModel(const std::string &name) const;
 
   /** Get the file names of the distance transforms that are to be
       used as input to an optimization process. Corresponds to the

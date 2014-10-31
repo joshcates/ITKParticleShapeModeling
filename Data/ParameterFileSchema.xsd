@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="http://www.w3.org/2001/XMLSchema-instance"/>
+  <xs:element name="psm_project">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="notes"/>
+        <xs:element ref="data"/>
+        <xs:element ref="optimization"/>
+      </xs:sequence>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="version" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notes" type="xs:string"/>
+  <xs:element name="data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="distance_transforms"/>
+        <xs:element maxOccurs="unbounded" ref="model"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distance_transforms" type="xs:string"/>
+  <xs:element name="model">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="optimization">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:restriction base="xs:anyType">
+          <xs:attribute name="regularization_initial" use="required" type="xs:decimal"/>
+          <xs:attribute name="regularization_final" use="required" type="xs:decimal"/>
+          <xs:attribute name="regularization_decayspan" use="required" type="xs:integer"/>
+          <xs:attribute name="tolerance" use="required" type="xs:decimal"/>
+          <xs:attribute name="maximum_iterations" use="required" type="xs:integer"/>
+          <xs:attribute name="procrustes_interval" use="required" type="xs:integer"/>
+        </xs:restriction>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

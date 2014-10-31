@@ -290,6 +290,34 @@ PSMProject::GetModel(const std::string &name)
 }
 
 
+bool PSMProject::HasModel(const std::string &name) const
+{
+  const PSMDOMNode *data = this->GetDataNode();
+  
+  // Search the data tree for nodes called model_tag
+  DOMNode::ConstChildrenListType models;
+  data->GetChildren(model_tag, models);
+  
+  if (models.size() == 0)
+  {
+    return false;
+  }
+  
+  // Search the list of variables for one with the correct name
+  for (unsigned int i = 0; i < models.size(); i++)
+    {
+      if (models[i]->HasAttribute(name_tag))
+        {
+          if (models[i]->GetAttribute(name_tag) == name)
+            {
+              return true;
+            }
+        }
+    }
+  return false;
+}
+
+
 void PSMProject::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);

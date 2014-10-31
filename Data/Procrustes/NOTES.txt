@@ -1,0 +1,14 @@
+3D Procrustes Registration Test:
+Distance transform created from ResampleItk_NoPVNoLAA_1.nrrd. Result is test_LA_DT_1.nrrd.  Renamed to test_LA.nrrd. Original files are in salmabengali/UROPSubset.
+
+2D Procrustes Registration Test:
+Distance transform created from Crop_P2_endo.nrrd. Result is Crop_P2_endoDT.nrrd. Renamed to endo_2D.nrrd. Original files are in salmabengali/Procrustes2D.
+
+3D Procrustes Function Test:
+Transformed point sets created from uropSubsetNoProc.01.lpts. Original file is at salmabengali/ProcrustesMatlab. 
+
+2D Procrustes Function Test:
+Transformed point sets created from Crop_P2optimized.00.lpts. Original file is at salmabengali/Procrustes2D 
+
+2D Entropy Model Filter Test:
+DTs created from original DTs in salmabengali/Procrustes2D. The DTs used in the test were registered to P2_endoDT so as to make all the centers the same. Registration parameters in Corview: Init:ImageCenters, Reg:Initial, Metric:MMI, Interp:Linear.
