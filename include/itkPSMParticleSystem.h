@@ -32,6 +32,7 @@
 #include "itkEventObject.h"
 #include "itkPSMNeighborhood.h"
 #include "vnl/vnl_inverse.h"
+#include "vnl/vnl_det.h"
 #include <map>
 #include <vector>
 
@@ -375,8 +376,20 @@ public:
   /** Returns the inverse of a transformation matrix.*/
   inline TransformType InvertTransform(const TransformType &T) const
   {
-    // Note, vnl_inverse is optimized for small matrices 1x1 - 4x4
-    return vnl_inverse(T);
+    double det = vnl_det(T);
+    // Check if the inverse can be calculated. If not, set the inverse
+    // to identity.
+    if (det == 0)
+    {
+      TransformType identity;
+      identity.set_identity();
+      return identity;
+    }
+    else
+    {
+      // Note, vnl_inverse is optimized for small matrices 1x1 - 4x4
+      return vnl_inverse(T);
+    }
   }
 
   /** Flag/Unflag a domain.  Flagging a domain has different meanings according

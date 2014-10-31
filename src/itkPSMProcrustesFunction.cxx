@@ -97,14 +97,14 @@ void PSMProcrustesFunction<VDimension>
         transformIt++;
       }
       // Calculate the sum of squares of discrepancies between
-      // the
+      // the shapes
       newSumOfSquares = ComputeSumOfSquares(shapes);
       diff = sumOfSquares - newSumOfSquares;
       
       sumOfSquares = newSumOfSquares;
       counter++;
       
-      if(counter > 1000)
+      if(counter >= 1000)
       {
         errstring = "Number of iterations on shapes is too high.";
         ExceptionObject e( __FILE__, __LINE__ );
@@ -123,7 +123,6 @@ void PSMProcrustesFunction<VDimension>
   {
     errstring = "Unknown exception thrown";
   }
-  //std::cout <<  "counter: " << counter << std::endl;
 }
 // Explicitly instantiate the function for 3D and 2D
 template void PSMProcrustesFunction<3>::RunGeneralizedProcrustes(SimilarityTransformListType & transforms,
