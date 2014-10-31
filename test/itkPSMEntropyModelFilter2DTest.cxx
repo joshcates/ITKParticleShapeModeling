@@ -143,75 +143,42 @@ int itkPSMEntropyModelFilter2DTest(int argc, char* argv[] )
         std::cout << "Number of inputs = " << P->GetNumberOfInputs() << std::endl;
         std::cout << "Correct number of inputs = " << dt_files.size() << std::endl;
       
-        // Exception on failure
+        // Get number of optimization scales
         unsigned int number_of_scales = project->GetNumberOfOptimizationScales();
         std::cout << "Found " << number_of_scales << " number of scales. " << std::endl;
-      
-        //  Read some parameters from the file or provide defaults
-        /*double regularization_initial   = 100.0f;
-        double regularization_final     = 5.0f;
-        double regularization_decayspan = 2000.0f;
-        double tolerance                = 1.0e-8;
-        unsigned int maximum_iterations = 200000;
-        if ( project->HasOptimizationAttribute("regularization_initial") )
-            regularization_initial = project->GetOptimizationAttribute("regularization_initial");
-        if ( project->HasOptimizationAttribute("regularization_final") )
-            regularization_final = project->GetOptimizationAttribute("regularization_final");
-        if ( project->HasOptimizationAttribute("regularization_decayspan") )
-            regularization_decayspan = project->GetOptimizationAttribute("regularization_decayspan");
-        if ( project->HasOptimizationAttribute("tolerance") )
-            tolerance = project->GetOptimizationAttribute("tolerance");
-        if ( project->HasOptimizationAttribute("maximum_iterations") )
-            maximum_iterations = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations"));
+          
+        // We need vectors of parameters, one for each scale.
+        std::vector<double> regularization_initial(number_of_scales);
+        std::vector<double> regularization_final(number_of_scales);
+        std::vector<double> regularization_decayspan(number_of_scales);
+        std::vector<double> tolerance(number_of_scales);
+        std::vector<unsigned int> maximum_iterations(number_of_scales);
         
-        std::cout << "Optimization parameters: " << std::endl;
-        std::cout << "    regularization_initial = " << regularization_initial << std::endl;
-        std::cout << "      regularization_final = " << regularization_final << std::endl;
-        std::cout << "  regularization_decayspan = " << regularization_decayspan << std::endl;
-        std::cout << "                 tolerance = " << tolerance << std::endl;
-        std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
+        // Read parameters for each scale
+        for (unsigned int i = 0; i < number_of_scales; i++)
+        {
+          std::cout << "Optimization parameters for scale " << i << ": " << std::endl;
+          regularization_initial[i] = project->GetOptimizationAttribute("regularization_initial",i);
+          std::cout << "    regularization_initial = " << regularization_initial[i] << std::endl;
+          regularization_final[i] = project->GetOptimizationAttribute("regularization_final",i);
+          std::cout << "      regularization_final = " << regularization_final[i] << std::endl;
+          regularization_decayspan[i] = project->GetOptimizationAttribute("regularization_decayspan",i);
+          std::cout << "  regularization_decayspan = " << regularization_decayspan[i] << std::endl;
+          tolerance[i] = project->GetOptimizationAttribute("tolerance",i);
+          std::cout << "                 tolerance = " << tolerance[i] << std::endl;
+          maximum_iterations[i] = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations",i));
+          std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
+        }
         
-        // Set the parameters and Run the optimization.
-        P->SetMaximumNumberOfIterations(maximum_iterations);
+        P->SetNumberOfScales(number_of_scales);
+        P->SetRegularizationDecaySpan(regularization_decayspan);
         P->SetRegularizationInitial(regularization_initial);
         P->SetRegularizationFinal(regularization_final);
-        P->SetRegularizationDecaySpan(regularization_decayspan);
         P->SetTolerance(tolerance);
-        P->Update();*/
+        P->SetMaximumNumberOfIterations(maximum_iterations);
+        P->Update();
       
-      // We need vectors of parameters, one for each scale.
-      std::vector<double> regularization_initial(number_of_scales);
-      std::vector<double> regularization_final(number_of_scales);
-      std::vector<double> regularization_decayspan(number_of_scales);
-      std::vector<double> tolerance(number_of_scales);
-      std::vector<unsigned int> maximum_iterations(number_of_scales);
-      
-      // Read parameters for each scale
-      for (unsigned int i = 0; i < number_of_scales; i++)
-      {
-        std::cout << "Optimization parameters for scale " << i << ": " << std::endl;
-        regularization_initial[i] = project->GetOptimizationAttribute("regularization_initial",i);
-        std::cout << "    regularization_initial = " << regularization_initial[i] << std::endl;
-        regularization_final[i] = project->GetOptimizationAttribute("regularization_final",i);
-        std::cout << "      regularization_final = " << regularization_final[i] << std::endl;
-        regularization_decayspan[i] = project->GetOptimizationAttribute("regularization_decayspan",i);
-        std::cout << "  regularization_decayspan = " << regularization_decayspan[i] << std::endl;
-        tolerance[i] = project->GetOptimizationAttribute("tolerance",i);
-        std::cout << "                 tolerance = " << tolerance[i] << std::endl;
-        maximum_iterations[i] = static_cast<unsigned int>(project->GetOptimizationAttribute("maximum_iterations",i));
-        std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
-      }
-      
-      P->SetNumberOfScales(number_of_scales);
-      P->SetRegularizationDecaySpan(regularization_decayspan);
-      P->SetRegularizationInitial(regularization_initial);
-      P->SetRegularizationFinal(regularization_final);
-      P->SetTolerance(tolerance);
-      P->SetMaximumNumberOfIterations(maximum_iterations);
-      P->Update();
-
-      
-        /*if (P->GetNumberOfElapsedIterations() >= maximum_iterations)
+        /*if (P->GetNumberOfElapsedIterations() >= 5000)
         {
             errstring += "Optimization did not converge based on tolerance criteria.\n";
             passed = false;
@@ -245,13 +212,14 @@ int itkPSMEntropyModelFilter2DTest(int argc, char* argv[] )
                         {
                             out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
                         }
-                        out << "0.0"; // printed for display in SWViewer
+                        out << "0.0"; // printed for display in SWViewer2
                         out << std::endl;
                     }
                 }
             }
         }
         std::cout << "GetNumberOfParticles(0): " << P->GetParticleSystem()->GetNumberOfParticles(0) << std::endl;
+        // TODO: Is this step necessary here?
         // Now run for a specific number of iterations.  Also tests
         // restart of the filter.
         /*P->SetMaximumNumberOfIterations(3);
