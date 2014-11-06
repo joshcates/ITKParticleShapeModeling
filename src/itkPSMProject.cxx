@@ -78,6 +78,8 @@ bool PSMProject
       if (opt->HasAttribute(number_of_scales_tag))
         {
           nscales = static_cast<unsigned int>(atoi(opt->GetAttribute(number_of_scales_tag).c_str()));
+          // If the number_of_scales_tag is the one being checked
+          if(name == number_of_scales_tag) { return true; }
         }
       
       // Did the user ask for a scale that isn't specified?
