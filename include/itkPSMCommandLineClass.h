@@ -73,8 +73,10 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     /** Read the distance transforms that are provided as inputs to the 
      *  optimzation filter. */
     void ReadInputs(std::string input_path_prefix);
-    /** Read the input parameters that set various optimization attribute values */
-    void ReadInputParameters();
+    /** Read the input optimization scales that set various optimization attribute values */
+    void ReadInputOptimizationScales();
+    /** Read the optimization attribute values with no multiple scales */
+    void ReadInputOptimizationParameters();
     /** Write out the optimized point sets to user specified files */
     void WriteOutputs(std::string output_path);
     /** Run the steps of the optimization process */

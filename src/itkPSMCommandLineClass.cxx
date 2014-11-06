@@ -137,104 +137,65 @@ void PSMCommandLineClass<VDimension>
     }
     std::cout << "Done!" << std::endl;
   }
+
+  // Check if scales have been supplied
+  if(this->m_Project->HasOptimizationAttribute("number_of_scales")
+     &&
+     (this->m_Project->GetNumberOfOptimizationScales()) != 0)
+  {
+    // Read the input optimization scales from the project file.
+    this->ReadInputOptimizationScales();
+  }
+  // Else if scales have not been supplied, then
+  // default scale values will be used.
   else
   {
-    // If initialization is not supplied, then optimization scales will be set to
-    // default values. 
-    if(!this->m_Project->HasOptimizationAttribute("number_of_scales"))
-    {
-      // Set default parameters for optimization scales. Number of scales
-      // has to at least one more than the number of input images.
-      this->SetDefaultScales(dt_files.size() + 1);
-    }
+    // TODO: Set default parameters for optimization scales. Number of scales
+    // has to be at least one more than the number of input images.
+    this->SetDefaultScales(dt_files.size() + 1);
   }
-  this->ReadInputParameters();
+  // If scales are not supplied, then read optimization parameters (single scale).
+  this->ReadInputOptimizationParameters();
 }
   
 template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
-::ReadInputParameters()
-{
-  this->m_ProcrustesRegistration = PSMCommandLineClass::ProcrustesRegistrationType::New();
+::ReadInputOptimizationScales()
+{  
+  unsigned int number_of_scales = this->m_Project->GetNumberOfOptimizationScales();
+  std::cout << "Found " << number_of_scales << " scales. " << std::endl;
   
-  // Check if project file supplies optimization scales
-  if(this->m_Project->HasOptimizationAttribute("number_of_scales"))
+  // We need vectors of parameters, one for each scale.
+  std::vector<double> regularization_initial(number_of_scales);
+  std::vector<double> regularization_final(number_of_scales);
+  std::vector<double> regularization_decayspan(number_of_scales);
+  std::vector<double> tolerance(number_of_scales);
+  std::vector<unsigned int> maximum_iterations(number_of_scales);
+  
+  // Read parameters for each scale
+  for (unsigned int i = 0; i < number_of_scales; i++)
   {
-    unsigned int number_of_scales = this->m_Project->GetNumberOfOptimizationScales();
-    std::cout << "Found " << number_of_scales << " scales. " << std::endl;
-    
-    // We need vectors of parameters, one for each scale.
-    std::vector<double> regularization_initial(number_of_scales);
-    std::vector<double> regularization_final(number_of_scales);
-    std::vector<double> regularization_decayspan(number_of_scales);
-    std::vector<double> tolerance(number_of_scales);
-    std::vector<unsigned int> maximum_iterations(number_of_scales);
-    
-    // Read parameters for each scale
-    for (unsigned int i = 0; i < number_of_scales; i++)
-    {
-      std::cout << "Optimization parameters for scale " << i << ": " << std::endl;
-      regularization_initial[i] = this->m_Project->GetOptimizationAttribute("regularization_initial",i);
-      std::cout << "    regularization_initial = " << regularization_initial[i] << std::endl;
-      regularization_final[i] = this->m_Project->GetOptimizationAttribute("regularization_final",i);
-      std::cout << "      regularization_final = " << regularization_final[i] << std::endl;
-      regularization_decayspan[i] = this->m_Project->GetOptimizationAttribute("regularization_decayspan",i);
-      std::cout << "  regularization_decayspan = " << regularization_decayspan[i] << std::endl;
-      tolerance[i] = this->m_Project->GetOptimizationAttribute("tolerance",i);
-      std::cout << "                 tolerance = " << tolerance[i] << std::endl;
-      maximum_iterations[i] = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations",i));
-      std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
-    }
-    // Set the parameters in the filter
-    this->m_Filter->SetNumberOfScales(number_of_scales);
-    this->m_Filter->SetRegularizationInitial(regularization_initial);
-    this->m_Filter->SetRegularizationFinal(regularization_final);
-    this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
-    this->m_Filter->SetTolerance(tolerance);
-    this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
+    std::cout << "Optimization parameters for scale " << i << ": " << std::endl;
+    regularization_initial[i] = this->m_Project->GetOptimizationAttribute("regularization_initial",i);
+    std::cout << "    regularization_initial = " << regularization_initial[i] << std::endl;
+    regularization_final[i] = this->m_Project->GetOptimizationAttribute("regularization_final",i);
+    std::cout << "      regularization_final = " << regularization_final[i] << std::endl;
+    regularization_decayspan[i] = this->m_Project->GetOptimizationAttribute("regularization_decayspan",i);
+    std::cout << "  regularization_decayspan = " << regularization_decayspan[i] << std::endl;
+    tolerance[i] = this->m_Project->GetOptimizationAttribute("tolerance",i);
+    std::cout << "                 tolerance = " << tolerance[i] << std::endl;
+    maximum_iterations[i] = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations",i));
+    std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
   }
-  else if(this->m_Project->HasModel(std::string("initialization")))
-  {
-    // Provide some default parameters
-    double regularization_initial   = 10.0f;
-    double regularization_final     = 2.0f;
-    double regularization_decayspan = 5000.0f;
-    double tolerance                = 0.01;
-    unsigned int maximum_iterations = 1000;
+  // Set the parameters in the filter
+  this->m_Filter->SetNumberOfScales(number_of_scales);
+  this->m_Filter->SetRegularizationInitial(regularization_initial);
+  this->m_Filter->SetRegularizationFinal(regularization_final);
+  this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
+  this->m_Filter->SetTolerance(tolerance);
+  this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
 
-    // Read the optimization parameters and set them in the filter
-    std::cout << "Optimization parameters: " << std::endl;
-    if ( this->m_Project->HasOptimizationAttribute("regularization_initial") )
-    {
-      regularization_initial = this->m_Project->GetOptimizationAttribute("regularization_initial");
-      this->m_Filter->SetRegularizationInitial(regularization_initial);
-      std::cout << "    regularization_initial = " << regularization_initial << std::endl;
-    }
-    if ( this->m_Project->HasOptimizationAttribute("regularization_final") )
-    {
-      regularization_final = this->m_Project->GetOptimizationAttribute("regularization_final");
-      this->m_Filter->SetRegularizationFinal(regularization_final);
-      std::cout << "      regularization_final = " << regularization_final << std::endl;
-    }
-    if ( this->m_Project->HasOptimizationAttribute("regularization_decayspan") )
-    {
-      regularization_decayspan = this->m_Project->GetOptimizationAttribute("regularization_decayspan");
-      this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
-      std::cout << "  regularization_decayspan = " << regularization_decayspan << std::endl;
-    }
-    if ( this->m_Project->HasOptimizationAttribute("tolerance") )
-    {
-      tolerance = this->m_Project->GetOptimizationAttribute("tolerance");
-      this->m_Filter->SetTolerance(tolerance);
-      std::cout << "                 tolerance = " << tolerance << std::endl;
-    }
-    if ( this->m_Project->HasOptimizationAttribute("maximum_iterations") )
-    {
-      maximum_iterations = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations"));
-      this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
-      std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
-    }
-  }
+  this->m_ProcrustesRegistration = PSMCommandLineClass::ProcrustesRegistrationType::New();
   // Set Procrustes interval for ProcrustesRegistration
   unsigned int procrustes_interval = 10;   // Default value
   if ( this->m_Project->HasOptimizationAttribute("procrustes_interval") )
@@ -245,6 +206,51 @@ void PSMCommandLineClass<VDimension>
   }
   // Set ParticleSystem for ProcrustesRegistration
   this->m_ProcrustesRegistration->SetPSMParticleSystem(this->m_Filter->GetParticleSystem());
+}
+  
+template <unsigned int VDimension>
+void PSMCommandLineClass<VDimension>
+::ReadInputOptimizationParameters()
+{
+  // Provide some default parameters
+  double regularization_initial   = 10.0f;
+  double regularization_final     = 2.0f;
+  double regularization_decayspan = 5000.0f;
+  double tolerance                = 0.01;
+  unsigned int maximum_iterations = 1000;
+
+  // Read the optimization parameters and set them in the filter
+  std::cout << "Optimization parameters: " << std::endl;
+  if ( this->m_Project->HasOptimizationAttribute("regularization_initial") )
+  {
+    regularization_initial = this->m_Project->GetOptimizationAttribute("regularization_initial");
+    this->m_Filter->SetRegularizationInitial(regularization_initial);
+    std::cout << "    regularization_initial = " << regularization_initial << std::endl;
+  }
+  if ( this->m_Project->HasOptimizationAttribute("regularization_final") )
+  {
+    regularization_final = this->m_Project->GetOptimizationAttribute("regularization_final");
+    this->m_Filter->SetRegularizationFinal(regularization_final);
+    std::cout << "      regularization_final = " << regularization_final << std::endl;
+  }
+  if ( this->m_Project->HasOptimizationAttribute("regularization_decayspan") )
+  {
+    regularization_decayspan = this->m_Project->GetOptimizationAttribute("regularization_decayspan");
+    this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
+    std::cout << "  regularization_decayspan = " << regularization_decayspan << std::endl;
+  }
+  if ( this->m_Project->HasOptimizationAttribute("tolerance") )
+  {
+    tolerance = this->m_Project->GetOptimizationAttribute("tolerance");
+    this->m_Filter->SetTolerance(tolerance);
+    std::cout << "                 tolerance = " << tolerance << std::endl;
+  }
+  if ( this->m_Project->HasOptimizationAttribute("maximum_iterations") )
+  {
+    maximum_iterations = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations"));
+    this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
+    std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
+  }
 }
 
 template <unsigned int VDimension>
@@ -337,6 +343,13 @@ void PSMCommandLineClass<VDimension>
     maximum_iterations[i] = 1000;
     std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
   }
+  // Set the parameters in the filter
+  this->m_Filter->SetNumberOfScales(number_of_scales);
+  this->m_Filter->SetRegularizationInitial(regularization_initial);
+  this->m_Filter->SetRegularizationFinal(regularization_final);
+  this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
+  this->m_Filter->SetTolerance(tolerance);
+  this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
 }
   
 template <unsigned int VDimension>
