@@ -150,9 +150,9 @@ void PSMCommandLineClass<VDimension>
   // default scale values will be used.
   else
   {
-    // TODO: Set default parameters for optimization scales. Number of scales
-    // has to be at least one more than the number of input images.
-    this->SetDefaultScales(dt_files.size() + 1);
+    // Set default parameters for optimization scales. TODO:  Number of scales
+    // has to be at least one more than the number of input images?
+    this->SetDefaultScales();
   }
   // If scales are not supplied, then read optimization parameters (single scale).
   this->ReadInputOptimizationParameters();
@@ -319,8 +319,9 @@ void PSMCommandLineClass<VDimension>
 
 template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
-::SetDefaultScales(unsigned int number_of_scales)
+::SetDefaultScales()
 {
+  unsigned int number_of_scales = 10;
   // Set default parameters for the optimization scales
   std::vector<double> regularization_initial(number_of_scales);
   std::vector<double> regularization_final(number_of_scales);

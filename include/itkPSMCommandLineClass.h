@@ -90,7 +90,7 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     /** Set the file name of the project parameter file */
     void SetProjectParameterFileName(const char *fname);
     /** Set default optimization scale parameters */
-    void SetDefaultScales(unsigned int num);
+    void SetDefaultScales();
     /** Callback to run Procrustes Registration on the shapes at the interval
     *  specified in the project parameter file or by default. */
     void IterateCallback(itk::Object *, const itk::EventObject &);
