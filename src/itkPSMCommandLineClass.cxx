@@ -30,6 +30,10 @@ PSMCommandLineClass<VDimension>
 ::PSMCommandLineClass()
 {
   this->m_ProcrustesCounter = 0;
+  this->m_XmlReader = PSMCommandLineClass::ProjectReaderType::New();
+  this->m_Project = PSMCommandLineClass::ProjectType::New();
+  this->m_ProcrustesRegistration = PSMCommandLineClass::ProcrustesRegistrationType::New();
+  this->m_Filter = PSMCommandLineClass::EntropyModelFilterType::New();  
 }
   
 template <unsigned int VDimension>
@@ -68,18 +72,15 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadInputs(std::string input_path_prefix)
 {
-  // Read the project parameter file
-  this->m_XmlReader = PSMCommandLineClass::ProjectReaderType::New();
+  // Read the project parameter file  
   this->m_XmlReader->SetFileName(this->m_ProjectParameterFile);
   this->m_XmlReader->Update();
   
-  // Store the project parameters
-  this->m_Project = PSMCommandLineClass::ProjectType::New();
+  // Store the project parameters  
   this->m_Project = m_XmlReader->GetOutput();
   
   // Read in the distance transforms
   const std::vector<std::string> &dt_files = this->m_Project->GetDistanceTransforms();
-  this->m_Filter = PSMCommandLineClass::EntropyModelFilterType::New();
   std::cout << "Reading distance transforms ..." << std::endl;
   for (unsigned int i = 0; i < dt_files.size(); i++)
   {
@@ -136,26 +137,28 @@ void PSMCommandLineClass<VDimension>
       std::cout << "  " << pt_files[i] << std::endl;
     }
     std::cout << "Done!" << std::endl;
+    // Read optimization parameters (single scale). 
+    this->ReadInputOptimizationParameters();
   }
-
-  // Check if scales have been supplied
-  if(this->m_Project->HasOptimizationAttribute("number_of_scales")
-     &&
-     (this->m_Project->GetNumberOfOptimizationScales()) != 0)
-  {
-    // Read the input optimization scales from the project file.
-    this->ReadInputOptimizationScales();
-  }
-  // Else if scales have not been supplied, then
-  // default scale values will be used.
   else
   {
-    // Set default parameters for optimization scales. TODO:  Number of scales
-    // has to be at least one more than the number of input images?
-    this->SetDefaultScales();
+    // Check if scales have been supplied
+    if(this->m_Project->HasOptimizationAttribute("number_of_scales")
+       &&
+       (this->m_Project->GetNumberOfOptimizationScales()) != 0)
+    {
+      // Read the input optimization scales from the project file.
+      this->ReadInputOptimizationScales();
+    }
+    // Else if scales have not been supplied, then
+    // default scale values will be used.
+    else
+    {
+      // Set default parameters for optimization scales. TODO:  Number of scales
+      // has to be at least one more than the number of input images?
+      this->SetDefaultScales();
+    }
   }
-  // If scales are not supplied, then read optimization parameters (single scale).
-  this->ReadInputOptimizationParameters();
 }
   
 template <unsigned int VDimension>
@@ -194,10 +197,11 @@ void PSMCommandLineClass<VDimension>
   this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
   this->m_Filter->SetTolerance(tolerance);
   this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
-
-  this->m_ProcrustesRegistration = PSMCommandLineClass::ProcrustesRegistrationType::New();
-  // Set Procrustes interval for ProcrustesRegistration
-  unsigned int procrustes_interval = 10;   // Default value
+  
+  // Get Procrustes interval for PSMProcrustesRegistration
+  unsigned int procrustes_interval = 10; // Default value
+  //TODO: This doesn't work when scales are used, even if the procrustes_interval tag is
+  // part of optimization tag.
   if ( this->m_Project->HasOptimizationAttribute("procrustes_interval") )
   {
     procrustes_interval = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("procrustes_interval"));
@@ -251,6 +255,16 @@ void PSMCommandLineClass<VDimension>
     this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
     std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
   }
+  // Get Procrustes interval for ProcrustesRegistration
+  unsigned int procrustes_interval = 10; // Default value
+  if ( this->m_Project->HasOptimizationAttribute("procrustes_interval") )
+  {
+    procrustes_interval = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("procrustes_interval"));
+    this->m_ProcrustesRegistration->SetProcrustesInterval(procrustes_interval);
+    std::cout << "        procrustes_interval = " << procrustes_interval << std::endl;
+  }
+  // Set ParticleSystem for ProcrustesRegistration
+  this->m_ProcrustesRegistration->SetPSMParticleSystem(this->m_Filter->GetParticleSystem());
 }
 
 template <unsigned int VDimension>
