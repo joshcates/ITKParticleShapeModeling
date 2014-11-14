@@ -86,6 +86,9 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     PSMCommandLineClass();
     virtual ~PSMCommandLineClass() {};
   
+    /** Returns the particle system used in the shape model computation. */
+    itkGetObjectMacro(Filter, EntropyModelFilterType);
+  
   protected:
     /** Set the file name of the project parameter file */
     void SetProjectParameterFileName(const char *fname);
