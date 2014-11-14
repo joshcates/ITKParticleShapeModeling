@@ -197,19 +197,6 @@ void PSMCommandLineClass<VDimension>
   this->m_Filter->SetRegularizationDecaySpan(regularization_decayspan);
   this->m_Filter->SetTolerance(tolerance);
   this->m_Filter->SetMaximumNumberOfIterations(maximum_iterations);
-  
-  // Get Procrustes interval for PSMProcrustesRegistration
-  unsigned int procrustes_interval = 10; // Default value
-  //TODO: This doesn't work when scales are used, even if the procrustes_interval tag is
-  // part of optimization tag.
-  if ( this->m_Project->HasOptimizationAttribute("procrustes_interval") )
-  {
-    procrustes_interval = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("procrustes_interval"));
-    this->m_ProcrustesRegistration->SetProcrustesInterval(procrustes_interval);
-    std::cout << "        procrustes_interval = " << procrustes_interval << std::endl;
-  }
-  // Set ParticleSystem for ProcrustesRegistration
-  this->m_ProcrustesRegistration->SetPSMParticleSystem(this->m_Filter->GetParticleSystem());
 }
   
 template <unsigned int VDimension>
