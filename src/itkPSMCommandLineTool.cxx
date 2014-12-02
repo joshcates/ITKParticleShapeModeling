@@ -36,7 +36,6 @@ int main( int argc, char *argv[] )
     std::cout << "Wrong number of arguments. \nUse: "
     << "ParticleShapeModeling_CLI parameter_file [output_path] [input_path]\n"
     << "See itk::PSMParameterFileReader for documentation on the parameter file format.\n"
-    << "Enter number of dimensions of the shapes (2 or 3) following parameter file name.\n"
     << "Note that input_path will be prefixed to any file names and paths in the xml parameter file.\n"
     << std::endl;
     return EXIT_FAILURE;
@@ -70,7 +69,7 @@ int main( int argc, char *argv[] )
     // Read the first distance transform to check the image dimensions
     std::cout << "Checking input image dimensions ..." << std::endl;
     typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
-    itk::ImageIOBase::Pointer imageIO =itk::ImageIOFactory::CreateImageIO(
+    itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
                                        fname.c_str(), itk::ImageIOFactory::ReadMode);
     imageIO->SetFileName(fname);
     imageIO->ReadImageInformation();
