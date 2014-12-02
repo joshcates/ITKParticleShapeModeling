@@ -20,19 +20,21 @@
 #include <iostream>
 #include "itkPSMCommandLineClass.h"
 #include "itkPSMCommandLineClass.cxx"
+#include "itkPSMProjectReader.h"
+#include "itkImage.h"
+#include "itkImageFileReader.h"
 #include "itkExceptionObject.h"
 
 int main( int argc, char *argv[] )
 {
-  int dim = 0;
   std::string output_path = "";
   std::string input_path_prefix = "";
   std::string errstring = "";
   // Check for proper arguments
-  if (argc < 3)
+  if (argc < 2)
   {
     std::cout << "Wrong number of arguments. \nUse: "
-    << "ParticleShapeModeling_CLI parameter_file shape_dimensions [output_path] [input_path]\n"
+    << "ParticleShapeModeling_CLI parameter_file [output_path] [input_path]\n"
     << "See itk::PSMParameterFileReader for documentation on the parameter file format.\n"
     << "Enter number of dimensions of the shapes (2 or 3) following parameter file name.\n"
     << "Note that input_path will be prefixed to any file names and paths in the xml parameter file.\n"
@@ -40,34 +42,50 @@ int main( int argc, char *argv[] )
     return EXIT_FAILURE;
   }
   
-  if (argc > 3)
+  if (argc > 2)
   {
-    output_path = std::string(argv[3]);
+    output_path = std::string(argv[2]);
   }
   
-  if (argc > 4)
+  if (argc > 3)
   {
-    input_path_prefix = std::string(argv[4]);
+    input_path_prefix = std::string(argv[3]);
   }
   
   try
   {
-    dim = atoi(argv[2]);
     // This function is called to fix an ITK runtime error where image format is not recognized.
     RegisterRequiredFactories();
-    if (dim == 2)
+    
+    // The dimensions of the input images need to be checked in order to
+    // correctly initialize PSMCommandLineClass.
+    itk::PSMProjectReader::Pointer xmlReader = itk::PSMProjectReader::New();
+    xmlReader->SetFileName(argv[1]);
+    xmlReader->Update();
+    
+    itk::PSMProject::Pointer project = xmlReader->GetOutput();
+    // Load the distance transforms
+    const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
+    std::string fname = input_path_prefix + dt_files[0];
+    // Read the first distance transform to check the image dimensions
+    std::cout << "Checking input image dimensions ..." << std::endl;
+    typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
+    itk::ImageIOBase::Pointer imageIO =itk::ImageIOFactory::CreateImageIO(
+                                       fname.c_str(), itk::ImageIOFactory::ReadMode);
+    imageIO->SetFileName(fname);
+    imageIO->ReadImageInformation();
+    const size_t numOfDimensions =  imageIO->GetNumberOfDimensions();
+    std::cout << "Number of dimensions: " << numOfDimensions << std::endl;
+    
+    if (numOfDimensions == 2)
     {
       itk::PSMCommandLineClass<2>::Pointer psmClass = itk::PSMCommandLineClass<2>::New();
       psmClass->Run( argv[1], input_path_prefix, output_path );
     }
-    else if (dim == 3)
+    else if (numOfDimensions == 3)
     {
       itk::PSMCommandLineClass<3>::Pointer psmClass = itk::PSMCommandLineClass<3>::New();
       psmClass->Run( argv[1], input_path_prefix, output_path );
-    }
-    else
-    {
-      std::cerr << "Please specify the input dimension as 2 or 3" << std::endl;
     }
   }
   
