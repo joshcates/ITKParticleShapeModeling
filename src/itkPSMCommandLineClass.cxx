@@ -277,6 +277,7 @@ void PSMCommandLineClass<VDimension>
       }
       else
       {
+        std::cout << "Writing global point files..." << std::endl;
         for (unsigned int j = 0; j < this->m_Filter->GetParticleSystem()->GetNumberOfParticles(d); j++)
         {
           for (unsigned int i = 0; i < VDimension; i++)
@@ -345,6 +346,13 @@ void PSMCommandLineClass<VDimension>
     maximum_iterations[i] = 1000;
     std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
   }
+  if(this->m_Project->HasProcrustes() == true)
+  {
+    unsigned int procrustes_interval = 10;
+    this->m_ProcrustesRegistration->SetProcrustesInterval(procrustes_interval);
+    std::cout << "        procrustes_interval = " << procrustes_interval << std::endl;
+  }
+  
   // Set the parameters in the filter
   this->m_Filter->SetNumberOfScales(number_of_scales);
   this->m_Filter->SetRegularizationInitial(regularization_initial);
