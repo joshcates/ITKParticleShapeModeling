@@ -66,6 +66,7 @@ namespace itk
   static const std::string        optimization_tag;
   static const std::string    number_of_scales_tag;
   static const std::string       preprocessing_tag;
+  static const std::string          procrustes_tag;
   static const std::string         psm_project_tag;
   static const std::string               scale_tag;
   static const std::string        scale_number_tag;
@@ -127,7 +128,9 @@ namespace itk
       provide the scale, if there are multiple scales in the
       optimization.*/
   double GetOptimizationAttribute(const std::string &name, unsigned int i = 0) const;
-
+  
+  bool HasProcrustes() const;
+  
   /** Returns true if the project has a variables_tag with the
       specified name. */
   bool HasVariables(const std::string &name) const;
