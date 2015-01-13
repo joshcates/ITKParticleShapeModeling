@@ -54,9 +54,10 @@ static void RandomGaussian(double n, double mean, double sigma, std::vector<doub
       r2 = x * x + y * y;
     }
     r[i] = mean + sigma * y * sqrt(-2.0 * log(r2) / r2);
-    // Check that radius value does not exceed set image size
-    if (r[i] > 100.00)
-      r[i] = 100;
+    // Check that random radius value does not exceed half the set image size.
+    // This avoids an 'out of bounds' error during optimization.
+    if (r[i] > 100.0)
+      r[i] = 99.0;
   }
 }
 
@@ -101,8 +102,8 @@ static double Slope(const std::vector<double>& x, const std::vector<double>& y)
   }
   // Calculate correlation coeff and coeff of determination
   double r_xy = sumXY / sqrt(sum_squareX * sum_squareY);
-  std::cout << "\nCorrelation coefficient      = " << r_xy << std::endl;
-  std::cout << "Coefficient of determination = " << (r_xy * r_xy) << std::endl;
+  std::cout << "\nCorrelation coefficient          = " << r_xy << std::endl;
+  std::cout << "Coefficient of determination     = " << (r_xy * r_xy) << std::endl;
   
   return b1;
 }
@@ -230,7 +231,7 @@ int itkPSMCommandLineClass2DTest( int argc, char* argv[] )
     // Generate the radius values
     itk::RandomGaussian(number_of_ellipses, r1, sigma_intercept, radius_minor);
     itk::RandomGaussian(number_of_ellipses, r2, sigma_intercept, radius_major);
-    
+   
     for(int i=0; i<radius_major.size(); i++)
     {
       std::cout << "Input_R: " << radius_major[i] << " Input_r: " << radius_minor[i] << std::endl;
