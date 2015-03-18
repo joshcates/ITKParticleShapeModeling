@@ -358,13 +358,12 @@ int itkPSMCommandLineClass2DTest( int argc, char* argv[] )
       // Center the image in index space
       itk::Center(implicitSurfaceFilter->GetOutput());
       
-      // Write out the distance transforms
       std::string str = "ellipse";
       typedef itk::ImageFileWriter< DTImageType > WriterType;
       WriterType::Pointer writer = WriterType::New();
       std::ostringstream ss;
       ss << i;
-      std::string iname = str + "_DT_Test" + ss.str() + ".nrrd";
+      std::string iname = output_path + str + "_DT_Test" + ss.str() + ".nrrd";
       writer->SetFileName( iname.c_str() );
       writer->SetInput( implicitSurfaceFilter->GetOutput() );
       std::cout << "....";
@@ -379,16 +378,18 @@ int itkPSMCommandLineClass2DTest( int argc, char* argv[] )
     }
 
     // Write the DOM object to an XML file
-    const char* outputXMLFileName = "PSMCommandLineClass2DTest.xml";
+    //const char*
+    std::string outputXMLFileName = "PSMCommandLineClass2DTest.xml";
+    std::string projectFileName = output_path + outputXMLFileName;
     itk::DOMNodeXMLWriter::Pointer writer_xml = itk::DOMNodeXMLWriter::New();
     writer_xml->SetInput( inputDOMObject );
-    writer_xml->SetFileName( outputXMLFileName );
+    writer_xml->SetFileName( projectFileName.c_str() );
     writer_xml->Update();
     
     // Run the command line tool with the newly generated XML project
     // file as input. 
     itk::PSMCommandLineClass<2>::Pointer psmClass = itk::PSMCommandLineClass<2>::New();
-    psmClass->Run( "PSMCommandLineClass2DTest.xml", input_path_prefix, output_path );
+    psmClass->Run( "PSMCommandLineClass2DTest.xml", output_path, output_path );
     
     CommandLineClassType::EntropyModelFilterType::Pointer filter = psmClass->GetFilter();
     

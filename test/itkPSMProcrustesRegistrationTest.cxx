@@ -242,6 +242,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       
       std::cout << "  " << dt_files[i] << std::endl;
       }
+    int number_of_inputs = 100;
     //TODO: Why does number of inputs need to be set to greater than 100?
     for(unsigned int i = 0; i < 103; i++)
       {
@@ -254,7 +255,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     const std::vector<std::string> &pt_files = project->GetModel(std::string("initialization"));
     std::vector<itk::PSMEntropyModelFilter<ImageType>::PointType> c;
     std::cout << "Reading the initial model correspondences ..." << std::endl;
-    int numOfPoints;
+    unsigned int numOfPoints;
     for (unsigned int i = 0; i < pt_files.size(); i++)
     {
         // Read the points for this file and add as a list
@@ -286,7 +287,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         in.close();
     }
     
-    for(unsigned int i = 0; i < 100; i++)
+    for(unsigned int i = 0; i < number_of_inputs; i++)
     {
         P->SetInputCorrespondencePoints(i,c);
     }
@@ -318,11 +319,11 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
       }
         
     //  Read some parameters from the file or provide defaults
-    double regularization_initial   = 100.0f;
-    double regularization_final     = 5.0f;
-    double regularization_decayspan = 2000.0f;
-    double tolerance                = 1.0e-8;
-    unsigned int maximum_iterations = 200000;
+    double regularization_initial   = 10.0f;
+    double regularization_final     = 2.0f;
+    double regularization_decayspan = 5000.0f;
+    double tolerance                = 0.01;
+    unsigned int maximum_iterations = 1000;
     unsigned int procrustes_interval = 1;
     if ( project->HasOptimizationAttribute("regularization_initial") )
     {
@@ -370,7 +371,7 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
     P->SetRegularizationDecaySpan(regularization_decayspan);
     P->SetTolerance(tolerance);
     P->Update();
-    
+    // TODO: Should this be a comparison of tolerance instead of iterations?
     if (P->GetNumberOfElapsedIterations() >= maximum_iterations)
       {
       errstring += "Optimization did not converge based on tolerance criteria.\n";
@@ -396,16 +397,16 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
         
     // Print out points for domain d
     // Load the model initialization.  It should be specified as a model with a name.
-    const std::vector<std::string> &out_files = project->GetModel(std::string("optimized"));
+    const std::vector<std::string> &opt_files = project->GetModel(std::string("optimized"));
     
     for (unsigned int d = 0; d < P->GetParticleSystem()->GetNumberOfDomains(); d++)
       {
       // Open the output file and append the number
       std::ostringstream ss;
       ss << d;
-      std::string fname = output_path + out_files[0] + "_" + ss.str() + ".lpts";
-      std::ofstream out( fname.c_str() );
-      if ( !out )
+      std::string fname = output_path + opt_files[0] + "_" + ss.str() + ".lpts";
+      std::ofstream out_file( fname.c_str() );
+      if ( !out_file )
         {
         errstring += "Could not open point file for output: ";
         }
@@ -415,9 +416,9 @@ int itkPSMProcrustesRegistrationTest(int argc, char* argv[] )
           {
           for (unsigned int i = 0; i < 3; i++)
             {
-            out <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
+            out_file <<  P->GetParticleSystem()->GetPosition(j,d)[i]  << " ";
             }
-          out << std::endl;
+          out_file << std::endl;
           }
         }
       }

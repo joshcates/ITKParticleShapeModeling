@@ -35,7 +35,7 @@ void PSMProcrustesFunction<VDimension>
   SimilarityTransform3D transform;
   PointType ssqShape, ssqMean;
 
-  const RealType SOS_EPSILON = 1.0e-8;
+  const RealType SOS_EPSILON = 0.1; //1.0e-8;
 
   int numOfShapes = shapes.size();
   std::string errstring = "";
@@ -53,9 +53,9 @@ void PSMProcrustesFunction<VDimension>
     }
   
   RealType sumOfSquares = ComputeSumOfSquares(shapes);
-  RealType newSumOfSquares, diff = 1e10;
+  RealType newSumOfSquares, diff = 1e5; // 1e10;
   
-  int counter = 1;
+  int counter = 0;
   try
   {
     while(diff > SOS_EPSILON)
@@ -103,7 +103,8 @@ void PSMProcrustesFunction<VDimension>
       
       sumOfSquares = newSumOfSquares;
       counter++;
-      
+      std::cout << "DIFF VALUE : " << diff << std::endl;
+      std::cout << "******PROCRUSTES FUNCTION COUNTER******: " << counter << std::endl;
       if(counter >= 1000)
       {
         errstring = "Number of iterations on shapes is too high.";

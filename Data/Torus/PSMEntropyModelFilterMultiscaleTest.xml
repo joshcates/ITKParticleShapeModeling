@@ -47,7 +47,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "200"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "1"
@@ -55,7 +55,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "400"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "2"
@@ -63,7 +63,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "400"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "3"
@@ -71,7 +71,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "400"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "4"
@@ -79,7 +79,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "400"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "5"
@@ -87,7 +87,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "0"
            tolerance                = "0.01"
-           maximum_iterations       = "400"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "6"
@@ -95,7 +95,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "5000"
            tolerance                = "0.01"
-           maximum_iterations       = "5000"
+           maximum_iterations       = "1"
            >
     </scale>
     <scale number = "7"
@@ -103,7 +103,7 @@
            regularization_final     = "2.0" 
            regularization_decayspan = "5000"
            tolerance                = "0.01"
-           maximum_iterations       = "5000"
+           maximum_iterations       = "1"
            >
     </scale>
   </optimization>

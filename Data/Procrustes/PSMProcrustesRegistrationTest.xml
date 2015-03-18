@@ -27,8 +27,7 @@
       regularization_final     = "2.0" 
       regularization_decayspan = "5000" 
       tolerance                = "0.01"
-      maximum_iterations       = "5000"
-      procrustes_interval      = "1"
+      maximum_iterations       = "1000"
       >
   </optimization>
 

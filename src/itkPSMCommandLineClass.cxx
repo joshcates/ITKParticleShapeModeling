@@ -40,12 +40,26 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::IterateCallback(itk::Object *caller , const itk::EventObject &)
 {
+  PSMEntropyModelFilter<PSMCommandLineClass::ImageType> *o
+  = static_cast<PSMEntropyModelFilter<PSMCommandLineClass::ImageType> *>(caller);
+  int interval;
+  // Check if optimization is run using scales. Get Procrustes interval for the current scale.
+  if(o->GetNumberOfScales() != 0)
+  {
+    int currentScale = o->GetCurrentScale();
+    interval = m_ProcrustesInterval[currentScale];
+  }
+  else
+  {
+    interval = this->m_ProcrustesRegistration->GetProcrustesInterval();
+  }
+    
   // Check if the Procrustes interval is set to a value other than 0
-  if (this->m_ProcrustesRegistration->GetProcrustesInterval() != 0)
+  if (interval != 0)
   {
     this->m_ProcrustesCounter++;
     // If the counter is greater than the interval value, run Procrustes registration
-    if (this->m_ProcrustesCounter >= (int)this->m_ProcrustesRegistration->GetProcrustesInterval())
+    if (this->m_ProcrustesCounter >= interval)
     {
       // Reset the counter
       this->m_ProcrustesCounter = 0;
@@ -53,8 +67,7 @@ void PSMCommandLineClass<VDimension>
       std::cout << "Run Procrustes Registration" << std::endl;
     }
   }
-  PSMEntropyModelFilter<PSMCommandLineClass::ImageType> *o
-  = static_cast<PSMEntropyModelFilter<PSMCommandLineClass::ImageType> *>(caller);
+  
   // Print every 50 iterations
   if (o->GetNumberOfElapsedIterations() % 50 != 0) return;
   
@@ -72,6 +85,7 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadInputs(std::string input_path_prefix)
 {
+  std::cout << "INPUT PATH PREFIX: " << input_path_prefix << std::endl;
   // Read the project parameter file  
   this->m_XmlReader->SetFileName(this->m_ProjectParameterFile);
   this->m_XmlReader->Update();
@@ -86,13 +100,15 @@ void PSMCommandLineClass<VDimension>
   {
     typename itk::ImageFileReader<PSMCommandLineClass::ImageType>::Pointer reader =
     itk::ImageFileReader<PSMCommandLineClass::ImageType>::New();
-    reader->SetFileName(input_path_prefix + dt_files[i]);
+    //reader->SetFileName(input_path_prefix + dt_files[i]);
+    reader->SetFileName(dt_files[i]);
     reader->Update();
     
     std::cout << "  " << dt_files[i] << std::endl;
     this->m_Filter->SetInput(i, reader->GetOutput());
   }
   std::cout << "Done!" << std::endl;
+  
   double value1, value2, value3;
   unsigned int numOfPoints;
   typename PSMCommandLineClass::EntropyModelFilterType::PointType pt;
@@ -106,7 +122,6 @@ void PSMCommandLineClass<VDimension>
     {
       // Read the points for this file and add as a list
       typename std::vector<typename PSMCommandLineClass::EntropyModelFilterType::PointType> init_points;
-      
       numOfPoints = 0;
       // Open the ascii file.
       std::ifstream in( (input_path_prefix + pt_files[i]).c_str() );
@@ -164,7 +179,15 @@ void PSMCommandLineClass<VDimension>
 template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadInputOptimizationScales()
-{  
+{
+  // Provide some default parameters
+  double regularization_initial_def   = 10.0f;
+  double regularization_final_def     = 2.0f;
+  double regularization_decayspan_def = 5000.0f;
+  double tolerance_def                = 0.01;
+  unsigned int maximum_iterations_def = 1000;
+  unsigned int procrustes_interval_def = 10;
+  
   unsigned int number_of_scales = this->m_Project->GetNumberOfOptimizationScales();
   std::cout << "Found " << number_of_scales << " scales. " << std::endl;
   
@@ -174,21 +197,56 @@ void PSMCommandLineClass<VDimension>
   std::vector<double> regularization_decayspan(number_of_scales);
   std::vector<double> tolerance(number_of_scales);
   std::vector<unsigned int> maximum_iterations(number_of_scales);
+  m_ProcrustesInterval.resize(number_of_scales);
   
   // Read parameters for each scale
   for (unsigned int i = 0; i < number_of_scales; i++)
   {
     std::cout << "Optimization parameters for scale " << i << ": " << std::endl;
-    regularization_initial[i] = this->m_Project->GetOptimizationAttribute("regularization_initial",i);
+    if ( this->m_Project->HasOptimizationAttribute("regularization_initial", i) )
+      regularization_initial[i] = this->m_Project->GetOptimizationAttribute("regularization_initial", i);
+    else
+      regularization_initial[i] = regularization_initial_def;
     std::cout << "    regularization_initial = " << regularization_initial[i] << std::endl;
-    regularization_final[i] = this->m_Project->GetOptimizationAttribute("regularization_final",i);
+    
+    if ( this->m_Project->HasOptimizationAttribute("regularization_final", i) )
+      regularization_final[i] = this->m_Project->GetOptimizationAttribute("regularization_final", i);
+    else
+      regularization_final[i] = regularization_final_def;
     std::cout << "      regularization_final = " << regularization_final[i] << std::endl;
-    regularization_decayspan[i] = this->m_Project->GetOptimizationAttribute("regularization_decayspan",i);
+    
+    if ( this->m_Project->HasOptimizationAttribute("regularization_decayspan", i) )
+      regularization_decayspan[i] = this->m_Project->GetOptimizationAttribute("regularization_decayspan", i);
+    else
+      regularization_decayspan[i] = regularization_decayspan_def;
     std::cout << "  regularization_decayspan = " << regularization_decayspan[i] << std::endl;
-    tolerance[i] = this->m_Project->GetOptimizationAttribute("tolerance",i);
+    
+    if ( this->m_Project->HasOptimizationAttribute("tolerance", i) )
+      tolerance[i] = this->m_Project->GetOptimizationAttribute("tolerance", i);
+    else
+      tolerance[i] = tolerance_def;
     std::cout << "                 tolerance = " << tolerance[i] << std::endl;
-    maximum_iterations[i] = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations",i));
+    
+    if ( this->m_Project->HasOptimizationAttribute("maximum_iterations", i) )
+      maximum_iterations[i] = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("maximum_iterations", i));
+    else
+      maximum_iterations[i] = maximum_iterations_def;
     std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
+    
+    if(this->m_Project->HasProcrustes() == true)
+    {
+      if ( this->m_Project->HasOptimizationAttribute("procrustes_interval", i) )
+      {
+        m_ProcrustesInterval[i] = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("procrustes_interval", i));
+      }
+      else
+      {
+        m_ProcrustesInterval[i] = procrustes_interval_def;
+      }
+      std::cout << "        procrustes_interval = " << m_ProcrustesInterval[i] << std::endl;
+    }    
+    // Set ParticleSystem for ProcrustesRegistration
+    this->m_ProcrustesRegistration->SetPSMParticleSystem(this->m_Filter->GetParticleSystem());    
   }
   // Set the parameters in the filter
   this->m_Filter->SetNumberOfScales(number_of_scales);
@@ -209,7 +267,8 @@ void PSMCommandLineClass<VDimension>
   double regularization_decayspan = 5000.0f;
   double tolerance                = 0.01;
   unsigned int maximum_iterations = 1000;
-
+  unsigned int procrustes_interval = 10;
+  
   // Read the optimization parameters and set them in the filter
   std::cout << "Optimization parameters: " << std::endl;
   if ( this->m_Project->HasOptimizationAttribute("regularization_initial") )
@@ -243,7 +302,6 @@ void PSMCommandLineClass<VDimension>
     std::cout << "        maximum_iterations = " << maximum_iterations << std::endl;
   }
   // Get Procrustes interval for ProcrustesRegistration
-  unsigned int procrustes_interval = 10; // Default value
   if ( this->m_Project->HasOptimizationAttribute("procrustes_interval") )
   {
     procrustes_interval = static_cast<unsigned int>(this->m_Project->GetOptimizationAttribute("procrustes_interval"));
@@ -323,6 +381,7 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::SetDefaultScales()
 {
+  // Setting scales to 10 produces 512 points at the output.
   unsigned int number_of_scales = 10;
   // Set default parameters for the optimization scales
   std::vector<double> regularization_initial(number_of_scales);
@@ -345,13 +404,14 @@ void PSMCommandLineClass<VDimension>
     std::cout << "                 tolerance = " << tolerance[i] << std::endl;
     maximum_iterations[i] = 1000;
     std::cout << "        maximum_iterations = " << maximum_iterations[i] << std::endl;
-  }
-  if(this->m_Project->HasProcrustes() == true)
-  {
-    unsigned int procrustes_interval = 10;
-    this->m_ProcrustesRegistration->SetProcrustesInterval(procrustes_interval);
-    std::cout << "        procrustes_interval = " << procrustes_interval << std::endl;
-  }
+    if(this->m_Project->HasProcrustes() == true)
+    {
+      // Set the Procrustes interval for each scale
+      unsigned int procrustes_interval = 10;
+      m_ProcrustesInterval[i] = procrustes_interval;
+      std::cout << "        procrustes_interval = " << procrustes_interval << std::endl;
+    }
+  }  
   
   // Set the parameters in the filter
   this->m_Filter->SetNumberOfScales(number_of_scales);

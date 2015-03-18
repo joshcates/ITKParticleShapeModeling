@@ -114,6 +114,8 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
     typename ProjectType::Pointer m_Project;
     /** Counter to keep track of when to run Procrustes Registration */
     int m_ProcrustesCounter;
+    /** Stores Procrustes interval values */
+    std::vector<unsigned int> m_ProcrustesInterval;
     /** This variable calls a pointer to a member function, in this case, the
      *  IterateCallback function which will run Procrustes at specified intervals
      *  during the optimization */
