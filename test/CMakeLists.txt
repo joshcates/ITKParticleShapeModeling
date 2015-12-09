@@ -26,11 +26,12 @@
 itk_module_test()
 set(ITKParticleShapeModelingTests
 itkPSMCleanAndCenterLabelMapImageFilterTest.cxx
-itkPSMCommandLineTool.cxx
+itkPSMCommandLineClass2DTest.cxx
 itkPSMContainerTest.cxx
 itkPSMContainerArrayAttributeTest.cxx
 itkPSMCostFunctionTest.cxx
 itkPSMEntropyMixedEffectsModelFilterTest.cxx
+itkPSMEntropyModelFilter2DMultiscaleTest.cxx
 itkPSMEntropyModelFilter2DTest.cxx
 itkPSMEntropyModelFilterTest.cxx
 itkPSMEntropyModelFilterMultiscaleTest.cxx
@@ -54,6 +55,7 @@ itkPSMShapeEntropyFunctionTest.cxx
 itkPSMSurfaceNeighborhoodTest.cxx
 itkPSMTrimLabelMapImageFilterTest.cxx
 itkPSMTwoCostFunctionTest.cxx
+itkPSMEntropyModelFilterTest2.cxx
 )
 
 # Create source code, compile and link a test driver
@@ -72,6 +74,12 @@ CreateTestDriver(ITKParticleShapeModeling "${ITKParticleShapeModeling-Test_LIBRA
 
 set(TEST_DATA_ROOT "${ITKParticleShapeModeling_SOURCE_DIR}/Data")
 
+itk_add_test(NAME itkPSMCommandLineClass2DTest 
+COMMAND ITKParticleShapeModelingTestDriver
+itkPSMCommandLineClass2DTest
+ ${ITK_TEST_OUTPUT_DIR}/
+)
+
 itk_add_test(NAME itkPSMContainerTest COMMAND
 ITKParticleShapeModelingTestDriver  itkPSMContainerTest )
 
@@ -85,6 +93,14 @@ itk_add_test(NAME itkPSMEntropyMixedEffectsModelFilterTest
 COMMAND ITKParticleShapeModelingTestDriver
 itkPSMEntropyMixedEffectsModelFilterTest
  ${TEST_DATA_ROOT}/Torus/PSMEntropyMixedEffectsModelFilterTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Torus/
+)
+
+itk_add_test(NAME itkPSMEntropyModelFilter2DMultiscaleTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMEntropyModelFilter2DMultiscaleTest
+ ${TEST_DATA_ROOT}/Torus/PSMEntropyModelFilterMultiscaleTest.xml
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
@@ -112,6 +128,7 @@ itk_add_test(NAME itkPSMEntropyModelFilterTest
  ${ITK_TEST_OUTPUT_DIR}/
  ${TEST_DATA_ROOT}/Torus/
 )
+
 
 itk_add_test(NAME itkPSMEntropyRegressionModel2DFilterMultiscaleTest 
 COMMAND ITKParticleShapeModelingTestDriver
@@ -162,6 +179,38 @@ itk_add_test(NAME itkPSMParticleSystemTest COMMAND ITKParticleShapeModelingTestD
 
 itk_add_test(NAME itkPSMPointTreeTest COMMAND ITKParticleShapeModelingTestDriver itkPSMPointTreeTest )
 
+itk_add_test(NAME itkPSMProcrustesFunction2DTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesFunction2DTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunction2DTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
+itk_add_test(NAME itkPSMProcrustesFunctionTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesFunctionTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
+itk_add_test(NAME itkPSMProcrustesRegistration2DTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesRegistration2DTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistration2DTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
+itk_add_test(NAME itkPSMProcrustesRegistrationTest 
+ COMMAND ITKParticleShapeModelingTestDriver
+ itkPSMProcrustesRegistrationTest
+ ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistrationTest.xml
+ ${ITK_TEST_OUTPUT_DIR}/
+ ${TEST_DATA_ROOT}/Procrustes/
+)
+
 itk_add_test(NAME itkPSMProjectTest COMMAND ITKParticleShapeModelingTestDriver itkPSMProjectTest
 ${TEST_DATA_ROOT}/PSMProjectExample.xml)
 
@@ -189,39 +238,6 @@ itk_add_test(NAME itkPSMTrimLabelMapImageFilterTest
 )
 
 itk_add_test(NAME itkPSMTwoCostFunctionTest COMMAND ITKParticleShapeModelingTestDriver  itkPSMTwoCostFunctionTest )
-
-itk_add_test(NAME itkPSMProcrustesFunction2DTest 
- COMMAND ITKParticleShapeModelingTestDriver
- itkPSMProcrustesFunction2DTest
- ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionExample2D.xml
- ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Procrustes/
-)
-
-itk_add_test(NAME itkPSMProcrustesFunctionTest 
- COMMAND ITKParticleShapeModelingTestDriver
- itkPSMProcrustesFunctionTest
- ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesFunctionExample.xml
- ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Procrustes/
-)
-
-itk_add_test(NAME itkPSMProcrustesRegistration2DTest 
- COMMAND ITKParticleShapeModelingTestDriver
- itkPSMProcrustesRegistration2DTest
- ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistration2DExample.xml
- ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Procrustes/
-)
-
-itk_add_test(NAME itkPSMProcrustesRegistrationTest 
- COMMAND ITKParticleShapeModelingTestDriver
- itkPSMProcrustesRegistrationTest
- ${TEST_DATA_ROOT}/Procrustes/PSMProcrustesRegistrationExample.xml
- ${ITK_TEST_OUTPUT_DIR}/
- ${TEST_DATA_ROOT}/Procrustes/
-)
-
 
 # Necessary on Linux build to include IOXML in proper order
 target_link_libraries(ITKParticleShapeModelingTestDriver ITKIOXML)

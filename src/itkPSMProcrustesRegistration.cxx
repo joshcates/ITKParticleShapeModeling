@@ -31,13 +31,13 @@ PSMProcrustesRegistration<VDimension>
   PointType     point;
   
   // Read input shapes from file list
-  for(int i = d % m_DomainsPerShape; i < totalDomains; i+=m_DomainsPerShape)
+  for (int i = d % m_DomainsPerShape; i < totalDomains; i+=m_DomainsPerShape)
     {
     int j = 0;
     shapevector.clear();
-    for(j = 0; j < numPoints; j++)
+    for (j = 0; j < numPoints; j++)
       {
-        for(int k = 0; k < VDimension; k++)
+        for (unsigned int k = 0; k < VDimension; k++)
           {
           point(k) = m_PSMParticleSystem->GetPosition(j,i)[k];
           }

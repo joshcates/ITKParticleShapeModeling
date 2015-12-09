@@ -91,7 +91,7 @@ EstimateParameters()
   Ws = new vnl_matrix<double>[m_NumIndividuals];
   Vs = new vnl_matrix<double>[m_NumIndividuals];
   identity_n = new vnl_matrix<double>[m_NumIndividuals];
-  Xp = new vnl_matrix<double>[m_NumIndividuals];
+  Xp = new vnl_matrix<double>[m_NumIndividuals];  // Xp: Design matrix. Stores all time points.
   
   vnl_vector<double> residual, y;
   y.set_size(m_TimeptsPerIndividual(0));
@@ -157,7 +157,6 @@ EstimateParameters()
         sum_mat1 = sum_mat1 + vnl_transpose(Xp[k]) * Ws[k] * Xp[k];
         sum_mat2 = sum_mat2 + vnl_transpose(Xp[k]) * Ws[k] * y;
       }
-      
       tempvect = vnl_inverse<double>(sum_mat1) * sum_mat2;
       fixed.set_column(i, tempvect);
       

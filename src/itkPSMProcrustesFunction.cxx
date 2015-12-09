@@ -35,7 +35,7 @@ void PSMProcrustesFunction<VDimension>
   SimilarityTransform3D transform;
   PointType ssqShape, ssqMean;
 
-  const RealType SOS_EPSILON = 1.0e-8;
+  const RealType SOS_EPSILON = 0.1; //1.0e-8;
 
   int numOfShapes = shapes.size();
   std::string errstring = "";
@@ -53,9 +53,9 @@ void PSMProcrustesFunction<VDimension>
     }
   
   RealType sumOfSquares = ComputeSumOfSquares(shapes);
-  RealType newSumOfSquares, diff = 1e10;
+  RealType newSumOfSquares, diff = 1e5; // 1e10;
   
-  int counter = 1;
+  int counter = 0;
   try
   {
     while(diff > SOS_EPSILON)
@@ -97,14 +97,15 @@ void PSMProcrustesFunction<VDimension>
         transformIt++;
       }
       // Calculate the sum of squares of discrepancies between
-      // the
+      // the shapes
       newSumOfSquares = ComputeSumOfSquares(shapes);
       diff = sumOfSquares - newSumOfSquares;
       
       sumOfSquares = newSumOfSquares;
       counter++;
-      
-      if(counter > 1000)
+      std::cout << "DIFF VALUE : " << diff << std::endl;
+      std::cout << "******PROCRUSTES FUNCTION COUNTER******: " << counter << std::endl;
+      if(counter >= 1000)
       {
         errstring = "Number of iterations on shapes is too high.";
         ExceptionObject e( __FILE__, __LINE__ );
@@ -123,7 +124,6 @@ void PSMProcrustesFunction<VDimension>
   {
     errstring = "Unknown exception thrown";
   }
-  //std::cout <<  "counter: " << counter << std::endl;
 }
 // Explicitly instantiate the function for 3D and 2D
 template void PSMProcrustesFunction<3>::RunGeneralizedProcrustes(SimilarityTransformListType & transforms,

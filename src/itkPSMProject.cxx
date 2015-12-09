@@ -30,6 +30,7 @@ const std::string PSMProject::optimization_tag        = "optimization";
 const std::string PSMProject::number_of_scales_tag    = "number_of_scales";
 const std::string PSMProject::psm_project_tag         = "psm_project";
 const std::string PSMProject::preprocessing_tag       = "preprocessing";
+const std::string PSMProject::procrustes_tag          = "procrustes_registration";
 const std::string PSMProject::scale_tag               = "scale";
 const std::string PSMProject::scale_number_tag        = "number";
 const std::string PSMProject::variables_tag           = "variables";
@@ -78,6 +79,8 @@ bool PSMProject
       if (opt->HasAttribute(number_of_scales_tag))
         {
           nscales = static_cast<unsigned int>(atoi(opt->GetAttribute(number_of_scales_tag).c_str()));
+          // If the number_of_scales_tag is the one being checked
+          if(name == number_of_scales_tag) { return true; }
         }
       
       // Did the user ask for a scale that isn't specified?
@@ -104,7 +107,6 @@ bool PSMProject
             }
         }
     }
-
   return false;
 }
 
@@ -161,11 +163,27 @@ double PSMProject
   itkExceptionMacro("File has no " + optimization_tag + " element");
 }
 
+bool PSMProject::HasProcrustes() const
+{
+  DOMNode *proc = m_DOMNode->GetChild(procrustes_tag);
+  if (proc != 0) // Found the procrustes element
+  {
+    if (proc->HasAttribute("value"))
+    {
+      if (atoi(proc->GetAttribute("value").c_str()) == 0)
+        return false;
+      else
+        return true;
+    }
+  }
+  return false;
+}
+  
 bool PSMProject::HasVariables(const std::string &name) const
 {
   const PSMDOMNode *data = this->GetDataNode();
 
-  // Search the data tree for nodes called model_tag
+  // Search the data tree for nodes called variables_tag
   DOMNode::ConstChildrenListType variables;
   data->GetChildren(variables_tag, variables);
   
@@ -206,7 +224,7 @@ const std::vector<std::string > &PSMProject::GetVariablesText(const std::string 
 {
   const PSMDOMNode *data = this->GetDataNode();
   
-  // Search the data tree for nodes called model_tag
+  // Search the data tree for nodes called variables_tag
   DOMNode::ConstChildrenListType variables;
   data->GetChildren(variables_tag, variables);
   
@@ -287,6 +305,34 @@ PSMProject::GetModel(const std::string &name)
        }
    }
  itkExceptionMacro( "PSM Project file does not have any " + model_tag + " entries with name = " << name );
+}
+
+
+bool PSMProject::HasModel(const std::string &name) const
+{
+  const PSMDOMNode *data = this->GetDataNode();
+  
+  // Search the data tree for nodes called model_tag
+  DOMNode::ConstChildrenListType models;
+  data->GetChildren(model_tag, models);
+  
+  if (models.size() == 0)
+  {
+    return false;
+  }
+  
+  // Search the list of variables for one with the correct name
+  for (unsigned int i = 0; i < models.size(); i++)
+    {
+      if (models[i]->HasAttribute(name_tag))
+        {
+          if (models[i]->GetAttribute(name_tag) == name)
+            {
+              return true;
+            }
+        }
+    }
+  return false;
 }
 
 

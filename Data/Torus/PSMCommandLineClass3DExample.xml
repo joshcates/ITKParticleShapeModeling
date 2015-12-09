@@ -1,12 +1,18 @@
 <?xml version="1.0" ?>
 
-<psm_project name = "PSMProcrustesFunctionTest Parameter File" author = "Salma Bengali" date = "November 2013" version = "1.0">
+<psm_project
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="ParameterFileSchema.xsd"
+  name="PSMCommandLineClassTest Parameter File"
+  author="Salma Bengali"
+  date="August 2014"
+  version="1.0">
 
- <notes>
-    This is an example PSM Project file for the itkPSMProcrustesRegistrationTest.
- </notes>
- 
- <data>
+  <notes>
+    This is an example PSM Project file for the itkPSMCommandLineTool.
+  </notes>
+
+  <data>
     <distance_transforms>
       torusDT.00.mha
       torusDT.01.mha
@@ -19,19 +25,6 @@
       torusDT.08.mha
       torusDT.09.mha
     </distance_transforms>
-
-    <variables name = "regression_test">
-      1.0
-      3.0
-      2.0
-      2.4
-      3.1
-      2.0
-      1.8
-      1.0
-      4.0
-      2.5
-    </variables>
 
     <!-- The unoptimized input model -->
     <model name = "initialization">
@@ -63,13 +56,11 @@
   </data>
 
   <optimization 
-      regularization_initial   = "10.0" 
-      regularization_final     = "2.0" 
-      regularization_decayspan = "5000" 
-      tolerance                = "0.01"
-      maximum_iterations       = "5000"
-      procrustes_interval      = "10"
-      >
-  </optimization>
-
+    regularization_initial="10.0" 
+    regularization_final="2.0" 
+    regularization_decayspan="5000" 
+    tolerance="0.01" 
+    maximum_iterations="5000" 
+    procrustes_interval="10"></optimization>
 </psm_project>
+

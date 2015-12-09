@@ -111,8 +111,8 @@ public:
 
 
 protected:
-  PSMProcrustesRegistration() : m_DomainsPerShape(1),
-    m_Scaling(true)
+  PSMProcrustesRegistration() : m_Procrustes_Interval(0),
+     m_DomainsPerShape(1), m_Scaling(true)
     {  }
   virtual ~PSMProcrustesRegistration() {};
 

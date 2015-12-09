@@ -66,6 +66,7 @@ namespace itk
   static const std::string        optimization_tag;
   static const std::string    number_of_scales_tag;
   static const std::string       preprocessing_tag;
+  static const std::string          procrustes_tag;
   static const std::string         psm_project_tag;
   static const std::string               scale_tag;
   static const std::string        scale_number_tag;
@@ -91,6 +92,9 @@ namespace itk
       specified by name.  If no name is given, this method just
       returns the first list of names give by a model_tag. */
   const std::vector<std::string> &GetModel(const std::string &name);
+  
+  /** Returns true if the model with the specified name is given. */
+  bool HasModel(const std::string &name) const;
 
   /** Get the file names of the distance transforms that are to be
       used as input to an optimization process. Corresponds to the
@@ -124,7 +128,9 @@ namespace itk
       provide the scale, if there are multiple scales in the
       optimization.*/
   double GetOptimizationAttribute(const std::string &name, unsigned int i = 0) const;
-
+  
+  bool HasProcrustes() const;
+  
   /** Returns true if the project has a variables_tag with the
       specified name. */
   bool HasVariables(const std::string &name) const;
