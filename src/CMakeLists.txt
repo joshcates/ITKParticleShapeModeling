@@ -1,5 +1,4 @@
 set(ITKParticleShapeModeling_SRC
-itkPSMCommandLineClass.cxx
 itkPSMDOMNodeXMLReader.cxx
 itkPSMProject.cxx
 itkPSMProjectReader.cxx
@@ -12,6 +11,3 @@ itkPSMProcrustesRegistration.cxx
 add_library(ITKParticleShapeModeling ${ITKParticleShapeModeling_SRC})
 target_link_libraries(ITKParticleShapeModeling  ${ITKstatistics_LIBRARIES} ${ITKTransform_LIBRARIES})
 itk_module_target(ITKParticleShapeModeling)
-
-add_executable(ParticleShapeModeling_CLI itkPSMCommandLineTool.cxx itkPSMCommandLineClass.cxx itkIncludeRequiredIOFactories.h)
-target_link_libraries(ParticleShapeModeling_CLI ITKIOMeta ITKIOGDCM ITKIONRRD ITKParticleShapeModeling ITKIOXML  ${ITKIOImageBase_LIBRARIES} ${ITKstatistics_LIBRARIES} ${ITKTransform_LIBRARIES})

@@ -16,7 +16,6 @@
  *
  *=========================================================================*/
 
-#include "itkIncludeRequiredIOFactories.h"
 #include <iostream>
 #include "itkPSMCommandLineClass.h"
 #include "itkPSMCommandLineClass.cxx"
@@ -24,6 +23,11 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "itkExceptionObject.h"
+#include "itkGDCMImageIOFactory.h"
+#include "itkMetaImageIOFactory.h"
+#include "itkObjectFactoryBase.h"
+#include "itkNrrdImageIOFactory.h"
+
 
 int main( int argc, char *argv[] )
 {
@@ -53,8 +57,10 @@ int main( int argc, char *argv[] )
   
   try
   {
-    // This function is called to fix an ITK runtime error where image format is not recognized.
-    RegisterRequiredFactories();
+    // The following are called to fix an ITK runtime error where image format is not recognized.
+    itk::ObjectFactoryBase::RegisterFactory( itk::MetaImageIOFactory::New() );
+    itk::ObjectFactoryBase::RegisterFactory( itk::GDCMImageIOFactory::New() );
+    itk::ObjectFactoryBase::RegisterFactory( itk::NrrdImageIOFactory::New() );
     
     // The dimensions of the input images need to be checked in order to
     // correctly initialize PSMCommandLineClass.
