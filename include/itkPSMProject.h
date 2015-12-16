@@ -128,7 +128,8 @@ namespace itk
       provide the scale, if there are multiple scales in the
       optimization.*/
   double GetOptimizationAttribute(const std::string &name, unsigned int i = 0) const;
-  
+
+  /** Returns true if the project has a procrustes tag */
   bool HasProcrustes() const;
   
   /** Returns true if the project has a variables_tag with the

@@ -16,8 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef ____itkPSMCommandLineClass__
-#define ____itkPSMCommandLineClass__
+#ifndef ____itkPSMCommandLineClass__h
+#define ____itkPSMCommandLineClass__h
 
 #include <iostream>
 #include <string>
@@ -61,39 +61,55 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
   
     /** Input distance transforms image typedef */
     typedef typename itk::Image<float, VDimension> ImageType;
+
     /** PSM model optimization filter typedef */
-    typedef PSMEntropyModelFilter<typename PSMCommandLineClass::ImageType> EntropyModelFilterType;
+    typedef PSMEntropyModelFilter<typename PSMCommandLineClass::ImageType>
+      EntropyModelFilterType;
+
     /** Procrustes Registration typedef */
     typedef PSMProcrustesRegistration<VDimension> ProcrustesRegistrationType;
+
     /** Project Reader typedef */
     typedef PSMProjectReader ProjectReaderType;
+
     /** Project typedef */
     typedef PSMProject ProjectType;
-  
+
+
+    /** Parse the project file and store in the m_Project member
+	variable. */
+    void ReadProjectFile(const char *fn);
+    
     /** Read the distance transforms that are provided as inputs to the 
      *  optimzation filter. */
-    void ReadInputs(std::string input_path_prefix);
-    /** Read the input optimization scales that set various optimization attribute values */
-    void ReadInputOptimizationScales();
-    /** Read the optimization attribute values with no multiple scales */
-    void ReadInputOptimizationParameters();
+    void ReadDistanceTransforms(std::string input_path_prefix);
+
+    /** Read the input point files, if any. */
+    void ReadModelPointFiles();
+    
+    /** Sets the optimization parameters. Assumes that the parameter
+	file has been parsed.*/
+    void SetPSMFilterParameters();
+
     /** Write out the optimized point sets to user specified files */
     void WriteOutputs(std::string output_path);
+
     /** Run the steps of the optimization process */
     void Run(const char *fname, std::string input_path_prefix, std::string output_path);
-  
+
     /** Constructor and destructor */
     PSMCommandLineClass();
     virtual ~PSMCommandLineClass() {};
   
     /** Returns the particle system used in the shape model computation. */
-    itkGetObjectMacro(Filter, EntropyModelFilterType);
-  
+    itkGetObjectMacro(PSMFilter, EntropyModelFilterType);
+
+    /** Get/Set the number of optimization iterations between
+	reporting of the optimized values. */
+    itkGetMacro(ReportInterval,unsigned int);
+    itkSetMacro(ReportInterval,unsigned int);
+    
   protected:
-    /** Set the file name of the project parameter file */
-    void SetProjectParameterFileName(const char *fname);
-    /** Set default optimization scale parameters */
-    void SetDefaultScales();
     /** Callback to run Procrustes Registration on the shapes at the interval
     *  specified in the project parameter file or by default. */
     void IterateCallback(itk::Object *, const itk::EventObject &);
@@ -101,26 +117,43 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
   private:
     PSMCommandLineClass(const Self&); //purposely not implemented
     void operator=(const Self&);      //purposely not implemented
+
     /** The project parameter file that contains information about input and output 
      *  file names and the optimization attribute values */
-    const char *m_ProjectParameterFile;
+    std::string m_ProjectFileName;
+
     /** The PSM model optimization filter */
-    typename EntropyModelFilterType::Pointer m_Filter;
+    typename EntropyModelFilterType::Pointer m_PSMFilter;
+
     /** The Procrustes Registration filter that will register the point sets */
     typename ProcrustesRegistrationType::Pointer m_ProcrustesRegistration;
+
     /** The reader which will read in the project parameters */
-    typename ProjectReaderType::Pointer m_XmlReader;
+    typename ProjectReaderType::Pointer m_ProjectReader;
+
     /** The variable which will store the project parameters */
     typename ProjectType::Pointer m_Project;
-    /** Counter to keep track of when to run Procrustes Registration */
+
+    /** Counter that tracks iterations between runs of the Procrustes
+	registration algorithm */
     int m_ProcrustesCounter;
+
     /** Stores Procrustes interval values */
     std::vector<unsigned int> m_ProcrustesInterval;
+
     /** This variable calls a pointer to a member function, in this case, the
      *  IterateCallback function which will run Procrustes at specified intervals
      *  during the optimization */
     typename itk::MemberCommand<PSMCommandLineClass>::Pointer m_IterateCmd;
+
+    /** This variable sets the number of iterations between reporting
+	of the optimization progress. */
+    unsigned int m_ReportInterval;
 };
 } // end namespace
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkPSMCommandLineClass.hxx"
+#endif
 
 #endif 

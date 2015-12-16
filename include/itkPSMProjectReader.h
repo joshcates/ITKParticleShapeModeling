@@ -33,9 +33,10 @@ namespace itk
  * The following code illustrates how to use this class to read a PSMProject from a file:
  *
  * 
- * Note: Though this class behaves similar to ProcessObject, it is not derived from ProcessObject. This is
- *       because the output of this class, i.e. a PSMProject object, is not an image and cannot
- *       be connected to an ITK process pipeline.
+ * Note: Though this class behaves similar to ProcessObject, it is not
+ *       derived from ProcessObject. This is because the output of
+ *       this class, i.e. a PSMProject object, is not an image and
+ *       cannot be connected to an ITK process pipeline.
  */
 class ITK_EXPORT PSMProjectReader : public PSMDOMNodeXMLReader
 {

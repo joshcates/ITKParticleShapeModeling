@@ -199,7 +199,7 @@ PSMEntropyModelFilter<TImage, TShapeMatrix>::GenerateData()
           m_Optimizer->SetTolerance(m_Tolerances[scale]);
           m_Optimizer->SetMaximumNumberOfIterations(m_MaximumNumberOfIterations[scale]);
           
-          // Set up the exponentially-decreasing regularlization constant.  If
+          // Set up the exponentially-decreasing regularization constant.  If
           // the decay span is greater than 1 iteration, then we will set up
           // the annealing approach.  Otherwise, the optimizer will simply use
           // its constant annealing parameter.
@@ -222,7 +222,8 @@ PSMEntropyModelFilter<TImage, TShapeMatrix>::GenerateData()
       // iteration callback registered with the optimizer. See
       // this->OptimizerIterateCallback
       this->GetOptimizer()->StartOptimization();
-      
+
+
       // If this is multiscale, split particles for the next iteration
       // -- but not if this is the last iteration.
       if ((m_NumberOfScales > 1) && (scale != m_NumberOfScales-1) )

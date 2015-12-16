@@ -25,10 +25,10 @@
     </processed_segmentations>
     
     <distance_transforms>
-      torusDT.01.nrrd
-      torusDT.02.nrrd
-      torusDT.03.nrrd
-      torusDT.04.nrrd
+      torusDT.01.mha
+      torusDT.02.mha
+      torusDT.03.mha
+      torusDT.04.mha
     </distance_transforms>
 
     <model name = "my_model">

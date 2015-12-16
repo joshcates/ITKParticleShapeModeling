@@ -55,12 +55,82 @@
     </model>
   </data>
 
-  <optimization 
-    regularization_initial="10.0" 
-    regularization_final="2.0" 
-    regularization_decayspan="5000" 
-    tolerance="0.01" 
-    maximum_iterations="5000" 
-    procrustes_interval="10"></optimization>
+
+ <optimization number_of_scales = "8">
+    <scale number = "0"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "1"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "2"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "3"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "4"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "5"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "0"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "6"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "5000"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "0"
+           >
+    </scale>
+    <scale number = "7"
+           regularization_initial   = "10.0"
+           regularization_final     = "2.0" 
+           regularization_decayspan = "5000"
+           tolerance                = "0.01"
+           maximum_iterations       = "1000"
+	   procrustes_interval      = "10"
+           >
+    </scale>
+  </optimization>
+
+
 </psm_project>
 
