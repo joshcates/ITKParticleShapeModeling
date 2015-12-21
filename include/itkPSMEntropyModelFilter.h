@@ -109,6 +109,19 @@ class ITK_EXPORT PSMEntropyModelFilter
   
   /** Type of the optimizer */
   typedef PSMGradientDescentOptimizer<typename ImageType::PixelType, Dimension> OptimizerType;
+
+  /** Convenient type for cutting plane info */
+  struct CuttingPlaneType
+  {
+    vnl_vector_fixed<double,Dimension> x;
+    vnl_vector_fixed<double,Dimension> y;
+    vnl_vector_fixed<double,Dimension> z;
+    bool valid;
+
+    CuttingPlaneType()
+    { valid = false; }
+    
+  };
   
   /**
    * Override parent classes to expand input list on new inputs.  This
@@ -519,7 +532,31 @@ class ITK_EXPORT PSMEntropyModelFilter
        placed at the surface position closest to the upper-left-hand
        corner of each of the input images.  */
    bool CreateSingleCorrespondence();
-   
+
+   /** Sets the name of the ith domain. This functionality is only for
+       convenience, but required if you want to lookup a domain index
+       by its name.*/
+   void SetDomainName(const std::string &s, unsigned int i);
+
+   /** Returns the index associated with the given name.  Throws an
+       exception if the given name is not found in the domain name
+       list. */
+   unsigned int GetDomainIndexByName(const std::string &name);
+
+   /** Adds cutting plane information for given domain i.  Currently,
+       only one cutting plane per domain is supported.  */
+   void AddCuttingPlane(const vnl_vector_fixed<double,3> &x,
+			const vnl_vector_fixed<double,3> &y,
+			const vnl_vector_fixed<double,3> &z,
+			unsigned int domain);
+   void AddCuttingPlane(const vnl_vector_fixed<double,3> &x,
+			const vnl_vector_fixed<double,3> &y,
+			const vnl_vector_fixed<double,3> &z,
+			const std::string &s)
+   {
+     this->AddCuttingPlane(x,y,z,this->GetDomainIndexByName(s));
+   }
+
  protected:
    PSMEntropyModelFilter();
    virtual ~PSMEntropyModelFilter() {};
@@ -560,6 +597,25 @@ class ITK_EXPORT PSMEntropyModelFilter
    /** A callback method that will be called after each iteration of
        the Solver. */
    void OptimizerIterateCallback(Object *, const EventObject &);
+
+   /** Returns a pointer to the domain that is referenced by the given
+       name*/
+   typename PSMImplicitSurfaceDomain<
+     typename ImageType::PixelType, Dimension>::Pointer
+     &GetDomainByName(const std::string &name)
+   {
+     return this->GetDomain(this->GetDomainIndexByName(name));
+   }
+
+   /** Returns a pointer to the ith domain in the domain list. */
+   typename PSMImplicitSurfaceDomain<
+     typename ImageType::PixelType, Dimension>::Pointer
+     &GetDomain(unsigned int i)
+   {
+     if (i >= m_DomainList.size())
+       { itkExceptionMacro("Requested domain not available"); }
+     return m_DomainList[i];
+   }
    
  private:
    PSMEntropyModelFilter(const Self&); //purposely not implemented
@@ -629,11 +685,16 @@ class ITK_EXPORT PSMEntropyModelFilter
       is a vector of correspondence point lists.  It should be the
       same length as the number of input images. */
   std::vector<std::vector<PointType> > m_InputCorrespondencePoints;
-  
+
+  /** The set of names for the domains. Same order as the
+      m_DomainList*/
+  std::vector<std::string> m_DomainListNames;
+ 
   /** The set of all shape domains.*/
-  std::vector<typename PSMImplicitSurfaceDomain<typename ImageType::PixelType, Dimension>::Pointer> m_DomainList;
-  
-  /** Set of neighborhood objects that tracks point positions on each
+  std::vector<typename PSMImplicitSurfaceDomain<
+  typename ImageType::PixelType, Dimension>::Pointer> m_DomainList;
+ 
+ /** Set of neighborhood objects that tracks point positions on each
       of the surface domains.  */
   std::vector<typename PSMSurfaceNeighborhood<ImageType>::Pointer> m_NeighborhoodList;
   
@@ -649,6 +710,9 @@ class ITK_EXPORT PSMEntropyModelFilter
   /** The optimization tolerance for each scale.  It is resized
       on-the-fly as values are added.*/
   std::vector<double> m_Tolerances;
+
+  /** List of cutting planes. One per domain. */
+  std::vector<CuttingPlaneType> m_CuttingPlanes;
 };
   
 } // end namespace itk

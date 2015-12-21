@@ -84,6 +84,12 @@ class ITK_EXPORT PSMCommandLineClass : public DataObject
      *  optimzation filter. */
     void ReadDistanceTransforms(std::string input_path_prefix);
 
+
+    /** Reads any cutting plane data from the domain fields in the
+	project file and loads this information into the PSM
+	Filter. */
+    void ReadCuttingPlanes();
+    
     /** Read the input point files, if any. */
     void ReadModelPointFiles();
     

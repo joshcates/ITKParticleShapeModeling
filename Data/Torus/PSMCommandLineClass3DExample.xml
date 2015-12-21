@@ -4,29 +4,178 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="ParameterFileSchema.xsd"
   name="PSMCommandLineClassTest Parameter File"
-  author="Salma Bengali"
-  date="August 2014"
+  author="Josh Cates"
+  date="December 2015"
   version="1.0">
 
   <notes>
-    This is an example PSM Project file for the itkPSMCommandLineTool.
+    This is an example PSM Project file for the
+    itkPSMCommandLineTool. You can put any notes in this field that
+    you want to.
   </notes>
 
   <data>
+    <!-- This is the new and preferred way of specifying the input
+         distance transforms and other data.  A "domain" consists of a
+         distance transform filename and an optional list of geometric
+         constraints, such as cutting planes.  It could also include
+         any associated feature files or other data that is specific
+         to this domain.  For example, future data might include mesh
+         files. -->
+    <domain name = "Torus 0">
+      <distance_transform>torusDT.00.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <cutting_plane>
+	0.0 1.0 2.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      
+      <correspondences name = "initial">initialize.00.lpts</correspondences>
+      <correspondences name = "optimized">optimized.00.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 1">
+      <distance_transform>torusDT.01.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.01.lpts</correspondences>
+      <correspondences name = "optimized">optimized.01.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 2">
+      <distance_transform>torusDT.02.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.02.lpts</correspondences>
+      <correspondences name = "optimized">optimized.02.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 3">      
+      <distance_transform>torusDT.03.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.03.lpts</correspondences>
+      <correspondences name = "optimized">optimized.03.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 4">
+      <distance_transform>torusDT.04.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.04.lpts</correspondences>
+      <correspondences name = "optimized">optimized.04.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 5">
+      <distance_transform>torusDT.05.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.05.lpts</correspondences>
+      <correspondences name = "optimized">optimized.05.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 6">
+      <distance_transform>torusDT.06.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.06.lpts</correspondences>
+      <correspondences name = "optimized">optimized.06.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 7">
+      <distance_transform>torusDT.07.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.07.lpts</correspondences>
+      <correspondences name = "optimized">optimized.07.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 8">
+      <distance_transform>torusDT.08.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.08.lpts</correspondences>
+      <correspondences name = "optimized">optimized.08.lpts</correspondences>
+    </domain>
+    
+    <domain name = "Torus 9">
+      <distance_transform>torusDT.09.mha</distance_transform>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <cutting_plane>
+	-10.0 0.0 0.0
+	0.0 12.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <cutting_plane>
+	0.0 0.0 0.0
+	0.0 1.0 4.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <cutting_plane>
+	0.0 0.0 8.0
+	0.0 1.0 0.0
+	1.0 0.0 0.0
+      </cutting_plane>
+      <correspondences name = "initial">initialize.09.lpts</correspondences>
+      <correspondences name = "optimized">optimized.09.lpts</correspondences>
+    </domain>
+    
+    <!-- The project file format is still in flux a little bit.  This
+         is the old way of specifying the list of distance transforms.
+         It is intended to be replaced by specifying domains instead.
+         -->
     <distance_transforms>
-      torusDT.00.mha
-      torusDT.01.mha
-      torusDT.02.mha
+      torusDT.00.mha <!-- Domain 0 -->
+      torusDT.01.mha <!-- Domain 1 -->
+      torusDT.02.mha <!-- ...      -->
       torusDT.03.mha
       torusDT.04.mha
       torusDT.05.mha
       torusDT.06.mha
       torusDT.07.mha
       torusDT.08.mha
-      torusDT.09.mha
+      torusDT.09.mha <!-- Domain 9 -->
     </distance_transforms>
 
-    <!-- The unoptimized input model -->
+    <!-- The unoptimized input model. This is the old way to specify a
+         model.  The new and preferred way to specify input and output
+         point files is to include a tag within each individual
+         "domain", which avoids the ambiguity and confusion that often
+         arises from specifying information about domains across
+         multiple lists.-->
     <model name = "initialization">
      initialize.00.lpts
      initialize.01.lpts

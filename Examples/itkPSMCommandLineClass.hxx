@@ -96,8 +96,23 @@ template <unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadDistanceTransforms(std::string input_path_prefix)
 {
+  if (! m_Project->HasDomains())
+    { throw itk::ExceptionObject("Domains must be defined in the project file."); }
+
+  // Compile the list of distance transforms
+  std::vector<std::string> &domain_names = m_Project->GetDomainNames();
+  std::vector<std::string> dt_files;
+  for (unsigned int i = 0; i < domain_names.size(); i++)
+    {
+      std::string s = (m_Project->GetDomainDistanceTransform(domain_names[i]))[0];
+      dt_files.push_back(s);
+
+
+      this->m_PSMFilter->SetDomainName(domain_names[i],i);
+    }
+  
   // Read in the distance transforms
-  const std::vector<std::string> &dt_files = this->m_Project->GetDistanceTransforms();
+  //  const std::vector<std::string> &dt_files = this->m_Project->GetDistanceTransforms();
   std::cout << "Reading distance transforms ..." << std::endl;
   for (unsigned int i = 0; i < dt_files.size(); i++)
   {
@@ -106,15 +121,78 @@ void PSMCommandLineClass<VDimension>
     reader->SetFileName(input_path_prefix + dt_files[i]);
     //reader->SetFileName(dt_files[i]);
     reader->Update();
-    
-    std::cout << "  " << dt_files[i] << std::endl;
+
+    std::cout << domain_names[i] << ": " << dt_files[i] << std::endl;
+
     this->m_PSMFilter->SetInput(i, reader->GetOutput());
+   
   }
   std::cout << "Done!" << std::endl;
+}
 
+template <unsigned int VDimension>
+void PSMCommandLineClass<VDimension>
+::ReadCuttingPlanes()
+{
+  if (! m_Project->HasDomains())
+    { itkExceptionMacro("Domains must be defined in the project file."); }
+
+  // Compile the list of domains
+  std::vector<std::string> &domain_names = m_Project->GetDomainNames();
+
+  for (unsigned int i = 0; i < domain_names.size(); i++)
+    {
+      if (m_Project->HasDomainCuttingPlanes(domain_names[i]))
+	{
+	  // Cutting planes are returned as a list of vnl_vectors.
+	  std::vector<vnl_vector_fixed<double,3>> planes	  
+	   = m_Project->GetDomainCuttingPlanes(domain_names[i]);
+
+	  // The list should have size that is multiple of 3, since
+	  // every plane is defined by exactly 3 points.
+	  if (planes.size() % 3 != 0)
+	    {
+	      itkExceptionMacro("Something is wrong with the cutting plane data for domain " + domain_names[i] + ".  Correct number of points was not found.");
+	    }
+
+	  // Traverse the list and pull out sets of 3 points.  Each
+	  // set of 3 defines a cutting plane.
+	  vnl_vector_fixed<double,3> x;
+	  vnl_vector_fixed<double,3> y;
+	  vnl_vector_fixed<double,3> z;
+	  std::vector<vnl_vector_fixed<double,3>>::iterator it =
+	    planes.begin();
+
+	  while (it != planes.end())
+	    {
+	      x = *it; it++;
+	      y = *it; it++;
+	      z = *it; it++;
+
+	      std::cout << "Found cutting plane for domain " << domain_names[i] <<
+		": " << std::endl;
+	      std::cout << x[0] << " " << x[1] << " " << x[2] << std::endl;
+	      std::cout << y[0] << " " << y[1] << " " << y[2] << std::endl;
+	      std::cout << z[0] << " " << z[1] << " " << z[2] << std::endl;
+
+	      // Add cutting plane to the PSM filter by domain name
+
+	      m_PSMFilter->AddCuttingPlane(x,y,z,domain_names[i]);
+	      
+	      //	      int d = m_PSMFilter->GetDomainIndexByName(domain_names[i]);
+	      //	      m_PSMFilter->GetDomain(d)->SetCuttingPlane(x,y,z);
+
+	    }
+
+	  
+	} // end has cutting planes
+    } // end traverse domains
 
 }
 
+
+
+  
 template<unsigned int VDimension>
 void PSMCommandLineClass<VDimension>
 ::ReadModelPointFiles()
@@ -347,6 +425,9 @@ void PSMCommandLineClass<VDimension>
   
   // Read the distance transform files
   this->ReadDistanceTransforms(input_path_prefix);
+
+  // Read any geometric contraints (cutting planes)
+  this->ReadCuttingPlanes();
   
   // Create the callback function to run Procrustes and report
   // progress.

@@ -79,6 +79,7 @@ ApplyVectorConstraints(vnl_vector_fixed<double, VDimension> &gradE,
       gradE = gradE * maxtimestep;
       }    
     }
+
   
   return Superclass::ApplyVectorConstraints(gradE,pos,maxtimestep);
 }

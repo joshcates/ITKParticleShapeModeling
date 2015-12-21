@@ -103,7 +103,8 @@ PSMEntropyModelFilter<TImage, TShapeMatrix>::AllocateWorkingImages()
 
 template <class TImage, class TShapeMatrix>
 void
-PSMEntropyModelFilter<TImage, TShapeMatrix>::AllocateDomainsAndNeighborhoods()
+PSMEntropyModelFilter<TImage, TShapeMatrix>
+::AllocateDomainsAndNeighborhoods()
 {
   // Allocate all the necessary domains and neighborhoods. This must be done
   // *after* registering the attributes to the particle system since some of
@@ -115,10 +116,71 @@ PSMEntropyModelFilter<TImage, TShapeMatrix>::AllocateDomainsAndNeighborhoods()
     m_NeighborhoodList.push_back( PSMSurfaceNeighborhood<ImageType>::New() );
     m_DomainList[i]->SetSigma(m_WorkingImages[i]->GetSpacing()[0] * 2.0);    
     m_DomainList[i]->SetImage(m_WorkingImages[i]);
-    
+
+    if (m_CuttingPlanes.size() > i)
+      {        
+	m_DomainList[i]->SetCuttingPlane(m_CuttingPlanes[i].x,
+					 m_CuttingPlanes[i].y,
+					 m_CuttingPlanes[i].z);
+      }
+        
     m_ParticleSystem->AddDomain(m_DomainList[i]);
     m_ParticleSystem->SetNeighborhood(i, m_NeighborhoodList[i]);
     }
+}
+
+
+template <class TImage, class TShapeMatrix>
+void
+PSMEntropyModelFilter<TImage, TShapeMatrix>
+::AddCuttingPlane(const vnl_vector_fixed<double,3> &x,
+		const vnl_vector_fixed<double,3> &y,
+		const vnl_vector_fixed<double,3> &z,
+		unsigned int domain)
+{
+  if (m_CuttingPlanes.size() < domain+1)
+    {
+      m_CuttingPlanes.resize(domain+1);
+    }
+  CuttingPlaneType p;
+  p.x = x;
+  p.y = y;
+  p.z = z;
+  p.valid = true;
+  m_CuttingPlanes[domain] = p;
+}
+
+template <class TImage, class TShapeMatrix>
+void
+PSMEntropyModelFilter<TImage, TShapeMatrix>
+::SetDomainName(const std::string &s, unsigned int i)
+{
+  if (m_DomainListNames.size() < (i+1))
+    {
+      m_DomainListNames.resize(i+1);
+    }
+  m_DomainListNames[i] = s;
+}
+
+template <class TImage, class TShapeMatrix>
+unsigned int
+PSMEntropyModelFilter<TImage, TShapeMatrix>
+::GetDomainIndexByName(const std::string &name)
+{
+  // This is slow, but is not anticipated to be used very extensively.
+  // Better to have simple code than overengineer something not
+  // performance-critical.
+
+  for (unsigned int i = 0; i < m_DomainListNames.size(); i++)
+    {
+      if (m_DomainListNames[i] == name)
+	{
+	  return i;
+	}      
+    }
+
+  itkExceptionMacro("The domain name " + name + " was not found. ");
+  return 0; // algorithm will never reach this point  
 }
 
 template <class TImage, class TShapeMatrix>

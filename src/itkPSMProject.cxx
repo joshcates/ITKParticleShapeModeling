@@ -22,8 +22,12 @@ namespace itk
 {
 
 // Initialize reserved keywords for XML file tags
+const std::string PSMProject::correspondences_tag     = "correspondences";
+const std::string PSMProject::cutting_plane_tag       = "cutting_plane";
 const std::string PSMProject::data_tag                = "data";
+const std::string PSMProject::distance_transform_tag  = "distance_transform";
 const std::string PSMProject::distance_transforms_tag = "distance_transforms";
+const std::string PSMProject::domain_tag              = "domain";  
 const std::string PSMProject::model_tag               = "model";
 const std::string PSMProject::name_tag                = "name";
 const std::string PSMProject::optimization_tag        = "optimization";
@@ -47,6 +51,273 @@ void PSMProject::SetDOMNode(PSMDOMNode *dom)
     }
 }
 
+
+bool PSMProject
+::HasDomains() const
+{
+  const PSMDOMNode *data = this->GetDataNode();
+  
+  // Search the data tree for nodes called domain_tag
+  DOMNode::ConstChildrenListType domains;
+  data->GetChildren(domain_tag, domains);
+  
+  // Did we find anything called a domain?
+  if (domains.size() == 0)
+    {
+      return false;
+    }
+  else return true;
+
+}
+
+  /** Returns a set of points that define one or more cutting planes
+      in the domain described by "domain_name".  The number of cutting
+      planes is the size of the returned list of vectors divided by 3.
+      Each cutting plane is defined by 3 vectors, i.e., one point for
+      each dimension.  Returns an empty list of no cutting planes are
+      defined for the given domain.*/
+  //std::vector<vnl_vector_fixed<double,3>>
+  //PSMProject::GetCuttingPlanes(const std::string &domain_name)
+  //{
+    //   const PSMDOMNode *data = this->GetDataNode();
+  
+//   // Search the data tree for nodes called domain_tag
+//   DOMNode::ConstChildrenListType domains;
+//   data->GetChildren(domain_tag, domains);
+
+//   std::vector<vnl_vector_fixed<double,3>> planes;
+    
+//   // Search the data tree for nodes called variables_tag
+//   DOMNode::ConstChildrenListType variables;
+//   data->GetChildren(variables_tag, variables);
+  
+//   if (variables.size() == 0)
+//     {
+//       itkExceptionMacro( "PSM Project file does not have any " + variables_tag + " entries with name = " << name );
+//     }
+  
+//   // Search the list of variables for one with the correct name
+//   for (unsigned int i = 0; i < variables.size(); i++)
+//     {
+//       if (variables[i]->HasAttribute(name_tag))
+//         {
+//           if (variables[i]->GetAttribute(name_tag) == name)
+//             {
+//               return ((dynamic_cast<const PSMDOMNode *>(variables[i]))->GetText());
+//             }
+//         }
+//     }
+//   itkExceptionMacro( "PSM Project file does not have any " + variables_tag + " entries with name = " << name );
+  
+//}
+
+
+const DOMNode *PSMProject
+::GetDomainNode(const std::string &name) const
+{
+ // Look for the data section
+  const DOMNode *data = this->GetDataNode();
+
+  // Compile the list of domains
+  DOMNode::ConstChildrenListType domains;
+  data->GetChildren(domain_tag, domains);
+
+  for (unsigned int i = 0; i < domains.size(); i++)
+    {
+      // Look for the name
+      if (domains[i]->HasAttribute(name_tag))
+        {
+	  if (domains[i]->GetAttribute(name_tag) == name)
+	    {
+	      return domains[i];
+	    }
+        }
+    }
+
+  // Didn't find the name!
+  itkExceptionMacro( "Could not find a domain called " + name );
+  return 0;
+}
+
+
+  
+bool PSMProject
+::HasDomainDistanceTransform(const std::string &name) const
+{
+
+ const DOMNode *domain = this->GetDomainNode(name);
+ const DOMNode *dt = domain->GetChild(distance_transform_tag);
+
+ if (dt == 0)
+   {
+     return false;
+   }
+ else
+   {
+     return true;
+   }
+}
+
+const std::vector<std::string > &PSMProject
+::GetDomainDistanceTransform(const std::string &name) const
+{
+
+ const DOMNode *domain = this->GetDomainNode(name);
+ const DOMNode *dt = domain->GetChild(distance_transform_tag);
+
+ if (dt == 0)
+   {
+     itkExceptionMacro("No distance transform filename was found in the domain called " + name + " ");
+   }
+ 
+ return ((dynamic_cast<const PSMDOMNode *>(dt))->GetText());  
+}
+  
+  
+std::vector<std::string> 
+PSMProject::GetDomainNames() const
+{
+  const PSMDOMNode *data = this->GetDataNode();
+  
+  // Search the data tree for nodes called domain_tag
+  DOMNode::ConstChildrenListType domains;
+  data->GetChildren(domain_tag, domains);
+  
+  // Did we find anything called a domain?
+  if (domains.size() == 0)
+    {
+      itkExceptionMacro( "PSM Project file does not specify any elements called " + domain_tag );
+    }
+  
+  std::vector<std::string> s;
+  
+  // Compile the list of names of the domains
+  for (unsigned int i = 0; i < domains.size(); i++)
+    {
+      if (domains[i]->HasAttribute(name_tag))
+	{
+	  s.push_back(domains[i]->GetAttribute(name_tag));
+	}
+      else
+	{
+	  itkExceptionMacro( "The name attribute is missing from a PSM Project file"  + model_tag + ".");
+	}
+    }
+  return s;
+}
+
+bool PSMProject
+::HasDomainCuttingPlanes(const std::string &name) const
+{
+  const DOMNode *domain = this->GetDomainNode(name);
+
+  // Search the domain for nodes called cutting_plane
+  DOMNode::ConstChildrenListType p;
+  domain->GetChildren(cutting_plane_tag, p);
+  
+ // Did we find anything called a cutting plane?
+  if (p.size() > 0)
+    { 
+      return true;
+    }
+  else
+    {
+      return false;
+    }
+}
+
+std::vector<vnl_vector_fixed<double,3> > PSMProject
+::GetDomainCuttingPlanes(const std::string &name) const
+{
+  const DOMNode *domain = this->GetDomainNode(name);
+  
+  // Search the domain for nodes called cutting_plane
+  DOMNode::ConstChildrenListType p;
+  domain->GetChildren(cutting_plane_tag, p);
+  
+ // Did we find anything called a cutting plane?  If not, this is an
+ // error.  Proper way is to check for cutting planes first using
+ // HasDomainCuttingPlanes.
+  if (p.size() == 0)
+    { 
+      itkExceptionMacro("Did not find cutting planes in domain " + name + " ");
+    }
+
+  std::vector<vnl_vector_fixed<double,3>> planes;
+
+  for (unsigned int i = 0; i < p.size(); i++)
+    {
+      std::istringstream inputsBuffer;
+      std::vector<double> pts;
+      double pt;
+
+      std::vector<std::string> txt
+	= dynamic_cast<const PSMDOMNode *>(p[i])->GetText();
+      for (unsigned int j = 0; j < txt.size(); j++)
+	{
+	  inputsBuffer.str(txt[j]);    
+
+	  while (inputsBuffer >> pt)
+	    {   pts.push_back(pt); }
+
+	  inputsBuffer.clear();
+	}
+
+      // If we didn't get the right number of points, throw an
+      // exception.
+      if (pts.size() != 9)
+	{
+	  itkExceptionMacro("Cutting plane data for " + name + " does not consist of three points.");
+	}
+
+      vnl_vector_fixed<double,3> x;
+      vnl_vector_fixed<double,3> y;
+      vnl_vector_fixed<double,3> z;
+      x[0] = pts[0]; x[1] = pts[1]; x[2] = pts[2];
+      y[0] = pts[3]; y[1] = pts[4]; y[2] = pts[5];
+      z[0] = pts[6]; z[1] = pts[7]; z[2] = pts[8];
+
+      planes.push_back(x);
+      planes.push_back(y);
+      planes.push_back(z);
+ 
+    }
+
+  return planes;
+}
+  
+// std::vector<std::string> 
+// PSMProject::GetDomainNames() const
+// {
+//   const PSMDOMNode *data = this->GetDataNode();
+  
+//   // Search the data tree for nodes called domain_tag
+//   DOMNode::ConstChildrenListType domains;
+//   data->GetChildren(domain_tag, domains);
+  
+//   // Did we find anything called a domain?
+//   if (domains.size() == 0)
+//     {
+//       itkExceptionMacro( "PSM Project file does not specify any elements called " + domain_tag );
+//     }
+  
+//   std::vector<std::string> s;
+  
+//   // Compile the list of names of the domains
+//   for (unsigned int i = 0; i < domains.size(); i++)
+//     {
+//       if (domains[i]->HasAttribute(name_tag))
+// 	{
+// 	  s.push_back(domains[i]->GetAttribute(name_tag));
+// 	}
+//       else
+// 	{
+// 	  itkExceptionMacro( "The name attribute is missing from a PSM Project file"  + model_tag + ".");
+// 	}
+//     }
+//   return s;
+// }
+  
 unsigned int PSMProject
 ::GetNumberOfOptimizationScales() const
 {

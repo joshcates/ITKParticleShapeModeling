@@ -24,6 +24,7 @@
 #include "itkObjectFactory.h"
 #include "itkEventObject.h"
 #include "itkExceptionObject.h"
+#include <vnl/vnl_vector_fixed.h>
 
 namespace itk
 {
@@ -60,7 +61,11 @@ namespace itk
 
   /** Reserved keywords for use in XML parameter files. */
   static const std::string                data_tag;
+  static const std::string  distance_transform_tag;
   static const std::string distance_transforms_tag;
+  static const std::string              domain_tag;
+  static const std::string     correspondences_tag;
+  static const std::string       cutting_plane_tag;
   static const std::string               model_tag;
   static const std::string                name_tag;
   static const std::string        optimization_tag;
@@ -85,6 +90,38 @@ namespace itk
   PSMDOMNode::Pointer &GetDOMNode() 
     { return m_DOMNode; }
 
+
+  /** Returns true if the file has specified at least one "domain"
+      tag. */
+  bool HasDomains() const;
+
+  /** Returns the node associated with the given name */
+  const DOMNode *GetDomainNode(const std::string &name) const;
+
+  /** Returns true if the named domain has distance transforms
+      defined */
+  bool HasDomainDistanceTransform(const std::string &name) const;
+
+  /** Returns the name of the distance transform from the given
+      domain */
+  const std::vector<std::string > &
+    GetDomainDistanceTransform(const std::string &name) const;
+
+  /** Returns true if the named domain has cutting planes defined */
+  bool HasDomainCuttingPlanes(const std::string &name) const;
+
+  /** Returns a list of cutting planes for the named domain.  Throws
+      an exception if the domain does not contain cutting planes (call
+      HasDomainCuttingPlanes first). */
+  std::vector<vnl_vector_fixed<double,3> > 
+    GetDomainCuttingPlanes(const std::string &name) const;
+    
+  /** Returns a list of the names of all domains present in the
+      project file.  Will throw an exception if no domain names are
+      present, so call HasDomains() first to check is the file has
+      domains defined. */
+  std::vector<std::string> GetDomainNames() const;    
+  
   /** The file names of the original segmentations for the project.
       Corresponds to the text found in the XML tag <segmentations> */
 

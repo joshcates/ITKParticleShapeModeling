@@ -62,39 +62,39 @@ int main( int argc, char *argv[] )
     itk::ObjectFactoryBase::RegisterFactory( itk::NrrdImageIOFactory::New() );
     
     // Read and parse the project file
-    itk::PSMProjectReader::Pointer xmlReader = itk::PSMProjectReader::New();
-    xmlReader->SetFileName(argv[1]);
-    xmlReader->Update();
-    itk::PSMProject::Pointer project = xmlReader->GetOutput();
+    // itk::PSMProjectReader::Pointer xmlReader = itk::PSMProjectReader::New();
+    // xmlReader->SetFileName(argv[1]);
+    // xmlReader->Update();
+    // itk::PSMProject::Pointer project = xmlReader->GetOutput();
 
     // The dimensions of the input images need to be checked in order to
     // correctly initialize PSMCommandLineClass.
-    const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
-    std::string fname = input_path_prefix + dt_files[0];
+    //    const std::vector<std::string> &dt_files = project->GetDistanceTransforms();
+    //  std::string fname = input_path_prefix + dt_files[0];
 
     // 1. First try to read the file. This is just a convenient way to
     // check whether the file is valid or not. An exception will be
     // thrown by ITK otherwise.  This is slow, but an easy solution.
-    itk::ImageFileReader<itk::Image<unsigned int, 3>>::Pointer
-      testreader = itk::ImageFileReader<itk::Image<unsigned int, 3>>::New();
-    testreader->SetFileName(fname);
-    testreader->Update();
+    //  itk::ImageFileReader<itk::Image<unsigned int, 3>>::Pointer
+    //   testreader = itk::ImageFileReader<itk::Image<unsigned int, 3>>::New();
+    //  testreader->SetFileName(fname);
+    //  testreader->Update();
     
     // 2. If the file was read successfully, we now just probe the image
     // information. Note that ITK does not provide a method under
     // ImageIOBase to actually check the validity of a file, so the
     // following is dangerous unless you know that the file actually
     // exists.
-    std::cout << "Checking input image dimensions of " << fname << std::endl;
-    typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
-    itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
-                                       fname.c_str(), itk::ImageIOFactory::ReadMode);
-    imageIO->SetFileName(fname);
+    //    std::cout << "Checking input image dimensions of " << fname << std::endl;
+    //   typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
+    //  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
+    //                                     fname.c_str(), itk::ImageIOFactory::ReadMode);
+    //  imageIO->SetFileName(fname);
     
-    imageIO->ReadImageInformation();
-    const size_t numOfDimensions =  imageIO->GetNumberOfDimensions();
-    std::cout << "Number of dimensions: " << numOfDimensions << std::endl;
-
+    //    imageIO->ReadImageInformation();
+    //    const size_t numOfDimensions =  imageIO->GetNumberOfDimensions();
+    //   std::cout << "Number of dimensions: " << numOfDimensions << std::endl;
+    const size_t numOfDimensions = 3;
     if (numOfDimensions == 2)
     {
       std::cout << "Running 2D optimization code" << std::endl;
